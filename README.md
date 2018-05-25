@@ -7,32 +7,32 @@ Java FTP server
 
 https://www.iana.org/assignments/ftp-commands-extensions/ftp-commands-extensions.xhtml
 
-- [] ABOR - Abort
-- [] ACCT - Account
-- [] ALLO - Allocate
-- [] APPE - Append 
-- [] CWD - Change Working Directory 
-- [] DELE - Delete File 
-- [] HELP - Help
-- [] LIST - List 
-- [] MODE - Transfer Mode 
-- [] NLST - Name List 
-- [] NOOP - No-Op (Ping)
-- [] PASS - Password 
-- [] PASV - Passive Mode 
-- [] PORT - Data Port 
-- [] QUIT - Logout 
-- [] REIN - Reinitialize 
-- [] REST - Restart 
-- [] RETR - Retrieve 
-- [] RNFR - Rename From
-- [] RNTO - Rename To
-- [] SITE - Site Parameters
-- [] STAT - Status
-- [] STOR - Store 
-- [] STRU - File Structure 
-- [] TYPE - Representation Type 
-- [] USER - User Name
+- [ ] ABOR - Abort
+- [ ] ACCT - Account
+- [ ] ALLO - Allocate
+- [ ] APPE - Append 
+- [ ] CWD - Change Working Directory 
+- [ ] DELE - Delete File 
+- [ ] HELP - Help
+- [ ] LIST - List 
+- [ ] MODE - Transfer Mode 
+- [ ] NLST - Name List 
+- [ ] NOOP - No-Op (Ping)
+- [ ] PASS - Password 
+- [ ] PASV - Passive Mode 
+- [ ] PORT - Data Port 
+- [ ] QUIT - Logout 
+- [ ] REIN - Reinitialize 
+- [ ] REST - Restart 
+- [ ] RETR - Retrieve 
+- [ ] RNFR - Rename From
+- [ ] RNTO - Rename To
+- [ ] SITE - Site Parameters
+- [ ] STAT - Status
+- [ ] STOR - Store 
+- [ ] STRU - File Structure 
+- [ ] TYPE - Representation Type 
+- [ ] USER - User Name
 
 
 ## Core Storing and Retrieving Operations
