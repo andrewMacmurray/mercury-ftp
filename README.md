@@ -1,2 +1,3 @@
-# mercury-ftp
+# Mercury FTP
+
 Java FTP server
