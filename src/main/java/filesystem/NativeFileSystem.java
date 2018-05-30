@@ -15,19 +15,23 @@ public class NativeFileSystem implements FileSystem {
     }
 
     public boolean fileExists(String path) {
-        return Files.exists(rootDir.resolve(path));
+        return Files.exists(resolveRoot(path));
     }
 
     public InputStream readFile(String path) throws IOException {
-        return Files.newInputStream(rootDir.resolve(path));
+        return Files.newInputStream(resolveRoot(path));
     }
 
     public void writeFile(String destinationPath, InputStream source) throws IOException {
-        Files.copy(source, rootDir.resolve(destinationPath));
+        Files.copy(source, resolveRoot(destinationPath));
     }
 
     public void copyFromLocal(String path, OutputStream destination) throws IOException {
-        Files.copy(rootDir.resolve(path), destination);
+        Files.copy(resolveRoot(path), destination);
+    }
+
+    private Path resolveRoot(String path) {
+        return rootDir.resolve(path);
     }
 
 }
