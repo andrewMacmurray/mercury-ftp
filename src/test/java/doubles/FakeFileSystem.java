@@ -1,6 +1,5 @@
 package doubles;
 
-import filesystem.FileSystem;
 import filesystem.NativeFileSystem;
 
 import java.io.*;

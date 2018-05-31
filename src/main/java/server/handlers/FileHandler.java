@@ -1,6 +1,6 @@
 package server.handlers;
 
-import filesystem.FileSystem;
+import filesystem.NativeFileSystem;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,11 +8,11 @@ import java.io.OutputStream;
 
 public class FileHandler {
 
-    private FileSystem fileSystem;
+    private NativeFileSystem fileSystem;
     private InputStream socketIn;
     private OutputStream socketOut;
 
-    public FileHandler(FileSystem fileSystem) {
+    public FileHandler(NativeFileSystem fileSystem) {
         this.fileSystem = fileSystem;
     }
 

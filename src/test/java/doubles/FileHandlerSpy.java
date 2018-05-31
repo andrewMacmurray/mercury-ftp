@@ -1,6 +1,6 @@
 package doubles;
 
-import filesystem.FileSystem;
+import filesystem.NativeFileSystem;
 import server.handlers.FileHandler;
 
 import java.io.IOException;
@@ -13,7 +13,7 @@ public class FileHandlerSpy extends FileHandler {
     public String storedFile;
     public boolean streamsConnected = false;
 
-    public FileHandlerSpy(FileSystem fileSystem) {
+    public FileHandlerSpy(NativeFileSystem fileSystem) {
         super(fileSystem);
     }
 
