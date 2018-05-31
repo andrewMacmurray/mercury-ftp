@@ -1,6 +1,5 @@
 package server;
 
-import filesystem.FileSystem;
 import server.handlers.FileHandler;
 
 import java.io.IOException;
@@ -19,12 +18,12 @@ public class FileConnection {
     }
 
     public void processCommand(String rawCommand, Socket fileSocket) throws IOException {
-        connectSocket(fileSocket);
+        connectSocketStreams(fileSocket);
         commandInterpreter.execute(rawCommand);
         fileSocket.close();
     }
 
-    private void connectSocket(Socket socket) throws IOException {
+    private void connectSocketStreams(Socket socket) throws IOException {
         InputStream fileIn = socket.getInputStream();
         OutputStream fileOut = socket.getOutputStream();
         fileHandler.connectStreams(fileIn, fileOut);
