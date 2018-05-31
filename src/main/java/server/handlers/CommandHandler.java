@@ -12,10 +12,6 @@ public class CommandHandler {
         this.socketOut = new PrintWriter(out, true);
     }
 
-    public void unrecognized() {
-        writeResponse(500, "Unrecognized");
-    }
-
     public String readCommand() throws IOException {
         return socketIn.readLine();
     }

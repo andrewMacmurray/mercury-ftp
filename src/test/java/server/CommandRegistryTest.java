@@ -1,6 +1,5 @@
 package server;
 
-import doubles.CommandHandlerSpy;
 import doubles.FakeFileSystem;
 import doubles.FileHandlerSpy;
 import org.junit.Before;
@@ -16,19 +15,17 @@ public class CommandRegistryTest {
 
     private CommandRegistry commandRegistry;
     private FileHandlerSpy fileHandlerSpy;
-    private CommandHandlerSpy commandHandlerSpy;
+    private int responseCode;
+    private String responseMessage;
 
     @Before
     public void setup() {
         ByteArrayOutputStream fileOut = new ByteArrayOutputStream();
-        ByteArrayOutputStream commandOut = new ByteArrayOutputStream();
         ByteArrayInputStream fileIn = new ByteArrayInputStream("".getBytes());
-        ByteArrayInputStream commandIn = new ByteArrayInputStream("".getBytes());
         FakeFileSystem fakeFileSystem = new FakeFileSystem();
 
-        commandHandlerSpy = new CommandHandlerSpy(commandIn, commandOut);
         fileHandlerSpy = new FileHandlerSpy(fileIn, fileOut, fakeFileSystem);
-        commandRegistry = new CommandRegistry(fileHandlerSpy, commandHandlerSpy);
+        commandRegistry = new CommandRegistry(fileHandlerSpy, this::dummyResponseHandler);
     }
 
     @Test
@@ -36,8 +33,8 @@ public class CommandRegistryTest {
         commandRegistry.executeCommand("RETR", "hello.txt");
 
         assertEquals("hello.txt", fileHandlerSpy.requestedFile);
-        assertEquals(250, commandHandlerSpy.code);
-        assertEquals("OK File sent", commandHandlerSpy.message);
+        assertEquals(250, responseCode);
+        assertEquals("OK File sent", responseMessage);
     }
 
     @Test
@@ -45,16 +42,21 @@ public class CommandRegistryTest {
         commandRegistry.executeCommand("STOR", "my-file.txt");
 
         assertEquals("my-file.txt", fileHandlerSpy.storedFile);
-        assertEquals(250, commandHandlerSpy.code);
-        assertEquals("OK File stored", commandHandlerSpy.message);
+        assertEquals(250, responseCode);
+        assertEquals("OK File stored", responseMessage);
     }
 
     @Test
     public void unrecognised() throws IOException {
         commandRegistry.executeCommand("LOL", "wut?");
 
-        assertEquals(500, commandHandlerSpy.code);
-        assertEquals("Unrecognized", commandHandlerSpy.message);
+        assertEquals(500, responseCode);
+        assertEquals("Unrecognized", responseMessage);
+    }
+    
+    private void dummyResponseHandler(Integer code, String message) {
+        this.responseCode = code;
+        this.responseMessage = message;
     }
 
 }
