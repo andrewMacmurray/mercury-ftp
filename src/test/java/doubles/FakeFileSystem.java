@@ -1,22 +1,25 @@
 package doubles;
 
 import filesystem.FileSystem;
+import filesystem.NativeFileSystem;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class FakeFileSystem implements FileSystem {
+public class FakeFileSystem extends NativeFileSystem {
 
     private List<String> input;
     private List<String> output = new ArrayList<>();
 
     public FakeFileSystem(String... input) {
+        super("tmp");
         this.input = Arrays.asList(input);
     }
 
     public FakeFileSystem() {
+        super("tmp");
         input = new ArrayList<>();
     }
 
