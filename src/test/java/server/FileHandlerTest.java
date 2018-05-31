@@ -3,6 +3,7 @@ package server;
 import doubles.FakeFileSystem;
 import org.junit.Before;
 import org.junit.Test;
+import server.handlers.FileHandler;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -11,18 +12,18 @@ import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 
-public class DataConnectionTest {
+public class FileHandlerTest {
 
     private ByteArrayOutputStream socketOut;
     private FakeFileSystem fakeFileSystem;
-    private DataConnection connection;
+    private FileHandler connection;
 
     @Before
     public void setup() {
         ByteArrayInputStream socketIn = new ByteArrayInputStream("socket\ninput".getBytes());
         socketOut = new ByteArrayOutputStream();
         fakeFileSystem = new FakeFileSystem("hello", "world");
-        connection = new DataConnection(socketIn, socketOut, fakeFileSystem);
+        connection = new FileHandler(socketIn, socketOut, fakeFileSystem);
     }
 
     @Test

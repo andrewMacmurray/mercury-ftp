@@ -16,6 +16,10 @@ public class FakeFileSystem implements FileSystem {
         this.input = Arrays.asList(input);
     }
 
+    public FakeFileSystem() {
+        input = new ArrayList<>();
+    }
+
     public List<String> getOutput() {
         return output;
     }

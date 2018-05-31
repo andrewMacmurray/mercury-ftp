@@ -1,15 +1,19 @@
-package server;
+package server.handlers;
 
 import java.io.*;
 
-public class CommandConnection {
+public class CommandHandler {
 
     private BufferedReader socketIn;
     private PrintWriter socketOut;
 
-    public CommandConnection(InputStream in, OutputStream out) {
+    public CommandHandler(InputStream in, OutputStream out) {
         this.socketIn = new BufferedReader(new InputStreamReader(in));
         this.socketOut = new PrintWriter(out, true);
+    }
+
+    public void unrecognized() {
+        writeResponse(500, "Unrecognized");
     }
 
     public String readCommand() throws IOException {
