@@ -20,11 +20,7 @@ public class CommandRegistryTest {
 
     @Before
     public void setup() {
-        ByteArrayOutputStream fileOut = new ByteArrayOutputStream();
-        ByteArrayInputStream fileIn = new ByteArrayInputStream("".getBytes());
-        FakeFileSystem fakeFileSystem = new FakeFileSystem();
-
-        fileHandlerSpy = new FileHandlerSpy(fileIn, fileOut, fakeFileSystem);
+        fileHandlerSpy = new FileHandlerSpy(new FakeFileSystem());
         commandRegistry = new CommandRegistry(fileHandlerSpy, this::dummyResponseHandler);
     }
 

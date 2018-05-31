@@ -35,6 +35,7 @@ public class CommandRegistry {
 
     private void STOR(String fileName) {
         try {
+            responseHandler.accept(150, "OK receiving file");
             fileHandler.store(fileName);
             responseHandler.accept(250, "OK File stored");
         } catch (IOException e) {
@@ -44,6 +45,7 @@ public class CommandRegistry {
 
     private void RETR(String fileName) {
         try {
+            responseHandler.accept(150, "OK getting file");
             fileHandler.retrieve(fileName);
             responseHandler.accept(250, "OK File sent");
         } catch (IOException e) {

@@ -12,10 +12,13 @@ public class FileHandler {
     private InputStream socketIn;
     private OutputStream socketOut;
 
-    public FileHandler(InputStream socketIn, OutputStream socketOut, FileSystem fileSystem) {
+    public FileHandler(FileSystem fileSystem) {
         this.fileSystem = fileSystem;
-        this.socketIn = socketIn;
-        this.socketOut = socketOut;
+    }
+
+    public void connectStreams(InputStream in, OutputStream out) {
+        socketIn = in;
+        socketOut = out;
     }
 
     public void retrieve(String path) throws IOException {

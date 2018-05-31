@@ -3,8 +3,8 @@ package server.commands;
 import java.io.IOException;
 
 @FunctionalInterface
-public interface IOConsumer {
+public interface IOConsumer<T> {
 
-    void accept(String argument) throws IOException;
+    void accept(T argument) throws IOException;
 
 }

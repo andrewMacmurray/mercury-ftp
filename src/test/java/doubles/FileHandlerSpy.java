@@ -11,9 +11,15 @@ public class FileHandlerSpy extends FileHandler {
 
     public String requestedFile;
     public String storedFile;
+    public boolean streamsConnected = false;
 
-    public FileHandlerSpy(InputStream socketIn, OutputStream socketOut, FileSystem fileSystem) {
-        super(socketIn, socketOut, fileSystem);
+    public FileHandlerSpy(FileSystem fileSystem) {
+        super(fileSystem);
+    }
+
+    @Override
+    public void connectStreams(InputStream in, OutputStream out) {
+        this.streamsConnected = true;
     }
 
     @Override
