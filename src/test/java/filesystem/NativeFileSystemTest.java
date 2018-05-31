@@ -13,14 +13,13 @@ import static org.junit.Assert.*;
 
 public class NativeFileSystemTest {
 
-    private NativeFileSystem nativeFileSystem;
-
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
+    private NativeFileSystem nativeFileSystem;
 
     @Before
     public void setup() {
-        nativeFileSystem = new NativeFileSystem(tempFolder.getRoot().toPath());
+        nativeFileSystem = new NativeFileSystem(tempFolder.getRoot().toString());
     }
 
     @Test

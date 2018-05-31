@@ -5,13 +5,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class NativeFileSystem implements FileSystem {
 
     private Path rootDir;
 
-    public NativeFileSystem(Path rootDir) {
-        this.rootDir = rootDir;
+    public NativeFileSystem(String rootDir) {
+        this.rootDir = Paths.get(rootDir);
     }
 
     public boolean fileExists(String path) {
