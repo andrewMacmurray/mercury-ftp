@@ -1,9 +1,12 @@
 package server;
 
 import doubles.FakeFileSystem;
+import doubles.FakeSocketExecutor;
+import doubles.FakeSocketFactory;
 import doubles.FileHandlerSpy;
 import org.junit.Before;
 import org.junit.Test;
+import server.handlers.connection.ActiveSocketExecutor;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -20,7 +23,7 @@ public class CommandRegistryTest {
 
     @Before
     public void setup() {
-        fileHandlerSpy = new FileHandlerSpy(new FakeFileSystem());
+        fileHandlerSpy = new FileHandlerSpy(new FakeFileSystem(), new FakeSocketExecutor());
         commandRegistry = new CommandRegistry(fileHandlerSpy, this::dummyResponseHandler);
     }
 

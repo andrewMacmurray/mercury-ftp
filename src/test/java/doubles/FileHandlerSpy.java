@@ -2,6 +2,7 @@ package doubles;
 
 import filesystem.NativeFileSystem;
 import server.handlers.FileHandler;
+import server.handlers.connection.SocketExecutor;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,15 +12,9 @@ public class FileHandlerSpy extends FileHandler {
 
     public String requestedFile;
     public String storedFile;
-    public boolean streamsConnected = false;
 
-    public FileHandlerSpy(NativeFileSystem fileSystem) {
-        super(fileSystem);
-    }
-
-    @Override
-    public void connectStreams(InputStream in, OutputStream out) {
-        this.streamsConnected = true;
+    public FileHandlerSpy(NativeFileSystem fileSystem, SocketExecutor socketExecutor) {
+        super(fileSystem, socketExecutor);
     }
 
     @Override

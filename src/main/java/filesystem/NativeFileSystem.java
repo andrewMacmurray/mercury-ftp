@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 
 public class NativeFileSystem {
 
-    private Path rootDir;
+    private final Path rootDir;
 
     public NativeFileSystem(String rootDir) {
         this.rootDir = Paths.get(rootDir);

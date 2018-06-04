@@ -1,5 +1,6 @@
 package filesystem;
 
+import doubles.StreamHelper;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -44,7 +45,7 @@ public class NativeFileSystemTest {
         nativeFileSystem.writeFile("hello.txt", in);
 
         InputStream retrievedFile = nativeFileSystem.readFile("hello.txt");
-        assertEquals(inputStreamToString(retrievedFile), "hello");
+        assertEquals(StreamHelper.inputStreamToString(retrievedFile), "hello");
     }
 
     @Test
@@ -56,11 +57,6 @@ public class NativeFileSystemTest {
         nativeFileSystem.copyFromLocal("hello.txt", out);
 
         assertEquals("hello", out.toString());
-    }
-
-    private String inputStreamToString(InputStream in) {
-        BufferedReader br = new BufferedReader(new InputStreamReader(in));
-        return br.lines().collect(Collectors.joining("\n"));
     }
 
 }

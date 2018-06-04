@@ -9,10 +9,22 @@ import java.net.Socket;
 public class FakeSocket extends Socket {
 
     public boolean closed = false;
+    private InputStream inputStream;
+    private OutputStream outputStream;
+
+    public FakeSocket(InputStream inputStream) {
+        this.inputStream = inputStream;
+        this.outputStream =  new ByteArrayOutputStream();
+    }
+
+    public FakeSocket(InputStream inputStream, OutputStream outputStream) {
+        this.inputStream = inputStream;
+        this.outputStream = outputStream;
+    }
 
     @Override
     public InputStream getInputStream() {
-        return new ByteArrayInputStream("".getBytes());
+        return inputStream;
     }
 
     @Override

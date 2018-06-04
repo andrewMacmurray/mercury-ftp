@@ -9,31 +9,21 @@ import java.util.List;
 
 public class FakeFileSystem extends NativeFileSystem {
 
-    private List<String> input;
+    private List<String> storedFileLines;
     private List<String> output = new ArrayList<>();
 
-    public FakeFileSystem(String... input) {
+    public FakeFileSystem(String... storedFileLines) {
         super("tmp");
-        this.input = Arrays.asList(input);
+        this.storedFileLines = Arrays.asList(storedFileLines);
     }
 
     public FakeFileSystem() {
         super("tmp");
-        input = new ArrayList<>();
+        storedFileLines = new ArrayList<>();
     }
 
     public List<String> getOutput() {
         return output;
-    }
-
-    @Override
-    public boolean fileExists(String path) {
-        return false;
-    }
-
-    @Override
-    public InputStream readFile(String path) throws IOException {
-        return null;
     }
 
     @Override
@@ -45,7 +35,7 @@ public class FakeFileSystem extends NativeFileSystem {
     @Override
     public void copyFromLocal(String path, OutputStream destination) throws IOException {
         PrintWriter pr = new PrintWriter(destination, true);
-        for (String line : input) {
+        for (String line : storedFileLines) {
             pr.println(line);
         }
     }

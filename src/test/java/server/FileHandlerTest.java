@@ -1,9 +1,11 @@
 package server;
 
 import doubles.FakeFileSystem;
+import doubles.FakeSocketExecutor;
 import org.junit.Before;
 import org.junit.Test;
 import server.handlers.FileHandler;
+import server.handlers.connection.SocketExecutor;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -23,8 +25,8 @@ public class FileHandlerTest {
         ByteArrayInputStream socketIn = new ByteArrayInputStream("socket\ninput".getBytes());
         socketOut = new ByteArrayOutputStream();
         fakeFileSystem = new FakeFileSystem("hello", "world");
-        fileHandler = new FileHandler(fakeFileSystem);
-        fileHandler.connectStreams(socketIn, socketOut);
+        SocketExecutor socketExecutor = new FakeSocketExecutor(socketIn, socketOut);
+        fileHandler = new FileHandler(fakeFileSystem, socketExecutor);
     }
 
     @Test
