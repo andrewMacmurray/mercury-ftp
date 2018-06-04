@@ -10,8 +10,8 @@ import java.net.Socket;
 
 public class InterpreterFactory {
 
-    public static CommandInterpreter create(Socket commandSocket, NativeFileSystem fs, SocketExecutor socketExecutor) throws IOException {
-        FileHandler fileHandler = new FileHandler(fs, socketExecutor);
+    public static CommandInterpreter create(Socket commandSocket, SocketExecutor dataSocketExecutor, NativeFileSystem fs) throws IOException {
+        FileHandler fileHandler = new FileHandler(fs, dataSocketExecutor);
         CommandHandler commandHandler = new CommandHandler(commandSocket.getInputStream(), commandSocket.getOutputStream());
         return new CommandInterpreter(commandHandler, fileHandler);
     }

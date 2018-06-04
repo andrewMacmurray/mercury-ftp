@@ -1,5 +1,4 @@
 import filesystem.NativeFileSystem;
-import server.FtpConnection;
 import server.FtpConnectionThread;
 import server.handlers.connection.ActiveSocketExecutor;
 import server.handlers.connection.SocketExecutor;
@@ -28,14 +27,22 @@ public class FtpServer {
         while (true) {
             System.out.println("Waiting for new connection");
             try {
-                Socket commandSocket = serverSocket.accept();
-                SocketExecutor dataSocketExecutor = new ActiveSocketExecutor(new SocketFactory());
-                threadPool.execute(new FtpConnectionThread(commandSocket, dataSocketExecutor, fs));
+                acceptConnection();
             } catch (IOException e) {
-                System.out.println("Error processing connection");
-                System.out.println(e.getMessage());
+                logConnectionError(e);
             }
         }
+    }
+
+    private void acceptConnection() throws IOException {
+        Socket commandSocket = serverSocket.accept();
+        SocketExecutor dataSocketExecutor = new ActiveSocketExecutor(new SocketFactory());
+        threadPool.execute(new FtpConnectionThread(commandSocket, dataSocketExecutor, fs));
+    }
+
+    private void logConnectionError(IOException e) {
+        System.out.println("Error processing connection");
+        System.out.println(e.getMessage());
     }
 
 }

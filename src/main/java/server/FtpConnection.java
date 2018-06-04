@@ -11,9 +11,9 @@ public class FtpConnection implements AutoCloseable {
     private Socket commandSocket;
     private CommandInterpreter commandInterpreter;
 
-    public FtpConnection(Socket commandSocket, NativeFileSystem fs, SocketExecutor dataSocketExecutor) throws IOException {
+    public FtpConnection(Socket commandSocket, SocketExecutor dataSocketExecutor, NativeFileSystem fs) throws IOException {
         this.commandSocket = commandSocket;
-        this.commandInterpreter = InterpreterFactory.create(commandSocket, fs, dataSocketExecutor);
+        this.commandInterpreter = InterpreterFactory.create(commandSocket, dataSocketExecutor, fs);
     }
 
     public void processCommands() throws IOException {
