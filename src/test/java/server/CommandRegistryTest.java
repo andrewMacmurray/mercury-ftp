@@ -48,6 +48,17 @@ public class CommandRegistryTest {
     }
 
     @Test
+    public void badPassword() {
+        commandRegistry.executeCommand("PASS", "hello");
+        assertResponse(430, "Bad password, please try again");
+    }
+
+    @Test
+    public void correctPassword() {
+        commandRegistry.executeCommand("PASS", "hermes");
+        assertResponse(230, "Welcome to Mercury");
+    }
+    @Test
     public void unrecognised() {
         commandRegistry.executeCommand("LOL", "wut?");
         assertResponse(500, "Unrecognized");
