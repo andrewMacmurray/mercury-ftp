@@ -12,7 +12,7 @@ public class CommandInterpreter {
         this.commandExecutor = commandExecutor;
     }
 
-    public void execute(String rawCommand) throws IOException {
+    public void execute(String rawCommand) {
         String[] args = rawCommand.split(" ");
         if (args.length > 1) {
             commandExecutor.run(args[0], args[1]);

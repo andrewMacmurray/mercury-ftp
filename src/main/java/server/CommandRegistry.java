@@ -20,7 +20,7 @@ public class CommandRegistry {
         registerCommands();
     }
 
-    public void executeCommand(String commandName, String argument) throws IOException {
+    public void executeCommand(String commandName, String argument) {
         commands.execute(commandName, argument);
     }
 

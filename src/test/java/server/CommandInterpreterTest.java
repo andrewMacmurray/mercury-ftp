@@ -20,7 +20,7 @@ public class CommandInterpreterTest {
     }
 
     @Test
-    public void parseCommand() throws IOException {
+    public void parseCommand() {
        commandInterpreter.execute("RETR hello.txt");
 
        assertEquals("RETR", executedCommand);
@@ -28,7 +28,7 @@ public class CommandInterpreterTest {
     }
 
     @Test
-    public void parseSingleArg() throws IOException {
+    public void parseSingleArg() {
         commandInterpreter.execute("QUIT");
 
         assertEquals("QUIT", executedCommand);

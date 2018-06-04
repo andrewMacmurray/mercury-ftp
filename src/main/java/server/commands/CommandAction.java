@@ -5,6 +5,6 @@ import java.io.IOException;
 @FunctionalInterface
 public interface CommandAction {
 
-    void run(String argument) throws IOException;
+    void run(String argument);
 
 }

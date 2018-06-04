@@ -26,7 +26,7 @@ public class CommandsTest {
     }
 
     @Test
-    public void runRecognized() throws IOException {
+    public void runRecognized() {
         commands.execute("ONE", "arg");
         commands.execute("TWO", "arg");
         assertTrue(commandOneExecuted);
@@ -35,7 +35,7 @@ public class CommandsTest {
     }
 
     @Test
-    public void runUnrecognized() throws IOException {
+    public void runUnrecognized() {
         commands.execute("BLAH", "wut");
         assertFalse(commandOneExecuted);
         assertFalse(commandTwoExecuted);

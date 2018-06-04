@@ -19,7 +19,7 @@ public class Commands {
         }
     }
 
-    public void execute(String commandName, String argument) throws IOException {
+    public void execute(String commandName, String argument) {
         Command command = registeredCommands.get(commandName);
         if (command != null) {
             command.run(argument);

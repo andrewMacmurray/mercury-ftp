@@ -16,7 +16,7 @@ public class Command {
         return name;
     }
 
-    public void run(String argument) throws IOException {
+    public void run(String argument) {
         action.run(argument);
     }
 
