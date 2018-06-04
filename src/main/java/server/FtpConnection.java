@@ -8,32 +8,21 @@ import java.net.Socket;
 
 public class FtpConnection implements AutoCloseable {
 
-    private ConnectionIO connectionIO;
+    private Socket commandSocket;
+    private CommandInterpreter commandInterpreter;
 
-    public FtpConnection(Socket commandSocket, NativeFileSystem fs, SocketExecutor socketExecutor) throws IOException {
-        connectionIO = new ConnectionIO(commandSocket, fs, socketExecutor);
-        connectionIO.clientConnected();
+    public FtpConnection(Socket commandSocket, NativeFileSystem fs, SocketExecutor dataSocketExecutor) throws IOException {
+        this.commandSocket = commandSocket;
+        this.commandInterpreter = InterpreterFactory.create(commandSocket, fs, dataSocketExecutor);
     }
 
     public void processCommands() throws IOException {
-        processNextCommand();
-    }
-
-    private void processNextCommand() throws IOException {
-        String rawCommand = connectionIO.readCommand();
-        if (shouldExecuteCommand(rawCommand)) {
-            connectionIO.executeCommand(rawCommand);
-            processNextCommand();
-        }
-    }
-
-    private boolean shouldExecuteCommand(String rawCommand) {
-        return rawCommand != null && !"QUIT".equalsIgnoreCase(rawCommand);
+        commandInterpreter.processCommands();
     }
 
     @Override
     public void close() throws Exception {
-        connectionIO.clientDisconnect();
+        commandSocket.close();
     }
 
 }

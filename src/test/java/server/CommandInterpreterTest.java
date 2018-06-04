@@ -1,43 +1,33 @@
 package server;
 
-import org.junit.Before;
+import doubles.CommandHandlerSpy;
+import doubles.FakeFileSystem;
+import doubles.FakeSocketExecutor;
+import doubles.FileHandlerSpy;
 import org.junit.Test;
-import server.commands.Command;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
 public class CommandInterpreterTest {
 
-    private String executedCommand;
-    private String executedCommandArg;
-    private CommandInterpreter commandInterpreter;
-
-    @Before
-    public void setup() {
-       commandInterpreter = new CommandInterpreter(this::dummyCommandExecutor);
-    }
-
     @Test
-    public void parseCommand() {
-       commandInterpreter.execute("RETR hello.txt");
+    public void processCommands() throws IOException {
+        ByteArrayInputStream socketIn = new ByteArrayInputStream("RETR hello.txt".getBytes());
+        ByteArrayOutputStream socketOut = new ByteArrayOutputStream();
 
-       assertEquals("RETR", executedCommand);
-       assertEquals("hello.txt", executedCommandArg);
-    }
+        FileHandlerSpy fileHandlerSpy = new FileHandlerSpy(new FakeFileSystem(), new FakeSocketExecutor());
+        CommandHandlerSpy commandHandlerSpy = new CommandHandlerSpy(socketIn, socketOut);
 
-    @Test
-    public void parseSingleArg() {
-        commandInterpreter.execute("QUIT");
+        CommandInterpreter commandInterpreter = new CommandInterpreter(commandHandlerSpy, fileHandlerSpy);
+        commandInterpreter.processCommands();
 
-        assertEquals("QUIT", executedCommand);
-        assertEquals("", executedCommandArg);
-    }
-
-    private void dummyCommandExecutor(String commandName, String arg) {
-        this.executedCommand = commandName;
-        this.executedCommandArg = arg;
+        assertEquals(421, commandHandlerSpy.code);
+        assertEquals("Terminating Connection", commandHandlerSpy.message);
+        assertEquals("hello.txt", fileHandlerSpy.requestedFile);
     }
 
 }

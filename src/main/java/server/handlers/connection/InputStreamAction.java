@@ -6,6 +6,6 @@ import java.io.InputStream;
 @FunctionalInterface
 public interface InputStreamAction {
 
-    void run(InputStream in) throws IOException;
+    void run(InputStream inputStream) throws IOException;
 
 }

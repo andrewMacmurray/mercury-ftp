@@ -1,10 +1,19 @@
 package server.commands;
 
-import java.io.IOException;
+public class CommandExecutor {
 
-@FunctionalInterface
-public interface CommandExecutor {
+    public static void run(String rawCommand, ParsedCommandRunner action) {
+        String[] args = rawCommand.split(" ");
+        if (args.length > 1) {
+            action.run(args[0], args[1]);
+        } else {
+            action.run(args[0], "");
+        }
+    }
 
-    void run(String name, String argument);
+    @FunctionalInterface
+    public interface ParsedCommandRunner {
+        void run(String command, String arg);
+    }
 
 }
