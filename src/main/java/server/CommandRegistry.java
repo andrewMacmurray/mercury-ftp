@@ -27,7 +27,9 @@ public class CommandRegistry {
     private void registerCommands() {
         commands.register(
                 new Command("RETR", this::RETR),
-                new Command("STOR", this::STOR)
+                new Command("STOR", this::STOR),
+                new Command("USER", this::USER),
+                new Command("PASS", this::PASS)
         );
     }
 
@@ -48,6 +50,19 @@ public class CommandRegistry {
             statusResponder.respond(250, "OK File sent");
         } catch (IOException e) {
             statusResponder.respond(450, "Something went wrong");
+        }
+    }
+
+    private void USER(String userName) {
+        statusResponder.respond(331, String.format("Hey %s, Please enter your password", userName));
+    }
+
+    private void PASS(String password) {
+        boolean validPassword = password.equalsIgnoreCase("HERMES");
+        if (validPassword) {
+            statusResponder.respond(230, "Welcome to Mercury");
+        } else {
+            statusResponder.respond(430, "Bad password, please try again");
         }
     }
 

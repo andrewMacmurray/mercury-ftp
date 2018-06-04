@@ -21,7 +21,7 @@ public class FtpConnection implements AutoCloseable {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() throws IOException {
         commandSocket.close();
     }
 

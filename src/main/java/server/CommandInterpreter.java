@@ -28,6 +28,7 @@ public class CommandInterpreter {
 
     private void processCommand() throws IOException {
         String rawCommand = commandHandler.readCommand();
+        System.out.println(rawCommand);
         if (shouldExecuteCommand(rawCommand)) {
             execute(rawCommand);
             processCommand();

@@ -28,29 +28,34 @@ public class CommandRegistryTest {
     }
 
     @Test
-    public void retrieveFile() throws IOException {
+    public void retrieveFile() {
         commandRegistry.executeCommand("RETR", "hello.txt");
-
         assertEquals("hello.txt", fileHandlerSpy.requestedFile);
-        assertEquals(250, responseCode);
-        assertEquals("OK File sent", responseMessage);
+        assertResponse(250, "OK File sent");
     }
 
     @Test
-    public void storeFile() throws IOException {
+    public void storeFile() {
         commandRegistry.executeCommand("STOR", "my-file.txt");
-
         assertEquals("my-file.txt", fileHandlerSpy.storedFile);
-        assertEquals(250, responseCode);
-        assertEquals("OK File stored", responseMessage);
+        assertResponse(250, "OK File stored");
     }
 
     @Test
-    public void unrecognised() throws IOException {
-        commandRegistry.executeCommand("LOL", "wut?");
+    public void userName() {
+       commandRegistry.executeCommand("USER", "andrew");
+       assertResponse(331, "Hey andrew, Please enter your password");
+    }
 
-        assertEquals(500, responseCode);
-        assertEquals("Unrecognized", responseMessage);
+    @Test
+    public void unrecognised() {
+        commandRegistry.executeCommand("LOL", "wut?");
+        assertResponse(500, "Unrecognized");
+    }
+
+    private void assertResponse(int code, String message) {
+        assertEquals(code, responseCode);
+        assertEquals(message, responseMessage);
     }
     
     private void dummyResponseHandler(Integer code, String message) {
