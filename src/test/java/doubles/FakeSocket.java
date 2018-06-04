@@ -29,7 +29,7 @@ public class FakeSocket extends Socket {
 
     @Override
     public OutputStream getOutputStream() {
-        return new ByteArrayOutputStream();
+        return outputStream;
     }
 
     @Override

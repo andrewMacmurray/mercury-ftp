@@ -33,7 +33,7 @@ public class CommandRegistry {
 
     private void STOR(String fileName) {
         try {
-            statusResponder.respond(150, "OK receiving file");
+            statusResponder.respond(150, "OK receiving File");
             fileHandler.store(fileName);
             statusResponder.respond(250, "OK File stored");
         } catch (IOException e) {
@@ -43,7 +43,7 @@ public class CommandRegistry {
 
     private void RETR(String fileName) {
         try {
-            statusResponder.respond(150, "OK getting file");
+            statusResponder.respond(150, "OK getting File");
             fileHandler.retrieve(fileName);
             statusResponder.respond(250, "OK File sent");
         } catch (IOException e) {
