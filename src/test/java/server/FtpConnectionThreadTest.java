@@ -1,7 +1,7 @@
 package server;
 
-import doubles.FakeFileSystem;
-import doubles.FakeSocket;
+import doubles.DummyFileSystem;
+import doubles.SocketStub;
 import doubles.FakeSocketExecutor;
 import org.junit.Test;
 
@@ -17,11 +17,11 @@ public class FtpConnectionThreadTest {
     public void startThread() throws IOException {
         ByteArrayInputStream socketIn = new ByteArrayInputStream("USER andrew".getBytes());
         ByteArrayOutputStream socketOut = new ByteArrayOutputStream();
-        FakeSocket fakeSocket = new FakeSocket(socketIn, socketOut);
-        FakeFileSystem fakeFileSystem = new FakeFileSystem();
+        SocketStub socketStub = new SocketStub(socketIn, socketOut);
+        DummyFileSystem dummyFileSystem = new DummyFileSystem();
         FakeSocketExecutor fakeSocketExecutor = new FakeSocketExecutor();
 
-        FtpConnectionThread ftpConnectionThread = new FtpConnectionThread(fakeSocket, fakeSocketExecutor, fakeFileSystem);
+        FtpConnectionThread ftpConnectionThread = new FtpConnectionThread(socketStub, fakeSocketExecutor, dummyFileSystem);
         ftpConnectionThread.run();
 
         String output = socketOut.toString();

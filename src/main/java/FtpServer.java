@@ -1,6 +1,6 @@
 import filesystem.NativeFileSystem;
 import server.FtpConnectionThread;
-import server.handlers.connection.ActiveSocketExecutor;
+import server.handlers.connection.DataSocketExecutor;
 import server.handlers.connection.SocketExecutor;
 import server.handlers.connection.SocketFactory;
 
@@ -36,7 +36,7 @@ public class FtpServer {
 
     private void acceptConnection() throws IOException {
         Socket commandSocket = serverSocket.accept();
-        SocketExecutor dataSocketExecutor = new ActiveSocketExecutor(new SocketFactory());
+        SocketExecutor dataSocketExecutor = new DataSocketExecutor(new SocketFactory());
         threadPool.execute(new FtpConnectionThread(commandSocket, dataSocketExecutor, fs));
     }
 

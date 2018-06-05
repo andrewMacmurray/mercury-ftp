@@ -6,18 +6,18 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-public class FakeSocket extends Socket {
+public class SocketStub extends Socket {
 
     public boolean closed = false;
     private InputStream inputStream;
     private OutputStream outputStream;
 
-    public FakeSocket(InputStream inputStream) {
+    public SocketStub(InputStream inputStream) {
         this.inputStream = inputStream;
         this.outputStream =  new ByteArrayOutputStream();
     }
 
-    public FakeSocket(InputStream inputStream, OutputStream outputStream) {
+    public SocketStub(InputStream inputStream, OutputStream outputStream) {
         this.inputStream = inputStream;
         this.outputStream = outputStream;
     }

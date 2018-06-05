@@ -28,7 +28,6 @@ public class CommandExecutorTest {
         assertEquals("", argument);
     }
 
-
     private void dummyParsedCommandRunner(String command, String argument) {
         this.command = command;
         this.argument = argument;

@@ -4,26 +4,18 @@ import server.handlers.connection.InputStreamAction;
 import server.handlers.connection.OutputStreamAction;
 import server.handlers.connection.SocketExecutor;
 
-import java.io.*;
+import java.io.IOException;
 
-public class FakeSocketExecutor implements SocketExecutor {
-
-    private InputStream inputStream;
-    private OutputStream outputStream;
-
-    public FakeSocketExecutor() {
-        inputStream = new ByteArrayInputStream("".getBytes());
-        outputStream = new ByteArrayOutputStream();
-    }
+public class DummySocketExecutor implements SocketExecutor {
 
     @Override
     public void inputStream(String host, int port, InputStreamAction action) throws IOException {
-        action.run(inputStream);
+
     }
 
     @Override
     public void outputStream(String host, int port, OutputStreamAction action) throws IOException {
-        action.run(outputStream);
+
     }
 
 }

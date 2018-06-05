@@ -1,16 +1,11 @@
 package server;
 
-import doubles.FakeFileSystem;
+import doubles.DummyFileSystem;
+import doubles.DummySocketExecutor;
 import doubles.FakeSocketExecutor;
-import doubles.FakeSocketFactory;
 import doubles.FileHandlerSpy;
 import org.junit.Before;
 import org.junit.Test;
-import server.handlers.connection.ActiveSocketExecutor;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
@@ -23,7 +18,7 @@ public class CommandRegistryTest {
 
     @Before
     public void setup() {
-        fileHandlerSpy = new FileHandlerSpy(new FakeFileSystem(), new FakeSocketExecutor());
+        fileHandlerSpy = new FileHandlerSpy(new DummyFileSystem(), new DummySocketExecutor());
         commandRegistry = new CommandRegistry(fileHandlerSpy, this::dummyResponseHandler);
     }
 
@@ -45,6 +40,18 @@ public class CommandRegistryTest {
     public void userName() {
        commandRegistry.executeCommand("USER", "andrew");
        assertResponse(331, "Hey andrew, Please enter your password");
+    }
+
+    @Test
+    public void port() {
+        commandRegistry.executeCommand("PORT", "127,0,0,1,211,127");
+        assertResponse(200, "OK I got the port");
+    }
+
+    @Test
+    public void badPort() {
+        commandRegistry.executeCommand("PORT", "127,1,1");
+        assertResponse(500, "Invalid Port");
     }
 
     @Test

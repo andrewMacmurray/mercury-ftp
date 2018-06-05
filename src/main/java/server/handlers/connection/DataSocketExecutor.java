@@ -5,11 +5,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-public class ActiveSocketExecutor implements SocketExecutor {
+public class DataSocketExecutor implements SocketExecutor {
 
     private SocketFactory socketFactory;
 
-    public ActiveSocketExecutor(SocketFactory socketFactory) {
+    public DataSocketExecutor(SocketFactory socketFactory) {
         this.socketFactory = socketFactory;
     }
 

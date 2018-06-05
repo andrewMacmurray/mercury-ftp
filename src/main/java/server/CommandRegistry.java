@@ -28,6 +28,7 @@ public class CommandRegistry {
         commands.register(
                 new Command("RETR", this::RETR),
                 new Command("STOR", this::STOR),
+                new Command("PORT", this::PORT),
                 new Command("USER", this::USER),
                 new Command("PASS", this::PASS)
         );
@@ -50,6 +51,16 @@ public class CommandRegistry {
             statusResponder.respond(250, "OK File sent");
         } catch (IOException e) {
             statusResponder.respond(450, "Something went wrong");
+        }
+    }
+
+    private void PORT(String rawIpAddress) {
+        try {
+            int port = PortParser.parse(rawIpAddress);
+            fileHandler.setPortNumber(port);
+            statusResponder.respond(200, "OK I got the port");
+        } catch (Exception e) {
+            statusResponder.respond(500, "Invalid Port");
         }
     }
 

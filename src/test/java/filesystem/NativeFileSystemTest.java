@@ -40,15 +40,6 @@ public class NativeFileSystemTest {
     }
 
     @Test
-    public void readFile() throws IOException {
-        ByteArrayInputStream in = new ByteArrayInputStream("hello".getBytes());
-        nativeFileSystem.writeFile("hello.txt", in);
-
-        InputStream retrievedFile = nativeFileSystem.readFile("hello.txt");
-        assertEquals(StreamHelper.inputStreamToString(retrievedFile), "hello");
-    }
-
-    @Test
     public void copyToOutput() throws IOException {
         ByteArrayInputStream source = new ByteArrayInputStream("hello".getBytes());
         ByteArrayOutputStream out = new ByteArrayOutputStream();

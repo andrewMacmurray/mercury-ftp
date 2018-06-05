@@ -19,10 +19,6 @@ public class NativeFileSystem {
         return Files.exists(resolveRoot(path));
     }
 
-    public InputStream readFile(String path) throws IOException {
-        return Files.newInputStream(resolveRoot(path));
-    }
-
     public void writeFile(String destinationPath, InputStream source) throws IOException {
         Files.copy(source, resolveRoot(destinationPath));
     }
