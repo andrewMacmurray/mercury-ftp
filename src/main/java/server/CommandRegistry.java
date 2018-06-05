@@ -3,20 +3,20 @@ package server;
 import server.commands.Command;
 import server.commands.CommandAction;
 import server.commands.Commands;
-import server.commands.StatusResponder;
-import server.handlers.FileHandler;
+import server.commands.CommandResponder;
+import server.connections.FileConnection;
 
 import java.io.IOException;
 
 public class CommandRegistry {
 
-    private FileHandler fileHandler;
-    private StatusResponder statusResponder;
+    private FileConnection fileConnection;
+    private CommandResponder commandResponder;
     private Commands commands;
 
-    public CommandRegistry(FileHandler fileHandler, StatusResponder statusResponder) {
-        this.fileHandler = fileHandler;
-        this.statusResponder = statusResponder;
+    public CommandRegistry(FileConnection fileConnection, CommandResponder commandResponder) {
+        this.fileConnection = fileConnection;
+        this.commandResponder = commandResponder;
         this.commands = new Commands(this::unrecognized);
         registerCommands();
     }
@@ -44,68 +44,68 @@ public class CommandRegistry {
 
     private void STOR(String fileName) {
         try {
-            statusResponder.respond(150, "OK receiving File");
-            fileHandler.store(fileName);
-            statusResponder.respond(250, "OK File stored");
+            commandResponder.respond(150, "OK receiving File");
+            fileConnection.store(fileName);
+            commandResponder.respond(250, "OK File stored");
         } catch (IOException e) {
-            statusResponder.respond(450, "Something went wrong");
+            commandResponder.respond(450, "Something went wrong");
         }
     }
 
     private void RETR(String fileName) {
         try {
-            statusResponder.respond(150, "OK getting File");
-            fileHandler.retrieve(fileName);
-            statusResponder.respond(250, "OK File sent");
+            commandResponder.respond(150, "OK getting File");
+            fileConnection.retrieve(fileName);
+            commandResponder.respond(250, "OK File sent");
         } catch (IOException e) {
-            statusResponder.respond(450, "Something went wrong");
+            commandResponder.respond(450, "Something went wrong");
         }
     }
 
     private void PORT(String rawIpAddress) {
         try {
-            int port = PortParser.parse(rawIpAddress);
-            fileHandler.setPortNumber(port);
-            statusResponder.respond(200, "OK I got the port");
+            int port = PortParser.parseIpv4(rawIpAddress);
+            fileConnection.setPortNumber(port);
+            commandResponder.respond(200, "OK I got the port");
         } catch (Exception e) {
-            statusResponder.respond(500, "Invalid Port");
+            commandResponder.respond(500, "Invalid Port");
         }
     }
 
     private void USER(String userName) {
-        statusResponder.respond(331, String.format("Hey %s, Please enter your password", userName));
+        commandResponder.respond(331, String.format("Hey %s, Please enter your password", userName));
     }
 
     private void PASS(String password) {
         boolean validPassword = password.equalsIgnoreCase("HERMES");
         if (validPassword) {
-            statusResponder.respond(230, "Welcome to Mercury");
+            commandResponder.respond(230, "Welcome to Mercury");
         } else {
-            statusResponder.respond(430, "Bad password, please try again");
+            commandResponder.respond(430, "Bad password, please try again");
         }
     }
 
     private void PWD() {
-        statusResponder.respond(257, fileHandler.currentDirectory());
+        commandResponder.respond(257, fileConnection.currentDirectory());
     }
 
     private void CWD(String directory) {
-        boolean isValidDirectory = fileHandler.isDirectory(directory);
+        boolean isValidDirectory = fileConnection.isDirectory(directory);
         if (isValidDirectory) {
-            fileHandler.changeWorkingDirectory(directory);
-            statusResponder.respond(257, fileHandler.currentDirectory());
+            fileConnection.changeWorkingDirectory(directory);
+            commandResponder.respond(257, fileConnection.currentDirectory());
         } else {
-            statusResponder.respond(550, "Not a valid directory");
+            commandResponder.respond(550, "Not a valid directory");
         }
     }
 
     private void CDUP() {
-        fileHandler.cdUp();
-        statusResponder.respond(257, fileHandler.currentDirectory());
+        fileConnection.cdUp();
+        commandResponder.respond(257, fileConnection.currentDirectory());
     }
 
     private void unrecognized() {
-        statusResponder.respond(500, "Unrecognized");
+        commandResponder.respond(500, "Unrecognized");
     }
 
 }

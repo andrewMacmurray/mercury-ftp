@@ -1,9 +1,9 @@
 package server;
 
 import filesystem.NativeFileSystem;
-import server.handlers.CommandHandler;
-import server.handlers.FileHandler;
-import server.handlers.connection.SocketExecutor;
+import server.connections.CommandConnection;
+import server.connections.FileConnection;
+import server.connections.socket.SocketExecutor;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,16 +12,16 @@ import java.net.Socket;
 
 public class InterpreterFactory {
 
-    public static CommandInterpreter create(Socket commandSocket, SocketExecutor dataSocketExecutor, NativeFileSystem fs) throws IOException {
-        FileHandler fileHandler = new FileHandler(fs, dataSocketExecutor);
-        CommandHandler commandHandler = createCommandHandler(commandSocket);
-        return new CommandInterpreter(commandHandler, fileHandler);
+    public static CommandInterpreter create(Socket commandSocket, SocketExecutor socketExecutor, NativeFileSystem fs) throws IOException {
+        FileConnection fileConnection = new FileConnection(fs, socketExecutor);
+        CommandConnection commandConnection = createCommandConnection(commandSocket);
+        return new CommandInterpreter(commandConnection, fileConnection);
     }
 
-    private static CommandHandler createCommandHandler(Socket commandSocket) throws IOException {
+    private static CommandConnection createCommandConnection(Socket commandSocket) throws IOException {
         InputStream socketIn = commandSocket.getInputStream();
         OutputStream socketOut = commandSocket.getOutputStream();
-        return new CommandHandler(socketIn, socketOut);
+        return new CommandConnection(socketIn, socketOut);
     }
 
 }

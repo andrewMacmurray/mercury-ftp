@@ -1,13 +1,13 @@
-package server.handlers;
+package server.connections;
 
 import java.io.*;
 
-public class CommandHandler {
+public class CommandConnection {
 
     private BufferedReader socketIn;
     private PrintWriter socketOut;
 
-    public CommandHandler(InputStream in, OutputStream out) {
+    public CommandConnection(InputStream in, OutputStream out) {
         this.socketIn = new BufferedReader(new InputStreamReader(in));
         this.socketOut = new PrintWriter(out, true);
     }

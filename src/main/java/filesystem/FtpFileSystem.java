@@ -1,7 +1,7 @@
 package filesystem;
 
-import server.handlers.connection.InputStreamAction;
-import server.handlers.connection.OutputStreamAction;
+import server.connections.socket.InputStreamAction;
+import server.connections.socket.OutputStreamAction;
 
 import java.io.IOException;
 import java.nio.file.Path;

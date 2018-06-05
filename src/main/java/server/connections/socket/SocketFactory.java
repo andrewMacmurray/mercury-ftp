@@ -1,4 +1,4 @@
-package server.handlers.connection;
+package server.connections.socket;
 
 import java.io.IOException;
 import java.net.Socket;

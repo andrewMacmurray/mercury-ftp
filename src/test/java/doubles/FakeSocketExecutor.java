@@ -1,19 +1,20 @@
 package doubles;
 
-import server.handlers.connection.InputStreamAction;
-import server.handlers.connection.OutputStreamAction;
-import server.handlers.connection.SocketExecutor;
+import server.connections.socket.InputStreamAction;
+import server.connections.socket.OutputStreamAction;
+import server.connections.socket.SocketExecutor;
 
 import java.io.*;
 
-public class FakeSocketExecutor implements SocketExecutor {
+public class FakeSocketExecutor extends SocketExecutor {
 
     private InputStream inputStream;
     private OutputStream outputStream;
 
     public FakeSocketExecutor() {
-        inputStream = new ByteArrayInputStream("".getBytes());
-        outputStream = new ByteArrayOutputStream();
+        super(new MockSocketFactory());
+        this.inputStream = new ByteArrayInputStream("".getBytes());
+        this.outputStream = new ByteArrayOutputStream();
     }
 
     @Override

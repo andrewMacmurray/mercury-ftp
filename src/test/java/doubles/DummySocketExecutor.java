@@ -1,12 +1,16 @@
 package doubles;
 
-import server.handlers.connection.InputStreamAction;
-import server.handlers.connection.OutputStreamAction;
-import server.handlers.connection.SocketExecutor;
+import server.connections.socket.InputStreamAction;
+import server.connections.socket.OutputStreamAction;
+import server.connections.socket.SocketExecutor;
 
 import java.io.IOException;
 
-public class DummySocketExecutor implements SocketExecutor {
+public class DummySocketExecutor extends SocketExecutor {
+
+    public DummySocketExecutor() {
+        super(new MockSocketFactory());
+    }
 
     @Override
     public void inputStream(String host, int port, InputStreamAction action) throws IOException {

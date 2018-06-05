@@ -1,33 +1,33 @@
 package server;
 
 import server.commands.CommandExecutor;
-import server.handlers.CommandHandler;
-import server.handlers.FileHandler;
+import server.connections.CommandConnection;
+import server.connections.FileConnection;
 
 import java.io.IOException;
 
 public class CommandInterpreter {
 
     private CommandRegistry commandRegistry;
-    private CommandHandler commandHandler;
+    private CommandConnection commandConnection;
 
-    public CommandInterpreter(CommandHandler commandHandler, FileHandler fileHandler) {
-        this.commandHandler = commandHandler;
-        this.commandRegistry = new CommandRegistry(fileHandler, commandHandler::writeResponse);
+    public CommandInterpreter(CommandConnection commandConnection, FileConnection fileConnection) {
+        this.commandConnection = commandConnection;
+        this.commandRegistry = new CommandRegistry(fileConnection, commandConnection::writeResponse);
         clientConnectedResponse();
     }
 
     public void processCommands() throws IOException {
         processCommand();
-        commandHandler.writeResponse(421, "Disconnected from Mercury");
+        commandConnection.writeResponse(421, "Disconnected from Mercury");
     }
 
     private void clientConnectedResponse() {
-        commandHandler.writeResponse(200, "Connected to Mercury");
+        commandConnection.writeResponse(200, "Connected to Mercury");
     }
 
     private void processCommand() throws IOException {
-        String rawCommand = commandHandler.readCommand();
+        String rawCommand = commandConnection.readCommand();
         System.out.println(rawCommand);
         if (shouldExecuteCommand(rawCommand)) {
             execute(rawCommand);

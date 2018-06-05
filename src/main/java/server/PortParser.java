@@ -6,9 +6,9 @@ import java.util.stream.Collectors;
 
 public class PortParser {
 
-    public static int parse(String rawIpAddress) {
+    public static int parseIpv4(String rawIpv4Address) {
         List<Integer> ipList = Arrays
-                .stream(rawIpAddress.split(","))
+                .stream(rawIpv4Address.split(","))
                 .mapToInt(Integer::parseInt)
                 .boxed()
                 .collect(Collectors.toList());

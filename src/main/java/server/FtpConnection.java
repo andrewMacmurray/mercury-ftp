@@ -1,7 +1,7 @@
 package server;
 
 import filesystem.NativeFileSystem;
-import server.handlers.connection.SocketExecutor;
+import server.connections.socket.SocketExecutor;
 
 import java.io.IOException;
 import java.net.Socket;

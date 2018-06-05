@@ -1,9 +1,6 @@
 package server;
 
-import doubles.CommandHandlerSpy;
-import doubles.DummyFileSystem;
-import doubles.DummySocketExecutor;
-import doubles.FileHandlerSpy;
+import doubles.*;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -19,8 +16,8 @@ public class CommandInterpreterTest {
         ByteArrayInputStream socketIn = new ByteArrayInputStream("RETR hello.txt".getBytes());
         ByteArrayOutputStream socketOut = new ByteArrayOutputStream();
 
-        FileHandlerSpy fileHandlerSpy = new FileHandlerSpy(new DummyFileSystem(), new DummySocketExecutor());
-        CommandHandlerSpy commandHandlerSpy = new CommandHandlerSpy(socketIn, socketOut);
+        FileConnectionSpy fileHandlerSpy = new FileConnectionSpy(new DummyFileSystem(), new DummySocketExecutor());
+        CommandConnectionSpy commandHandlerSpy = new CommandConnectionSpy(socketIn, socketOut);
 
         CommandInterpreter commandInterpreter = new CommandInterpreter(commandHandlerSpy, fileHandlerSpy);
         commandInterpreter.processCommands();

@@ -1,17 +1,17 @@
 package doubles;
 
 import filesystem.NativeFileSystem;
-import server.handlers.FileHandler;
-import server.handlers.connection.SocketExecutor;
+import server.connections.FileConnection;
+import server.connections.socket.SocketExecutor;
 
 import java.io.IOException;
 
-public class FileHandlerSpy extends FileHandler {
+public class FileConnectionSpy extends FileConnection {
 
     public String requestedFile;
     public String storedFile;
 
-    public FileHandlerSpy(NativeFileSystem fileSystem, SocketExecutor socketExecutor) {
+    public FileConnectionSpy(NativeFileSystem fileSystem, SocketExecutor socketExecutor) {
         super(fileSystem, socketExecutor);
     }
 

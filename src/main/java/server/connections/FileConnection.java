@@ -1,21 +1,21 @@
-package server.handlers;
+package server.connections;
 
 import filesystem.FtpFileSystem;
 import filesystem.NativeFileSystem;
 import filesystem.WorkingDirectory;
-import server.handlers.connection.SocketExecutor;
+import server.connections.socket.SocketExecutor;
 
 import java.io.IOException;
 
-public class FileHandler {
+public class FileConnection {
 
     private int portNumber;
-    private SocketExecutor dataSocketExecutor;
+    private SocketExecutor socketExecutor;
     private FtpFileSystem ftpFileSystem;
 
-    public FileHandler(NativeFileSystem fileSystem, SocketExecutor dataSocketExecutor) {
+    public FileConnection(NativeFileSystem fileSystem, SocketExecutor socketExecutor) {
         this.ftpFileSystem = new FtpFileSystem(fileSystem, new WorkingDirectory());
-        this.dataSocketExecutor = dataSocketExecutor;
+        this.socketExecutor = socketExecutor;
     }
 
     public void setPortNumber(int portNumber) {
@@ -39,13 +39,13 @@ public class FileHandler {
     }
 
     public void retrieve(String path) throws IOException {
-        dataSocketExecutor.outputStream("localhost", portNumber, socketOut -> {
+        socketExecutor.outputStream("localhost", portNumber, socketOut -> {
             ftpFileSystem.retrieve(path).runWithStream(socketOut);
         });
     }
 
     public void store(String path) throws IOException {
-        dataSocketExecutor.inputStream("localhost", portNumber, socketIn -> {
+        socketExecutor.inputStream("localhost", portNumber, socketIn -> {
             ftpFileSystem.store(path).runWithStream(socketIn);
         });
     }

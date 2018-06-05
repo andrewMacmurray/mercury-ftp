@@ -1,7 +1,7 @@
 package server.commands;
 
 @FunctionalInterface
-public interface StatusResponder {
+public interface CommandResponder {
 
     void respond(int code, String message);
 

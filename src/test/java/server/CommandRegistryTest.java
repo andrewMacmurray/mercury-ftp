@@ -2,7 +2,7 @@ package server;
 
 import doubles.DummyFileSystem;
 import doubles.DummySocketExecutor;
-import doubles.FileHandlerSpy;
+import doubles.FileConnectionSpy;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,13 +11,13 @@ import static org.junit.Assert.assertEquals;
 public class CommandRegistryTest {
 
     private CommandRegistry commandRegistry;
-    private FileHandlerSpy fileHandlerSpy;
+    private FileConnectionSpy fileHandlerSpy;
     private int responseCode;
     private String responseMessage;
 
     @Before
     public void setup() {
-        fileHandlerSpy = new FileHandlerSpy(new DummyFileSystem(), new DummySocketExecutor());
+        fileHandlerSpy = new FileConnectionSpy(new DummyFileSystem(), new DummySocketExecutor());
         commandRegistry = new CommandRegistry(fileHandlerSpy, this::dummyResponseHandler);
     }
 

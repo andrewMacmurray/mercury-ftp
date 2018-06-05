@@ -4,7 +4,7 @@ import doubles.MockSocketFactory;
 import doubles.StreamHelper;
 import org.junit.Before;
 import org.junit.Test;
-import server.handlers.connection.DataSocketExecutor;
+import server.connections.socket.SocketExecutor;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -16,18 +16,18 @@ public class DataSocketExecutorTest {
 
     private InputStream socketIn;
     private MockSocketFactory mockSocketFactory;
-    private DataSocketExecutor dataSocketExecutor;
+    private SocketExecutor socketExecutor;
 
     @Before
     public void setup() {
         socketIn = new ByteArrayInputStream("hello".getBytes());
         mockSocketFactory = new MockSocketFactory(socketIn);
-        dataSocketExecutor = new DataSocketExecutor(mockSocketFactory);
+        socketExecutor = new SocketExecutor(mockSocketFactory);
     }
 
     @Test
     public void testInputStream() throws IOException {
-        dataSocketExecutor.inputStream("localhost", 2021, in -> {
+        socketExecutor.inputStream("localhost", 2021, in -> {
             assertEquals(2021, mockSocketFactory.port);
             assertEquals("localhost", mockSocketFactory.host);
             assertEquals("hello", StreamHelper.inputStreamToString(socketIn));
@@ -36,7 +36,7 @@ public class DataSocketExecutorTest {
 
     @Test
     public void testOutputStream() throws IOException {
-        dataSocketExecutor.outputStream("localhost", 2022, out -> {
+        socketExecutor.outputStream("localhost", 2022, out -> {
             assertEquals(2022, mockSocketFactory.port);
             assertEquals("localhost", mockSocketFactory.host);
             assertEquals("", out.toString().trim());

@@ -1,19 +1,18 @@
-package server.handlers.connection;
+package server.connections.socket;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-public class DataSocketExecutor implements SocketExecutor {
+public class SocketExecutor {
 
     private SocketFactory socketFactory;
 
-    public DataSocketExecutor(SocketFactory socketFactory) {
+    public SocketExecutor(SocketFactory socketFactory) {
         this.socketFactory = socketFactory;
     }
 
-    @Override
     public void inputStream(String host, int port, InputStreamAction inputStreamAction) throws IOException {
         try (
                 Socket socket = socketFactory.create(host, port);
@@ -23,7 +22,6 @@ public class DataSocketExecutor implements SocketExecutor {
         }
     }
 
-    @Override
     public void outputStream(String host, int port, OutputStreamAction outputStreamAction) throws IOException {
         try (
                 Socket socket = socketFactory.create(host, port);
