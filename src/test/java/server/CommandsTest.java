@@ -5,8 +5,6 @@ import org.junit.Test;
 import server.commands.Command;
 import server.commands.Commands;
 
-import java.io.IOException;
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 

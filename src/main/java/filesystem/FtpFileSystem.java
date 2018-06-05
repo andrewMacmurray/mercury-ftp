@@ -1,11 +1,9 @@
-package server.handlers;
+package filesystem;
 
-import filesystem.NativeFileSystem;
 import server.handlers.connection.InputStreamAction;
 import server.handlers.connection.OutputStreamAction;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class FtpFileSystem {
 

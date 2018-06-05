@@ -1,6 +1,5 @@
 package server;
 
-import doubles.DummySocketExecutor;
 import doubles.FakeSocketExecutor;
 import doubles.FileSystemSpy;
 import org.junit.Before;

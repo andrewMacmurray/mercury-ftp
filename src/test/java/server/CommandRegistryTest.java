@@ -2,7 +2,6 @@ package server;
 
 import doubles.DummyFileSystem;
 import doubles.DummySocketExecutor;
-import doubles.FakeSocketExecutor;
 import doubles.FileHandlerSpy;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,8 +37,8 @@ public class CommandRegistryTest {
 
     @Test
     public void userName() {
-       commandRegistry.executeCommand("USER", "andrew");
-       assertResponse(331, "Hey andrew, Please enter your password");
+        commandRegistry.executeCommand("USER", "andrew");
+        assertResponse(331, "Hey andrew, Please enter your password");
     }
 
     @Test
@@ -65,6 +64,7 @@ public class CommandRegistryTest {
         commandRegistry.executeCommand("PASS", "hermes");
         assertResponse(230, "Welcome to Mercury");
     }
+
     @Test
     public void unrecognised() {
         commandRegistry.executeCommand("LOL", "wut?");
@@ -75,7 +75,7 @@ public class CommandRegistryTest {
         assertEquals(code, responseCode);
         assertEquals(message, responseMessage);
     }
-    
+
     private void dummyResponseHandler(Integer code, String message) {
         this.responseCode = code;
         this.responseMessage = message;

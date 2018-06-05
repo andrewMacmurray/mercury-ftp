@@ -1,4 +1,4 @@
-package server.handlers;
+package filesystem;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;

@@ -1,6 +1,8 @@
 package server.handlers;
 
+import filesystem.FtpFileSystem;
 import filesystem.NativeFileSystem;
+import filesystem.WorkingDirectory;
 import server.handlers.connection.SocketExecutor;
 
 import java.io.IOException;

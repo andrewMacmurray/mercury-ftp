@@ -1,8 +1,7 @@
-package server;
+package filesystem;
 
 import org.junit.Before;
 import org.junit.Test;
-import server.handlers.WorkingDirectory;
 
 import static org.junit.Assert.assertEquals;
 
