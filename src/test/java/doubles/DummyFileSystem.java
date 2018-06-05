@@ -14,7 +14,7 @@ public class DummyFileSystem extends NativeFileSystem {
 
     @Override
     public boolean fileExists(String path) {
-        return false;
+        return true;
     }
 
     @Override
