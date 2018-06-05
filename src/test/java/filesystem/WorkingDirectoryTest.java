@@ -39,18 +39,6 @@ public class WorkingDirectoryTest {
     }
 
     @Test
-    public void currentWorkingDirectoryWithPath() {
-        workingDirectory.changeDirectory("hello");
-        assertEquals("hello/world", workingDirectory.getCurrentDirectoryWithPath("world").toString());
-    }
-
-    @Test
-    public void currentWorkingDirectoryWithNestedPath() {
-        workingDirectory.changeDirectory("hello");
-        assertEquals("hello/world/thing.txt", workingDirectory.getCurrentDirectoryWithPath("world/thing.txt").toString());
-    }
-
-    @Test
     public void cdUp() {
         workingDirectory.changeDirectory("hello/world");
         workingDirectory.cdUp();

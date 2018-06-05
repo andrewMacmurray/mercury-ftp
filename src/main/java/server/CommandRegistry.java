@@ -1,6 +1,7 @@
 package server;
 
 import server.commands.Command;
+import server.commands.CommandAction;
 import server.commands.Commands;
 import server.commands.StatusResponder;
 import server.handlers.FileHandler;
@@ -30,8 +31,14 @@ public class CommandRegistry {
                 new Command("STOR", this::STOR),
                 new Command("PORT", this::PORT),
                 new Command("USER", this::USER),
-                new Command("PASS", this::PASS)
+                new Command("PASS", this::PASS),
+                new Command("CWD", this::CWD),
+                new Command("PWD", noArg(this::PWD))
         );
+    }
+
+    private CommandAction noArg(Runnable action) {
+        return ignoredArg -> action.run();
     }
 
     private void STOR(String fileName) {
@@ -74,6 +81,20 @@ public class CommandRegistry {
             statusResponder.respond(230, "Welcome to Mercury");
         } else {
             statusResponder.respond(430, "Bad password, please try again");
+        }
+    }
+
+    private void PWD() {
+        statusResponder.respond(257, fileHandler.currentDirectory());
+    }
+
+    private void CWD(String directory) {
+        boolean isValidDirectory = fileHandler.isDirectory(directory);
+        if (isValidDirectory) {
+            fileHandler.changeWorkingDirectory(directory);
+            statusResponder.respond(257, fileHandler.currentDirectory());
+        } else {
+            statusResponder.respond(550, "Not a valid directory");
         }
     }
 

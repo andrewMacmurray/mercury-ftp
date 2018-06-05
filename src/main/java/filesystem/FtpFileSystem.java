@@ -15,6 +15,20 @@ public class FtpFileSystem {
         this.workingDirectory = workingDirectory;
     }
 
+    public void changeWorkingDirectory(String path) {
+        if (nativeFileSystem.isDirectory(resolve(path))) {
+            workingDirectory.changeDirectory(path);
+        }
+    }
+
+    public boolean isDirectory(String path) {
+        return nativeFileSystem.isDirectory(resolve(path));
+    }
+
+    public String getCurrentWorkingDirectory() {
+        return "/" + workingDirectory.getCurrentDirectory().toString();
+    }
+
     public InputStreamAction store(String path) {
         return inputStream -> nativeFileSystem.writeFile(resolve(path), inputStream);
     }

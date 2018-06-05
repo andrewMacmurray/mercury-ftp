@@ -1,6 +1,5 @@
 package doubles;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -14,7 +13,7 @@ public class SocketStub extends Socket {
 
     public SocketStub(InputStream inputStream) {
         this.inputStream = inputStream;
-        this.outputStream =  new ByteArrayOutputStream();
+        this.outputStream = new ByteArrayOutputStream();
     }
 
     public SocketStub(InputStream inputStream, OutputStream outputStream) {

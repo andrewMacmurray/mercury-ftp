@@ -2,7 +2,8 @@ package doubles;
 
 import server.handlers.connection.SocketFactory;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class MockSocketFactory extends SocketFactory {
 

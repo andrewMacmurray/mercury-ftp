@@ -5,8 +5,6 @@ import server.handlers.FileHandler;
 import server.handlers.connection.SocketExecutor;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 public class FileHandlerSpy extends FileHandler {
 

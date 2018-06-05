@@ -19,6 +19,10 @@ public class NativeFileSystem {
         return Files.exists(resolveRoot(path));
     }
 
+    public boolean isDirectory(Path path) {
+        return Files.isDirectory(resolveRoot(path));
+    }
+
     public void writeFile(Path destinationPath, InputStream source) throws IOException {
         Files.copy(source, resolveRoot(destinationPath));
     }

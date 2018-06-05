@@ -10,6 +10,7 @@ import java.nio.file.Path;
 public class FileSystemSpy extends NativeFileSystem {
 
     public String checkedFile;
+    public String checkedDirectory;
     public String storedFile;
     public String retrievedFile;
 
@@ -20,6 +21,12 @@ public class FileSystemSpy extends NativeFileSystem {
     @Override
     public boolean fileExists(Path path) {
         this.checkedFile = path.toString();
+        return true;
+    }
+
+    @Override
+    public boolean isDirectory(Path path) {
+        this.checkedDirectory = path.toString();
         return true;
     }
 

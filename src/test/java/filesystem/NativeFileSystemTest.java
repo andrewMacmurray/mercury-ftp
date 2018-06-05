@@ -33,6 +33,16 @@ public class NativeFileSystemTest {
     }
 
     @Test
+    public void isDirectory() throws IOException {
+        assertFalse(nativeFileSystem.isDirectory(Paths.get("hello.txt")));
+
+        tempFolder.newFolder("hello");
+
+        assertFalse(nativeFileSystem.isDirectory(Paths.get("hello/hello.txt")));
+        assertTrue(nativeFileSystem.isDirectory(Paths.get("hello")));
+    }
+
+    @Test
     public void writeFile() throws IOException {
         ByteArrayInputStream in = new ByteArrayInputStream("hello".getBytes());
 

@@ -10,10 +10,10 @@ import static org.junit.Assert.assertTrue;
 
 public class CommandsTest {
 
-    private Commands commands = new Commands(this::unrecognized);
     private boolean commandOneExecuted = false;
     private boolean commandTwoExecuted = false;
     private boolean unrecognizedCalled = false;
+    private Commands commands = new Commands(this::unrecognized);
 
     @Before
     public void setup() {

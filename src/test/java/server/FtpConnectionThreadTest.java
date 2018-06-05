@@ -1,8 +1,8 @@
 package server;
 
 import doubles.DummyFileSystem;
-import doubles.SocketStub;
 import doubles.FakeSocketExecutor;
+import doubles.SocketStub;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;

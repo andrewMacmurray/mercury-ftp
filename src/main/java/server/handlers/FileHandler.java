@@ -22,6 +22,18 @@ public class FileHandler {
         this.portNumber = portNumber;
     }
 
+    public boolean isDirectory(String path) {
+        return ftpFileSystem.isDirectory(path);
+    }
+
+    public void changeWorkingDirectory(String path) {
+        ftpFileSystem.changeWorkingDirectory(path);
+    }
+
+    public String currentDirectory() {
+        return ftpFileSystem.getCurrentWorkingDirectory();
+    }
+
     public void retrieve(String path) throws IOException {
         dataSocketExecutor.outputStream("localhost", portNumber, socketOut -> {
             ftpFileSystem.retrieve(path).runWithStream(socketOut);

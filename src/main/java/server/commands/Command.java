@@ -1,7 +1,5 @@
 package server.commands;
 
-import java.io.IOException;
-
 public class Command {
 
     private String name;

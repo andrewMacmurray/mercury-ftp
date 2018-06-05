@@ -15,10 +15,6 @@ public class WorkingDirectory {
         return root;
     }
 
-    public Path getCurrentDirectoryWithPath(String path) {
-        return root.resolve(removeLeadingSlash(path));
-    }
-
     public void changeDirectory(String path) {
         root = root.resolve(removeLeadingSlash(path));
     }
