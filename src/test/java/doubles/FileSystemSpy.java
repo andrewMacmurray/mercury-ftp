@@ -25,7 +25,7 @@ public class FileSystemSpy extends NativeFileSystem {
     }
 
     @Override
-    public boolean isDirectory(Path path) {
+    public boolean isValidDirectory(Path path) {
         this.checkedDirectory = path.toString();
         return true;
     }

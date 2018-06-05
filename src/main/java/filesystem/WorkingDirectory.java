@@ -16,7 +16,7 @@ public class WorkingDirectory {
     }
 
     public void changeDirectory(String path) {
-        root = root.resolve(removeLeadingSlash(path));
+        root = root.resolve(path);
     }
 
     public void cdUp() {
@@ -25,14 +25,6 @@ public class WorkingDirectory {
         } else {
             root = Paths.get("");
         }
-    }
-
-    private String removeLeadingSlash(String path) {
-        return hasLeadingSlash(path) ? path.substring(1) : path;
-    }
-
-    private boolean hasLeadingSlash(String path) {
-        return path.charAt(0) == '/';
     }
 
 }

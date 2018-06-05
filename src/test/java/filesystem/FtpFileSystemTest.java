@@ -30,14 +30,14 @@ public class FtpFileSystemTest {
     public void changeWorkingDirectory() {
         ftpFileSystem.changeWorkingDirectory("/hello");
         assertEquals("/hello", ftpFileSystem.getCurrentWorkingDirectory());
-        assertEquals("/hello", fileSystemSpy.checkedDirectory);
+        assertEquals("hello", fileSystemSpy.checkedDirectory);
     }
 
     @Test
     public void changeMultipleDirectories() {
         ftpFileSystem.changeWorkingDirectory("/hello/world");
         assertEquals("/hello/world", ftpFileSystem.getCurrentWorkingDirectory());
-        assertEquals("/hello/world", fileSystemSpy.checkedDirectory);
+        assertEquals("hello/world", fileSystemSpy.checkedDirectory);
     }
 
     @Test

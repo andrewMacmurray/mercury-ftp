@@ -33,13 +33,24 @@ public class NativeFileSystemTest {
     }
 
     @Test
-    public void isDirectory() throws IOException {
-        assertFalse(nativeFileSystem.isDirectory(Paths.get("hello.txt")));
+    public void isValidDirectory() throws IOException {
+        assertFalse(nativeFileSystem.isValidDirectory(Paths.get("hello.txt")));
 
         tempFolder.newFolder("hello");
 
-        assertFalse(nativeFileSystem.isDirectory(Paths.get("hello/hello.txt")));
-        assertTrue(nativeFileSystem.isDirectory(Paths.get("hello")));
+        assertFalse(nativeFileSystem.isValidDirectory(Paths.get("hello/hello.txt")));
+        assertTrue(nativeFileSystem.isValidDirectory(Paths.get("hello")));
+    }
+
+    @Test
+    public void rejectDirectoryDots() throws IOException {
+        assertFalse(nativeFileSystem.isValidDirectory(Paths.get("..")));
+        assertFalse(nativeFileSystem.isValidDirectory(Paths.get(".")));
+
+        tempFolder.newFolder("hello");
+
+        assertFalse(nativeFileSystem.isValidDirectory(Paths.get("hello/..")));
+        assertFalse(nativeFileSystem.isValidDirectory(Paths.get("hello/.")));
     }
 
     @Test

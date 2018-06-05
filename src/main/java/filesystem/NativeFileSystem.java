@@ -19,8 +19,9 @@ public class NativeFileSystem {
         return Files.exists(resolveRoot(path));
     }
 
-    public boolean isDirectory(Path path) {
-        return Files.isDirectory(resolveRoot(path));
+    public boolean isValidDirectory(Path path) throws IOException {
+        Path resolvedPath = resolveRoot(path);
+        return Files.isDirectory(resolvedPath) && !Files.isHidden(resolvedPath);
     }
 
     public void writeFile(Path destinationPath, InputStream source) throws IOException {

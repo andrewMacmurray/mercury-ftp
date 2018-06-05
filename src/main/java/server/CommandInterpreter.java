@@ -19,7 +19,7 @@ public class CommandInterpreter {
 
     public void processCommands() throws IOException {
         processCommand();
-        commandHandler.writeResponse(421, "Terminating Connection");
+        commandHandler.writeResponse(421, "Disconnected from Mercury");
     }
 
     private void clientConnectedResponse() {

@@ -26,7 +26,7 @@ public class CommandInterpreterTest {
         commandInterpreter.processCommands();
 
         assertEquals(421, commandHandlerSpy.code);
-        assertEquals("Terminating Connection", commandHandlerSpy.message);
+        assertEquals("Disconnected from Mercury", commandHandlerSpy.message);
         assertEquals("hello.txt", fileHandlerSpy.requestedFile);
     }
 

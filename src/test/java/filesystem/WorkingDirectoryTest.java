@@ -34,7 +34,7 @@ public class WorkingDirectoryTest {
 
     @Test
     public void multipleDirectoriesInOnePath() {
-        workingDirectory.changeDirectory("/hello/world/");
+        workingDirectory.changeDirectory("hello/world/");
         assertEquals("hello/world", workingDirectory.getCurrentDirectory().toString());
     }
 

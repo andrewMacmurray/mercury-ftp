@@ -3,6 +3,7 @@ package filesystem;
 import server.handlers.connection.InputStreamAction;
 import server.handlers.connection.OutputStreamAction;
 
+import java.io.IOException;
 import java.nio.file.Path;
 
 public class FtpFileSystem {
@@ -16,8 +17,8 @@ public class FtpFileSystem {
     }
 
     public void changeWorkingDirectory(String path) {
-        if (nativeFileSystem.isDirectory(resolve(path))) {
-            workingDirectory.changeDirectory(path);
+        if (isDirectory(path)) {
+            workingDirectory.changeDirectory(removeLeadingSlash(path));
         }
     }
 
@@ -26,7 +27,11 @@ public class FtpFileSystem {
     }
 
     public boolean isDirectory(String path) {
-        return nativeFileSystem.isDirectory(resolve(path));
+        try {
+            return nativeFileSystem.isValidDirectory(resolve(path));
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     public String getCurrentWorkingDirectory() {
@@ -42,7 +47,15 @@ public class FtpFileSystem {
     }
 
     private Path resolve(String path) {
-        return workingDirectory.getCurrentDirectory().resolve(path);
+        return workingDirectory.getCurrentDirectory().resolve(removeLeadingSlash(path));
+    }
+
+    private String removeLeadingSlash(String path) {
+        return hasLeadingSlash(path) ? path.substring(1) : path;
+    }
+
+    private boolean hasLeadingSlash(String path) {
+        return path.charAt(0) == '/';
     }
 
 }

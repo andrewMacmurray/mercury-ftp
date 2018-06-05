@@ -27,7 +27,7 @@ public class FtpConnectionThreadTest {
         String output = socketOut.toString();
         assertTrue(output.contains("200 Connected to Mercury"));
         assertTrue(output.contains("331 Hey andrew, Please enter your password"));
-        assertTrue(output.contains("421 Terminating Connection"));
+        assertTrue(output.contains("421 Disconnected from Mercury"));
     }
 
 }
