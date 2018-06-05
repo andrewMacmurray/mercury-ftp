@@ -2,8 +2,8 @@ package server;
 
 import server.commands.Command;
 import server.commands.CommandAction;
-import server.commands.Commands;
 import server.commands.CommandResponder;
+import server.commands.Commands;
 import server.connections.FileConnection;
 
 import java.io.IOException;

@@ -1,6 +1,9 @@
 package server;
 
-import doubles.*;
+import doubles.CommandConnectionSpy;
+import doubles.DummyFileSystem;
+import doubles.DummySocketExecutor;
+import doubles.FileConnectionSpy;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;

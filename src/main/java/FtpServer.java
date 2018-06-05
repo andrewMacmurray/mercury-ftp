@@ -1,7 +1,6 @@
 import filesystem.NativeFileSystem;
 import server.FtpConnectionThread;
 import server.connections.socket.SocketExecutor;
-import server.connections.socket.SocketFactory;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -12,13 +11,15 @@ import java.util.concurrent.Executors;
 public class FtpServer {
 
     private ServerSocket serverSocket;
+    private SocketExecutor socketExecutor;
     private NativeFileSystem fs;
     private ExecutorService threadPool;
 
-    public FtpServer(ServerSocket serverSocket, NativeFileSystem fs) {
+    public FtpServer(ServerSocket serverSocket, SocketExecutor socketExecutor, NativeFileSystem fs) {
         this.serverSocket = serverSocket;
-        this.threadPool = Executors.newFixedThreadPool(5);
+        this.socketExecutor = socketExecutor;
         this.fs = fs;
+        this.threadPool = Executors.newFixedThreadPool(5);
     }
 
     public void start() throws IOException {
@@ -35,8 +36,7 @@ public class FtpServer {
 
     private void acceptConnection() throws IOException {
         Socket commandSocket = serverSocket.accept();
-        SocketExecutor dataSocketExecutor = new SocketExecutor(new SocketFactory());
-        threadPool.execute(new FtpConnectionThread(commandSocket, dataSocketExecutor, fs));
+        threadPool.execute(new FtpConnectionThread(commandSocket, socketExecutor, fs));
     }
 
     private void logConnectionError(IOException e) {
