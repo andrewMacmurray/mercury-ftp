@@ -21,6 +21,10 @@ public class FtpFileSystem {
         }
     }
 
+    public void cdUp() {
+        workingDirectory.cdUp();
+    }
+
     public boolean isDirectory(String path) {
         return nativeFileSystem.isDirectory(resolve(path));
     }

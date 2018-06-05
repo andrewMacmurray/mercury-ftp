@@ -33,7 +33,8 @@ public class CommandRegistry {
                 new Command("USER", this::USER),
                 new Command("PASS", this::PASS),
                 new Command("CWD", this::CWD),
-                new Command("PWD", noArg(this::PWD))
+                new Command("PWD", noArg(this::PWD)),
+                new Command("CDUP", noArg(this::CDUP))
         );
     }
 
@@ -96,6 +97,11 @@ public class CommandRegistry {
         } else {
             statusResponder.respond(550, "Not a valid directory");
         }
+    }
+
+    private void CDUP() {
+        fileHandler.cdUp();
+        statusResponder.respond(257, fileHandler.currentDirectory());
     }
 
     private void unrecognized() {

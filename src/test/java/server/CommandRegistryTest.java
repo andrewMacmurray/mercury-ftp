@@ -66,6 +66,25 @@ public class CommandRegistryTest {
     }
 
     @Test
+    public void pwd() {
+        commandRegistry.executeCommand("PWD", "");
+        assertResponse(257, "/");
+    }
+
+    @Test
+    public void cwd() {
+        commandRegistry.executeCommand("CWD", "hello");
+        assertResponse(257, "/hello");
+    }
+
+    @Test
+    public void cdup() {
+        commandRegistry.executeCommand("CWD", "hello");
+        commandRegistry.executeCommand("CDUP", "");
+        assertResponse(257, "/");
+    }
+
+    @Test
     public void unrecognised() {
         commandRegistry.executeCommand("LOL", "wut?");
         assertResponse(500, "Unrecognized");

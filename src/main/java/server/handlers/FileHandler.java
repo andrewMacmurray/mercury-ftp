@@ -26,6 +26,10 @@ public class FileHandler {
         return ftpFileSystem.isDirectory(path);
     }
 
+    public void cdUp() {
+        ftpFileSystem.cdUp();
+    }
+
     public void changeWorkingDirectory(String path) {
         ftpFileSystem.changeWorkingDirectory(path);
     }
