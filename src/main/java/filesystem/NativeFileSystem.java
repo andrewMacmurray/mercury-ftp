@@ -15,19 +15,19 @@ public class NativeFileSystem {
         this.rootDir = Paths.get(rootDir);
     }
 
-    public boolean fileExists(String path) {
+    public boolean fileExists(Path path) {
         return Files.exists(resolveRoot(path));
     }
 
-    public void writeFile(String destinationPath, InputStream source) throws IOException {
+    public void writeFile(Path destinationPath, InputStream source) throws IOException {
         Files.copy(source, resolveRoot(destinationPath));
     }
 
-    public void copyFromLocal(String path, OutputStream destination) throws IOException {
+    public void copyFromLocal(Path path, OutputStream destination) throws IOException {
         Files.copy(resolveRoot(path), destination);
     }
 
-    private Path resolveRoot(String path) {
+    private Path resolveRoot(Path path) {
         return rootDir.resolve(path);
     }
 

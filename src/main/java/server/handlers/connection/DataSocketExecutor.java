@@ -19,7 +19,7 @@ public class DataSocketExecutor implements SocketExecutor {
                 Socket socket = socketFactory.create(host, port);
                 InputStream inputStream = socket.getInputStream();
         ) {
-            inputStreamAction.run(inputStream);
+            inputStreamAction.runWithStream(inputStream);
         }
     }
 
@@ -29,7 +29,7 @@ public class DataSocketExecutor implements SocketExecutor {
                 Socket socket = socketFactory.create(host, port);
                 OutputStream outputStream = socket.getOutputStream();
         ) {
-            outputStreamAction.run(outputStream);
+            outputStreamAction.runWithStream(outputStream);
         }
     }
 

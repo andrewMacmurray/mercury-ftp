@@ -5,6 +5,7 @@ import filesystem.NativeFileSystem;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Path;
 
 public class DummyFileSystem extends NativeFileSystem {
 
@@ -13,17 +14,17 @@ public class DummyFileSystem extends NativeFileSystem {
     }
 
     @Override
-    public boolean fileExists(String path) {
+    public boolean fileExists(Path path) {
         return true;
     }
 
     @Override
-    public void writeFile(String destinationPath, InputStream source) throws IOException {
+    public void writeFile(Path destinationPath, InputStream source) throws IOException {
 
     }
 
     @Override
-    public void copyFromLocal(String path, OutputStream destination) throws IOException {
+    public void copyFromLocal(Path path, OutputStream destination) throws IOException {
 
     }
 

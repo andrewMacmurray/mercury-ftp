@@ -8,6 +8,7 @@ import org.junit.rules.TemporaryFolder;
 
 import java.io.*;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
@@ -25,18 +26,18 @@ public class NativeFileSystemTest {
 
     @Test
     public void exists() throws IOException {
-        assertFalse(nativeFileSystem.fileExists("hello.txt"));
+        assertFalse(nativeFileSystem.fileExists(Paths.get("hello.txt")));
 
         Path path = tempFolder.newFile("hello.txt").toPath();
-        assertTrue(nativeFileSystem.fileExists("hello.txt"));
+        assertTrue(nativeFileSystem.fileExists(Paths.get("hello.txt")));
     }
 
     @Test
     public void writeFile() throws IOException {
         ByteArrayInputStream in = new ByteArrayInputStream("hello".getBytes());
 
-        nativeFileSystem.writeFile("hello.txt", in);
-        assertTrue(nativeFileSystem.fileExists("hello.txt"));
+        nativeFileSystem.writeFile(Paths.get("hello.txt"), in);
+        assertTrue(nativeFileSystem.fileExists(Paths.get("hello.txt")));
     }
 
     @Test
@@ -44,8 +45,8 @@ public class NativeFileSystemTest {
         ByteArrayInputStream source = new ByteArrayInputStream("hello".getBytes());
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-        nativeFileSystem.writeFile("hello.txt", source);
-        nativeFileSystem.copyFromLocal("hello.txt", out);
+        nativeFileSystem.writeFile(Paths.get("hello.txt"), source);
+        nativeFileSystem.copyFromLocal(Paths.get("hello.txt"), out);
 
         assertEquals("hello", out.toString());
     }

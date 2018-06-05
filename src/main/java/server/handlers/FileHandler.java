@@ -7,12 +7,12 @@ import java.io.IOException;
 
 public class FileHandler {
 
-    private NativeFileSystem fileSystem;
-    private SocketExecutor dataSocketExecutor;
     private int portNumber;
+    private SocketExecutor dataSocketExecutor;
+    private FtpFileSystem ftpFileSystem;
 
     public FileHandler(NativeFileSystem fileSystem, SocketExecutor dataSocketExecutor) {
-        this.fileSystem = fileSystem;
+        this.ftpFileSystem = new FtpFileSystem(fileSystem, new WorkingDirectory());
         this.dataSocketExecutor = dataSocketExecutor;
     }
 
@@ -22,13 +22,13 @@ public class FileHandler {
 
     public void retrieve(String path) throws IOException {
         dataSocketExecutor.outputStream("localhost", portNumber, socketOut -> {
-            fileSystem.copyFromLocal(path, socketOut);
+            ftpFileSystem.retrieve(path).runWithStream(socketOut);
         });
     }
 
     public void store(String path) throws IOException {
         dataSocketExecutor.inputStream("localhost", portNumber, socketIn -> {
-            fileSystem.writeFile(path, socketIn);
+            ftpFileSystem.store(path).runWithStream(socketIn);
         });
     }
 

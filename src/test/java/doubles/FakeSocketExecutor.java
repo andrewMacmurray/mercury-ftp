@@ -18,12 +18,12 @@ public class FakeSocketExecutor implements SocketExecutor {
 
     @Override
     public void inputStream(String host, int port, InputStreamAction action) throws IOException {
-        action.run(inputStream);
+        action.runWithStream(inputStream);
     }
 
     @Override
     public void outputStream(String host, int port, OutputStreamAction action) throws IOException {
-        action.run(outputStream);
+        action.runWithStream(outputStream);
     }
 
 }
