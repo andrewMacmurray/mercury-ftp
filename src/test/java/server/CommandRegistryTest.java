@@ -1,6 +1,5 @@
 package server;
 
-import doubles.DummyFileSystem;
 import doubles.DummyFtpFileSystem;
 import doubles.DummySocketExecutor;
 import doubles.FileConnectionSpy;

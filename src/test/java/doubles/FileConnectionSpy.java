@@ -1,7 +1,6 @@
 package doubles;
 
 import filesystem.FtpFileSystem;
-import filesystem.NativeFileSystem;
 import server.connections.FileConnection;
 import server.connections.socket.SocketExecutor;
 
