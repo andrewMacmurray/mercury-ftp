@@ -55,26 +55,32 @@ public class FtpFileSystem {
     }
 
     public OutputStreamAction list(String path) {
-        return outputStream -> getFilesList(path, outputStream);
+        return outputStream -> getFilesList(path, outputStream, fileListingFormatter::format);
     }
 
-    private void getFilesList(String path, OutputStream outputStream) throws IOException {
-        PrintWriter pr = printWriter(outputStream);
+    public OutputStreamAction nameList(String path) {
+        return outputStream -> getFilesList(path, outputStream, fileListingFormatter::name);
+    }
+
+    private void getFilesList(String path, OutputStream outputStream, FormatRunner formatRunner) throws IOException {
+        PrintWriter printWriter = createPrintWriter(outputStream);
+        Path currentDirectory = workingDirectory.getCurrentDirectory();
+
         if (path.isEmpty()) {
-            printFilesList(workingDirectory.getCurrentDirectory(), pr);
+            printFilesList(currentDirectory, printWriter, formatRunner);
         } else {
-            printFilesList(resolve(path), pr);
+            printFilesList(resolve(path), printWriter, formatRunner);
         }
     }
 
-    private void printFilesList(Path path, PrintWriter printWriter) throws IOException {
+    private void printFilesList(Path path, PrintWriter printWriter, FormatRunner formatRunner) throws IOException {
         nativeFileSystem
                 .list(path)
-                .map(fileListingFormatter::format)
+                .map(formatRunner::run)
                 .forEach(printWriter::println);
     }
 
-    private PrintWriter printWriter(OutputStream outputStream) {
+    private PrintWriter createPrintWriter(OutputStream outputStream) {
         return new PrintWriter(outputStream, true);
     }
 

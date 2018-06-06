@@ -44,9 +44,14 @@ public class FileConnectionTest {
     }
 
     @Test
-    public void list() throws IOException {
-        fileConnection.list("dir");
+    public void sendFileList() throws IOException {
+        fileConnection.sendFileList("dir");
         assertEquals("dir", fileSystemSpy.listedDirectory);
     }
 
+    @Test
+    public void sendNameList() throws IOException {
+        fileConnection.sendNameList("dir");
+        assertEquals("dir", fileSystemSpy.listedDirectory);
+    }
 }

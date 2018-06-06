@@ -45,7 +45,7 @@ public class CommandRegistryTest {
     @Test
     public void port() {
         commandRegistry.executeCommand("PORT", "127,0,0,1,211,127");
-        assertResponse(200, "OK I got the port");
+        assertResponse(200, "OK I got the Port");
     }
 
     @Test

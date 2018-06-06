@@ -23,8 +23,8 @@ public class FtpFileSystemTest {
 
     @Before
     public void setup() {
-        Stream<Path> subDirs = Stream.of("sub-1", "sub-2").map(Paths::get);
-        fileSystemSpy = new FileSystemSpy(subDirs);
+        Stream<Path> subPaths = Stream.of("sub-1/file.txt", "sub-2/file.txt").map(Paths::get);
+        fileSystemSpy = new FileSystemSpy(subPaths);
         workingDirectory = new WorkingDirectory();
         ftpFileSystem = new FtpFileSystem(fileSystemSpy, new FileListingStub(), workingDirectory);
     }
@@ -81,6 +81,14 @@ public class FtpFileSystemTest {
 
         assertTrue(out.toString().contains("sub-1"));
         assertTrue(out.toString().contains("sub-2"));
+    }
+
+    @Test
+    public void nameList() throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ftpFileSystem.nameList("").runWithStream(out);
+
+        assertTrue(out.toString().contains("file.txt"));
     }
 
 }

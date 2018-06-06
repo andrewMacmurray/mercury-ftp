@@ -28,7 +28,7 @@ public class FileConnectionSpy extends FileConnection {
     }
 
     @Override
-    public void list(String path) throws IOException {
+    public void sendFileList(String path) throws IOException {
         this.requestedDirectoryList = path;
     }
 

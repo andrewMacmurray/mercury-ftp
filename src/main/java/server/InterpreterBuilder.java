@@ -15,7 +15,7 @@ import java.net.Socket;
 
 public class InterpreterBuilder {
 
-    public static CommandInterpreter create(Socket commandSocket, SocketExecutor socketExecutor, NativeFileSystem fs) throws IOException {
+    public static CommandInterpreter build(Socket commandSocket, SocketExecutor socketExecutor, NativeFileSystem fs) throws IOException {
         return new CommandInterpreter(
                 createCommandConnection(commandSocket),
                 createFileConnection(fs, socketExecutor)

@@ -14,24 +14,28 @@ public class CommandInterpreter {
     public CommandInterpreter(CommandConnection commandConnection, FileConnection fileConnection) {
         this.commandConnection = commandConnection;
         this.commandRegistry = new CommandRegistry(fileConnection, commandConnection::writeResponse);
-        clientConnectedResponse();
     }
 
     public void processCommands() throws IOException {
-        processCommand();
-        commandConnection.writeResponse(421, "Disconnected from Mercury");
+        clientConnectedResponse();
+        processNextCommand();
+        disconnectedResponse();
     }
 
     private void clientConnectedResponse() {
         commandConnection.writeResponse(200, "Connected to Mercury");
     }
 
-    private void processCommand() throws IOException {
+    private void disconnectedResponse() {
+        commandConnection.writeResponse(421, "Disconnected from Mercury");
+    }
+
+    private void processNextCommand() throws IOException {
         String rawCommand = commandConnection.readCommand();
         System.out.println(rawCommand);
         if (shouldExecuteCommand(rawCommand)) {
             execute(rawCommand);
-            processCommand();
+            processNextCommand();
         }
     }
 

@@ -1,9 +1,8 @@
 package server.connections;
 
-import filesystem.FileListingFormatter;
 import filesystem.FtpFileSystem;
-import filesystem.NativeFileSystem;
-import filesystem.WorkingDirectory;
+import server.connections.socket.InputStreamAction;
+import server.connections.socket.OutputStreamAction;
 import server.connections.socket.SocketExecutor;
 
 import java.io.IOException;
@@ -41,21 +40,27 @@ public class FileConnection {
     }
 
     public void retrieve(String path) throws IOException {
-        socketExecutor.outputStream(host, portNumber, socketOut -> {
-            ftpFileSystem.retrieve(path).runWithStream(socketOut);
-        });
+        runOutputSocket(ftpFileSystem.retrieve(path));
     }
 
     public void store(String path) throws IOException {
-        socketExecutor.inputStream(host, portNumber, socketIn -> {
-            ftpFileSystem.store(path).runWithStream(socketIn);
-        });
+        runInputSocket(ftpFileSystem.store(path));
     }
 
-    public void list(String path) throws IOException {
-        socketExecutor.outputStream(host, portNumber, socketOut -> {
-            ftpFileSystem.list(path).runWithStream(socketOut);
-        });
+    public void sendFileList(String path) throws IOException {
+        runOutputSocket(ftpFileSystem.list(path));
+    }
+
+    public void sendNameList(String path) throws IOException {
+        runOutputSocket(ftpFileSystem.nameList(path));
+    }
+
+    private void runOutputSocket(OutputStreamAction outputStreamAction) throws IOException {
+        socketExecutor.outputStream(host, portNumber, outputStreamAction);
+    }
+
+    private void runInputSocket(InputStreamAction inputStreamAction) throws IOException {
+        socketExecutor.inputStream(host, portNumber, inputStreamAction);
     }
 
 }

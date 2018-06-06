@@ -11,4 +11,9 @@ public class FileListingStub extends FileListingFormatter {
         return path.toString();
     }
 
+    @Override
+    public String name(Path path) {
+        return path.getFileName().toString();
+    }
+
 }

@@ -15,16 +15,16 @@ public class FileSystemSpy extends NativeFileSystem {
     public String storedFile;
     public String retrievedFile;
     public String listedDirectory;
-    private Stream<Path> subDirectories;
+    private Stream<Path> subPaths;
 
     public FileSystemSpy() {
         super("tmp");
-        this.subDirectories = Stream.empty();
+        this.subPaths = Stream.empty();
     }
 
-    public FileSystemSpy(Stream<Path> subDirectories) {
+    public FileSystemSpy(Stream<Path> subPaths) {
         super("tmp");
-        this.subDirectories = subDirectories;
+        this.subPaths = subPaths;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class FileSystemSpy extends NativeFileSystem {
     @Override
     public Stream<Path> list(Path path) throws IOException {
         listedDirectory = path.toString();
-        return subDirectories;
+        return subPaths;
     }
 
 }

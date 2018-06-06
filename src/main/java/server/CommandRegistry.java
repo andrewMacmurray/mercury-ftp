@@ -34,6 +34,7 @@ public class CommandRegistry {
                 new Command("PASS", this::PASS),
                 new Command("CWD", this::CWD),
                 new Command("LIST", this::LIST),
+                new Command("NLST", this::NLST),
                 new Command("PWD", noArg(this::PWD)),
                 new Command("CDUP", noArg(this::CDUP))
         );
@@ -49,7 +50,7 @@ public class CommandRegistry {
             fileConnection.store(fileName);
             commandResponder.respond(250, "OK File stored");
         } catch (IOException e) {
-            commandResponder.respond(450, "Something went wrong");
+            commandResponder.respond(450, "Error storing File");
         }
     }
 
@@ -59,7 +60,7 @@ public class CommandRegistry {
             fileConnection.retrieve(fileName);
             commandResponder.respond(250, "OK File sent");
         } catch (IOException e) {
-            commandResponder.respond(450, "Something went wrong");
+            commandResponder.respond(450, "Error retrieving File");
         }
     }
 
@@ -67,7 +68,7 @@ public class CommandRegistry {
         try {
             int port = PortParser.parseIpv4(rawIpAddress);
             fileConnection.setPortNumber(port);
-            commandResponder.respond(200, "OK I got the port");
+            commandResponder.respond(200, "OK I got the Port");
         } catch (Exception e) {
             commandResponder.respond(500, "Invalid Port");
         }
@@ -108,7 +109,17 @@ public class CommandRegistry {
     private void LIST(String path) {
         try {
             commandResponder.respond(150, "Getting a file list");
-            fileConnection.list(path);
+            fileConnection.sendFileList(path);
+            commandResponder.respond(227, "Retrieved the listing");
+        } catch (IOException e) {
+            commandResponder.respond(450, "Could not get listing");
+        }
+    }
+
+    private void NLST(String path) {
+        try {
+            commandResponder.respond(150, "Getting a list of file names");
+            fileConnection.sendNameList(path);
             commandResponder.respond(227, "Retrieved the listing");
         } catch (IOException e) {
             commandResponder.respond(450, "Could not get listing");

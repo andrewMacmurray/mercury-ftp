@@ -22,6 +22,11 @@ public class FileListingFormatter {
         }
     }
 
+    public String name(Path path) {
+        this.path = path;
+        return getName();
+    }
+
     private String getAllInfo() throws IOException {
         return String.format(
                 "%s %d %s %s %8d %s %s",
