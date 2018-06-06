@@ -1,7 +1,10 @@
 package server;
 
 import doubles.FakeSocketExecutor;
+import doubles.FileListingStub;
 import doubles.FileSystemSpy;
+import filesystem.FtpFileSystem;
+import filesystem.WorkingDirectory;
 import org.junit.Before;
 import org.junit.Test;
 import server.connections.FileConnection;
@@ -20,7 +23,12 @@ public class FileConnectionTest {
     public void setup() {
         fileSystemSpy = new FileSystemSpy();
         SocketExecutor socketExecutor = new FakeSocketExecutor();
-        fileConnection = new FileConnection(fileSystemSpy, socketExecutor);
+        FtpFileSystem ftpFileSystem = new FtpFileSystem(
+                fileSystemSpy,
+                new FileListingStub(),
+                new WorkingDirectory()
+        );
+        fileConnection = new FileConnection(ftpFileSystem, socketExecutor);
     }
 
     @Test
@@ -33,6 +41,12 @@ public class FileConnectionTest {
     public void store() throws IOException {
         fileConnection.store("socket.txt");
         assertEquals("socket.txt", fileSystemSpy.storedFile);
+    }
+
+    @Test
+    public void list() throws IOException {
+        fileConnection.list("dir");
+        assertEquals("dir", fileSystemSpy.listedDirectory);
     }
 
 }

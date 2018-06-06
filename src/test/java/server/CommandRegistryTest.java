@@ -1,6 +1,7 @@
 package server;
 
 import doubles.DummyFileSystem;
+import doubles.DummyFtpFileSystem;
 import doubles.DummySocketExecutor;
 import doubles.FileConnectionSpy;
 import org.junit.Before;
@@ -17,7 +18,7 @@ public class CommandRegistryTest {
 
     @Before
     public void setup() {
-        fileHandlerSpy = new FileConnectionSpy(new DummyFileSystem(), new DummySocketExecutor());
+        fileHandlerSpy = new FileConnectionSpy(new DummyFtpFileSystem(), new DummySocketExecutor());
         commandRegistry = new CommandRegistry(fileHandlerSpy, this::dummyResponseHandler);
     }
 
@@ -82,6 +83,12 @@ public class CommandRegistryTest {
         commandRegistry.executeCommand("CWD", "hello");
         commandRegistry.executeCommand("CDUP", "");
         assertResponse(257, "/");
+    }
+
+    @Test
+    public void list() {
+        commandRegistry.executeCommand("LIST", "");
+        assertResponse(227, "Retrieved the listing");
     }
 
     @Test

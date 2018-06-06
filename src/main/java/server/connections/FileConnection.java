@@ -1,5 +1,6 @@
 package server.connections;
 
+import filesystem.FileListingFormatter;
 import filesystem.FtpFileSystem;
 import filesystem.NativeFileSystem;
 import filesystem.WorkingDirectory;
@@ -10,11 +11,12 @@ import java.io.IOException;
 public class FileConnection {
 
     private int portNumber;
+    private String host = "localhost";
     private SocketExecutor socketExecutor;
     private FtpFileSystem ftpFileSystem;
 
-    public FileConnection(NativeFileSystem fileSystem, SocketExecutor socketExecutor) {
-        this.ftpFileSystem = new FtpFileSystem(fileSystem, new WorkingDirectory());
+    public FileConnection(FtpFileSystem ftpFileSystem, SocketExecutor socketExecutor) {
+        this.ftpFileSystem = ftpFileSystem;
         this.socketExecutor = socketExecutor;
     }
 
@@ -39,14 +41,20 @@ public class FileConnection {
     }
 
     public void retrieve(String path) throws IOException {
-        socketExecutor.outputStream("localhost", portNumber, socketOut -> {
+        socketExecutor.outputStream(host, portNumber, socketOut -> {
             ftpFileSystem.retrieve(path).runWithStream(socketOut);
         });
     }
 
     public void store(String path) throws IOException {
-        socketExecutor.inputStream("localhost", portNumber, socketIn -> {
+        socketExecutor.inputStream(host, portNumber, socketIn -> {
             ftpFileSystem.store(path).runWithStream(socketIn);
+        });
+    }
+
+    public void list(String path) throws IOException {
+        socketExecutor.outputStream(host, portNumber, socketOut -> {
+            ftpFileSystem.list(path).runWithStream(socketOut);
         });
     }
 

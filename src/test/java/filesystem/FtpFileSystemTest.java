@@ -1,5 +1,6 @@
 package filesystem;
 
+import doubles.FileListingStub;
 import doubles.FileSystemSpy;
 import org.junit.Before;
 import org.junit.Test;
@@ -7,18 +8,25 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class FtpFileSystemTest {
 
     private FileSystemSpy fileSystemSpy;
+    private WorkingDirectory workingDirectory;
     private FtpFileSystem ftpFileSystem;
 
     @Before
     public void setup() {
-        fileSystemSpy = new FileSystemSpy();
-        ftpFileSystem = new FtpFileSystem(fileSystemSpy, new WorkingDirectory());
+        Stream<Path> subDirs = Stream.of("sub-1", "sub-2").map(Paths::get);
+        fileSystemSpy = new FileSystemSpy(subDirs);
+        workingDirectory = new WorkingDirectory();
+        ftpFileSystem = new FtpFileSystem(fileSystemSpy, new FileListingStub(), workingDirectory);
     }
 
     @Test
@@ -50,6 +58,29 @@ public class FtpFileSystemTest {
     public void retrieve() throws IOException {
         ftpFileSystem.retrieve("hello.txt").runWithStream(new ByteArrayOutputStream());
         assertEquals("hello.txt", fileSystemSpy.retrievedFile);
+    }
+
+    @Test
+    public void listWithNoArg() throws IOException {
+        workingDirectory.changeDirectory("hello");
+        ftpFileSystem.list("").runWithStream(new ByteArrayOutputStream());
+        assertEquals("if empty arg checks the current working directory", "hello", fileSystemSpy.listedDirectory);
+    }
+
+    @Test
+    public void listWithArg() throws IOException {
+        workingDirectory.changeDirectory("hello");
+        ftpFileSystem.list("world").runWithStream(new ByteArrayOutputStream());
+        assertEquals("resolves asked for dir against current working dir", "hello/world", fileSystemSpy.listedDirectory);
+    }
+
+    @Test
+    public void returnList() throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ftpFileSystem.list("").runWithStream(out);
+
+        assertTrue(out.toString().contains("sub-1"));
+        assertTrue(out.toString().contains("sub-2"));
     }
 
 }

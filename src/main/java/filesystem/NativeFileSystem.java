@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.stream.Stream;
 
 public class NativeFileSystem {
 
@@ -30,6 +31,10 @@ public class NativeFileSystem {
 
     public void copyFromLocal(Path path, OutputStream destination) throws IOException {
         Files.copy(resolveRoot(path), destination);
+    }
+
+    public Stream<Path> list(Path path) throws IOException {
+        return Files.list(resolveRoot(path));
     }
 
     private Path resolveRoot(Path path) {

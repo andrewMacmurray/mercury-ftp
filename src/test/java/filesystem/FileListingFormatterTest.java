@@ -11,7 +11,7 @@ import java.nio.file.Path;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class FileInformationTest {
+public class FileListingFormatterTest {
 
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
@@ -26,8 +26,8 @@ public class FileInformationTest {
 
     @Test
     public void getFolderInfo() throws IOException {
-        FileInformation fileInformation = new FileInformation(tempFolder);
-        String info = fileInformation.getInfo();
+        FileListingFormatter fileListingFormatter = new FileListingFormatter();
+        String info = fileListingFormatter.format(tempFolder);
 
         assertTrue("correct permissions and links", info.contains("drwxr-xr-x 3"));
         assertTrue("correct folder name", info.contains("my-folder"));
@@ -36,8 +36,8 @@ public class FileInformationTest {
 
     @Test
     public void getFileInfo() throws IOException {
-        FileInformation fileInformation = new FileInformation(tempFile);
-        String info = fileInformation.getInfo();
+        FileListingFormatter fileListingFormatter = new FileListingFormatter();
+        String info = fileListingFormatter.format(tempFile);
 
         assertTrue("correct permissions and links", info.contains("-rw-r--r-- 1"));
         assertTrue("correct file name", info.contains("hello.txt"));

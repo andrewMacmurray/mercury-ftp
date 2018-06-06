@@ -10,6 +10,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -70,6 +71,24 @@ public class NativeFileSystemTest {
         nativeFileSystem.copyFromLocal(Paths.get("hello.txt"), out);
 
         assertEquals("hello", out.toString());
+    }
+
+    @Test
+    public void listFiles() throws IOException {
+        tempFolder.newFile("foo.txt");
+        tempFolder.newFile("bar.txt");
+        tempFolder.newFile("baz.txt");
+
+        Path path = tempFolder.getRoot().toPath();
+
+        String result = nativeFileSystem.list(path)
+                .map(Path::getFileName)
+                .map(Path::toString)
+                .collect(Collectors.joining(" "));
+
+        assertTrue(result.contains("foo.txt"));
+        assertTrue(result.contains("baz.txt"));
+        assertTrue(result.contains("bar.txt"));
     }
 
 }

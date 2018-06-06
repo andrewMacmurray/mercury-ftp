@@ -33,6 +33,7 @@ public class CommandRegistry {
                 new Command("USER", this::USER),
                 new Command("PASS", this::PASS),
                 new Command("CWD", this::CWD),
+                new Command("LIST", this::LIST),
                 new Command("PWD", noArg(this::PWD)),
                 new Command("CDUP", noArg(this::CDUP))
         );
@@ -102,6 +103,16 @@ public class CommandRegistry {
     private void CDUP() {
         fileConnection.cdUp();
         commandResponder.respond(257, fileConnection.currentDirectory());
+    }
+
+    private void LIST(String path) {
+        try {
+            commandResponder.respond(150, "Getting a file list");
+            fileConnection.list(path);
+            commandResponder.respond(227, "Retrieved the listing");
+        } catch (IOException e) {
+            commandResponder.respond(450, "Could not get listing");
+        }
     }
 
     private void unrecognized() {
