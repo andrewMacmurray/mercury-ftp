@@ -16,16 +16,16 @@ public class CommandRegistry {
     public CommandRegistry(CommandResponder commandResponder, FileConnection fileConnection) {
         this.commandResponder = commandResponder;
         this.fileConnection = fileConnection;
-        this.nameGenerator = new NameGenerator(fileConnection::isUniqueFileName);
+        this.nameGenerator = new NameGenerator(fileConnection::fileExists);
     }
 
     public void STOR(String fileName) {
         try {
-            sendResponse(150, "OK receiving File");
+            sendGettingResource("OK receiving File");
             fileConnection.store(fileName);
-            sendFormattedResponse(250, "OK %s stored" , fileName);
+            sendFileSuccessResponse("OK %s stored", fileName);
         } catch (IOException e) {
-            sendResponse(450, "Error storing File");
+            sendFileError("Error storing File");
         }
     }
 
@@ -36,11 +36,11 @@ public class CommandRegistry {
 
     public void RETR(String fileName) {
         try {
-            sendResponse(150, "OK getting File");
+            sendGettingResource("OK getting File");
             fileConnection.retrieve(fileName);
-            sendFormattedResponse(250, "OK %s sent" , fileName);
+            sendFileSuccessResponse("OK %s sent", fileName);
         } catch (IOException e) {
-            sendResponse(450, "Error retrieving File");
+            sendFileError("Error retrieving File");
         }
     }
 
@@ -68,14 +68,14 @@ public class CommandRegistry {
     }
 
     public void PWD() {
-        sendResponse(257, fileConnection.currentDirectory());
+        directorySuccessResponse(fileConnection.currentDirectory());
     }
 
     public void CWD(String directory) {
         boolean isValidDirectory = fileConnection.isDirectory(directory);
         if (isValidDirectory) {
             fileConnection.changeWorkingDirectory(directory);
-            sendResponse(257, fileConnection.currentDirectory());
+            directorySuccessResponse(fileConnection.currentDirectory());
         } else {
             sendResponse(550, "Not a valid directory");
         }
@@ -83,26 +83,26 @@ public class CommandRegistry {
 
     public void CDUP() {
         fileConnection.cdUp();
-        sendResponse(257, fileConnection.currentDirectory());
+        directorySuccessResponse(fileConnection.currentDirectory());
     }
 
     public void LIST(String path) {
         try {
-            sendResponse(150, "Getting a file list");
+            sendGettingResource("Getting a file list");
             fileConnection.sendFileList(path);
-            sendResponse(227, "Retrieved the listing");
+            sendListingSuccess();
         } catch (IOException e) {
-            sendResponse(450, "Could not get listing");
+            sendFileError("Could not get listing");
         }
     }
 
     public void NLST(String path) {
         try {
-            sendResponse(150, "Getting a list of file names");
+            sendGettingResource("Getting a list of file names");
             fileConnection.sendNameList(path);
-            sendResponse(227, "Retrieved the listing");
+            sendListingSuccess();
         } catch (IOException e) {
-            sendResponse(450, "Could not get listing");
+            sendFileError("Could not get listing");
         }
     }
 
@@ -110,10 +110,30 @@ public class CommandRegistry {
         sendResponse(500, "Unrecognized");
     }
 
+    private void sendGettingResource(String message) {
+        sendResponse(150, message);
+    }
+
+    private void sendListingSuccess() {
+        sendResponse(227, "Retrieved the listing");
+    }
+
+    private void directorySuccessResponse(String message) {
+        sendResponse(257, message);
+    }
+
+    private void sendFileError(String message) {
+        sendResponse(450, message);
+    }
+
+    private void sendFileSuccessResponse(String message, String fileName) {
+        sendFormattedResponse(250, message, fileName);
+    }
+
     private void sendFormattedResponse(int code, String message, String fileName) {
         sendResponse(code, String.format(message, fileName));
     }
-    
+
     private void sendResponse(int code, String message) {
         commandResponder.respond(code, message);
     }
