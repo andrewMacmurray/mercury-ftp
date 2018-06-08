@@ -91,4 +91,11 @@ public class NativeFileSystemTest {
         assertTrue(result.contains("bar.txt"));
     }
 
+    @Test
+    public void fileExists() throws IOException {
+        assertFalse(nativeFileSystem.fileExists(Paths.get("hello.txt")));
+        Path file = tempFolder.newFile("hello.txt").toPath();
+        assertTrue(nativeFileSystem.fileExists(file));
+    }
+
 }

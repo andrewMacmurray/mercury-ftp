@@ -54,4 +54,10 @@ public class FileConnectionTest {
         fileConnection.sendNameList("dir");
         assertEquals("dir", fileSystemSpy.listedDirectory);
     }
+
+    @Test
+    public void isUniqueFileName() {
+        fileConnection.isUniqueFileName("hello.txt");
+        assertEquals("hello.txt", fileSystemSpy.checkedFile);
+    }
 }

@@ -42,6 +42,10 @@ public class FtpFileSystem {
         }
     }
 
+    public boolean fileExists(String path) {
+        return nativeFileSystem.fileExists(resolve(path));
+    }
+
     public String getCurrentWorkingDirectory() {
         return "/" + workingDirectory.getCurrentDirectory().toString();
     }

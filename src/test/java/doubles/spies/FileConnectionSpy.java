@@ -36,4 +36,9 @@ public class FileConnectionSpy extends FileConnection {
         this.requestedDirectoryList = path;
     }
 
+    @Override
+    public boolean isUniqueFileName(String path) {
+        return true;
+    }
+
 }

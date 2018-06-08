@@ -24,14 +24,21 @@ public class CommandRegistryTest {
     public void retrieveFile() {
         commandRegistry.RETR("hello.txt");
         assertEquals("hello.txt", fileConnectionSpy.requestedFile);
-        assertResponse(250, "OK File sent");
+        assertResponse(250, "OK hello.txt sent");
     }
 
     @Test
     public void storeFile() {
         commandRegistry.STOR("my-file.txt");
         assertEquals("my-file.txt", fileConnectionSpy.storedFile);
-        assertResponse(250, "OK File stored");
+        assertResponse(250, "OK my-file.txt stored");
+    }
+
+    @Test
+    public void storeUnique() {
+        commandRegistry.STOU("my-file-1.txt");
+        assertEquals("my-file-1.txt", fileConnectionSpy.storedFile);
+        assertResponse(250, "OK my-file-1.txt stored");
     }
 
     @Test
