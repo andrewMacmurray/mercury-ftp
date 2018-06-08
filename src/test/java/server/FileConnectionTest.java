@@ -1,33 +1,57 @@
 package server;
 
-import doubles.FakeFileSystem;
-import doubles.FakeSocket;
-import doubles.FileHandlerSpy;
+import doubles.fakes.FakeSocketExecutor;
+import doubles.FileListingStub;
+import doubles.spies.FileSystemSpy;
+import filesystem.FtpFileSystem;
+import filesystem.WorkingDirectory;
+import org.junit.Before;
 import org.junit.Test;
+import server.connections.FileConnection;
+import server.connections.socket.SocketExecutor;
 
 import java.io.IOException;
 
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class FileConnectionTest {
 
-    private boolean interpreterCalled = false;
+    private FileSystemSpy fileSystemSpy;
+    private FileConnection fileConnection;
+
+    @Before
+    public void setup() {
+        fileSystemSpy = new FileSystemSpy();
+        SocketExecutor socketExecutor = new FakeSocketExecutor();
+        FtpFileSystem ftpFileSystem = new FtpFileSystem(
+                fileSystemSpy,
+                new FileListingStub(),
+                new WorkingDirectory()
+        );
+        fileConnection = new FileConnection(ftpFileSystem, socketExecutor);
+    }
 
     @Test
-    public void initConnection() throws IOException  {
-        FileHandlerSpy fileHandlerSpy = new FileHandlerSpy(new FakeFileSystem());
-        FileConnection connection = new FileConnection(fileHandlerSpy, new CommandInterpreter(this::interpreterCallback));
-
-        FakeSocket fakeSocket = new FakeSocket();
-        connection.processCommand("RETR hello.txt", fakeSocket);
-
-        assertTrue(interpreterCalled);
-        assertTrue(fileHandlerSpy.streamsConnected);
-        assertTrue(fakeSocket.closed);
+    public void retrieve() throws IOException {
+        fileConnection.retrieve("hello.txt");
+        assertEquals("hello.txt", fileSystemSpy.retrievedFile);
     }
 
-    private void interpreterCallback(String arg1, String arg2) {
-        interpreterCalled = true;
+    @Test
+    public void store() throws IOException {
+        fileConnection.store("socket.txt");
+        assertEquals("socket.txt", fileSystemSpy.storedFile);
     }
 
+    @Test
+    public void sendFileList() throws IOException {
+        fileConnection.sendFileList("dir");
+        assertEquals("dir", fileSystemSpy.listedDirectory);
+    }
+
+    @Test
+    public void sendNameList() throws IOException {
+        fileConnection.sendNameList("dir");
+        assertEquals("dir", fileSystemSpy.listedDirectory);
+    }
 }

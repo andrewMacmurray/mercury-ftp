@@ -5,8 +5,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
@@ -24,27 +27,39 @@ public class NativeFileSystemTest {
 
     @Test
     public void exists() throws IOException {
-        assertFalse(nativeFileSystem.fileExists("hello.txt"));
+        assertFalse(nativeFileSystem.fileExists(Paths.get("hello.txt")));
 
         Path path = tempFolder.newFile("hello.txt").toPath();
-        assertTrue(nativeFileSystem.fileExists("hello.txt"));
+        assertTrue(nativeFileSystem.fileExists(Paths.get("hello.txt")));
+    }
+
+    @Test
+    public void isValidDirectory() throws IOException {
+        assertFalse(nativeFileSystem.isValidDirectory(Paths.get("hello.txt")));
+
+        tempFolder.newFolder("hello");
+
+        assertFalse(nativeFileSystem.isValidDirectory(Paths.get("hello/hello.txt")));
+        assertTrue(nativeFileSystem.isValidDirectory(Paths.get("hello")));
+    }
+
+    @Test
+    public void rejectDirectoryDots() throws IOException {
+        assertFalse(nativeFileSystem.isValidDirectory(Paths.get("..")));
+        assertFalse(nativeFileSystem.isValidDirectory(Paths.get(".")));
+
+        tempFolder.newFolder("hello");
+
+        assertFalse(nativeFileSystem.isValidDirectory(Paths.get("hello/..")));
+        assertFalse(nativeFileSystem.isValidDirectory(Paths.get("hello/.")));
     }
 
     @Test
     public void writeFile() throws IOException {
         ByteArrayInputStream in = new ByteArrayInputStream("hello".getBytes());
 
-        nativeFileSystem.writeFile("hello.txt", in);
-        assertTrue(nativeFileSystem.fileExists("hello.txt"));
-    }
-
-    @Test
-    public void readFile() throws IOException {
-        ByteArrayInputStream in = new ByteArrayInputStream("hello".getBytes());
-        nativeFileSystem.writeFile("hello.txt", in);
-
-        InputStream retrievedFile = nativeFileSystem.readFile("hello.txt");
-        assertEquals(inputStreamToString(retrievedFile), "hello");
+        nativeFileSystem.writeFile(Paths.get("hello.txt"), in);
+        assertTrue(nativeFileSystem.fileExists(Paths.get("hello.txt")));
     }
 
     @Test
@@ -52,15 +67,28 @@ public class NativeFileSystemTest {
         ByteArrayInputStream source = new ByteArrayInputStream("hello".getBytes());
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-        nativeFileSystem.writeFile("hello.txt", source);
-        nativeFileSystem.copyFromLocal("hello.txt", out);
+        nativeFileSystem.writeFile(Paths.get("hello.txt"), source);
+        nativeFileSystem.copyFromLocal(Paths.get("hello.txt"), out);
 
         assertEquals("hello", out.toString());
     }
 
-    private String inputStreamToString(InputStream in) {
-        BufferedReader br = new BufferedReader(new InputStreamReader(in));
-        return br.lines().collect(Collectors.joining("\n"));
+    @Test
+    public void listFiles() throws IOException {
+        tempFolder.newFile("foo.txt");
+        tempFolder.newFile("bar.txt");
+        tempFolder.newFile("baz.txt");
+
+        Path path = tempFolder.getRoot().toPath();
+
+        String result = nativeFileSystem.list(path)
+                .map(Path::getFileName)
+                .map(Path::toString)
+                .collect(Collectors.joining(" "));
+
+        assertTrue(result.contains("foo.txt"));
+        assertTrue(result.contains("baz.txt"));
+        assertTrue(result.contains("bar.txt"));
     }
 
 }

@@ -1,6 +1,6 @@
-package server.commands;
+package server.ftpcommands;
 
-import java.io.IOException;
+import server.ftpcommands.actions.CommandAction;
 
 public class Command {
 
@@ -16,7 +16,7 @@ public class Command {
         return name;
     }
 
-    public void run(String argument) throws IOException {
+    public void run(String argument) {
         action.run(argument);
     }
 

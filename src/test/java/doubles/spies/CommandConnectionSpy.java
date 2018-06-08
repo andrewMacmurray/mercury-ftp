@@ -1,16 +1,16 @@
-package doubles;
+package doubles.spies;
 
-import server.handlers.CommandHandler;
+import server.connections.CommandConnection;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class CommandHandlerSpy extends CommandHandler {
+public class CommandConnectionSpy extends CommandConnection {
 
     public int code;
     public String message;
 
-    public CommandHandlerSpy(InputStream in, OutputStream out) {
+    public CommandConnectionSpy(InputStream in, OutputStream out) {
         super(in, out);
     }
 

@@ -1,6 +1,5 @@
-package server.commands;
+package server.ftpcommands;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,13 +12,14 @@ public class Commands {
         this.unrecognizedCallback = unrecognizedCallback;
     }
 
-    public void register(Command... commands) {
+    public Commands register(Command... commands) {
         for (Command command : commands) {
             registeredCommands.put(command.getName(), command);
         }
+        return this;
     }
 
-    public void execute(String commandName, String argument) throws IOException {
+    public void execute(String commandName, String argument) {
         Command command = registeredCommands.get(commandName);
         if (command != null) {
             command.run(argument);

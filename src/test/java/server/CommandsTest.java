@@ -2,20 +2,18 @@ package server;
 
 import org.junit.Before;
 import org.junit.Test;
-import server.commands.Command;
-import server.commands.Commands;
-
-import java.io.IOException;
+import server.ftpcommands.Command;
+import server.ftpcommands.Commands;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class CommandsTest {
 
-    private Commands commands = new Commands(this::unrecognized);
     private boolean commandOneExecuted = false;
     private boolean commandTwoExecuted = false;
     private boolean unrecognizedCalled = false;
+    private Commands commands = new Commands(this::unrecognized);
 
     @Before
     public void setup() {
@@ -26,7 +24,7 @@ public class CommandsTest {
     }
 
     @Test
-    public void runRecognized() throws IOException {
+    public void runRecognized() {
         commands.execute("ONE", "arg");
         commands.execute("TWO", "arg");
         assertTrue(commandOneExecuted);
@@ -35,7 +33,7 @@ public class CommandsTest {
     }
 
     @Test
-    public void runUnrecognized() throws IOException {
+    public void runUnrecognized() {
         commands.execute("BLAH", "wut");
         assertFalse(commandOneExecuted);
         assertFalse(commandTwoExecuted);

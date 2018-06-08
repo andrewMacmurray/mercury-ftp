@@ -1,43 +1,32 @@
 package server;
 
-import org.junit.Before;
+import doubles.spies.CommandConnectionSpy;
+import doubles.spies.FileConnectionSpy;
 import org.junit.Test;
-import server.commands.Command;
+import server.ftpcommands.CommandInterpreter;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
 public class CommandInterpreterTest {
 
-    private String executedCommand;
-    private String executedCommandArg;
-    private CommandInterpreter commandInterpreter;
-
-    @Before
-    public void setup() {
-       commandInterpreter = new CommandInterpreter(this::dummyCommandExecutor);
-    }
-
     @Test
-    public void parseCommand() throws IOException {
-       commandInterpreter.execute("RETR hello.txt");
+    public void processCommands() throws IOException {
+        ByteArrayInputStream socketIn = new ByteArrayInputStream("RETR hello.txt".getBytes());
+        ByteArrayOutputStream socketOut = new ByteArrayOutputStream();
 
-       assertEquals("RETR", executedCommand);
-       assertEquals("hello.txt", executedCommandArg);
-    }
+        FileConnectionSpy fileHandlerSpy = new FileConnectionSpy();
+        CommandConnectionSpy commandHandlerSpy = new CommandConnectionSpy(socketIn, socketOut);
 
-    @Test
-    public void parseSingleArg() throws IOException {
-        commandInterpreter.execute("QUIT");
+        CommandInterpreter commandInterpreter = new CommandInterpreter(commandHandlerSpy, fileHandlerSpy);
+        commandInterpreter.processCommands();
 
-        assertEquals("QUIT", executedCommand);
-        assertEquals("", executedCommandArg);
-    }
-
-    private void dummyCommandExecutor(String commandName, String arg) {
-        this.executedCommand = commandName;
-        this.executedCommandArg = arg;
+        assertEquals(421, commandHandlerSpy.code);
+        assertEquals("Disconnected from Mercury", commandHandlerSpy.message);
+        assertEquals("hello.txt", fileHandlerSpy.requestedFile);
     }
 
 }

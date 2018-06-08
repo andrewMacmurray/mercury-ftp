@@ -6,32 +6,38 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.stream.Stream;
 
 public class NativeFileSystem {
 
-    private Path rootDir;
+    private final Path rootDir;
 
     public NativeFileSystem(String rootDir) {
         this.rootDir = Paths.get(rootDir);
     }
 
-    public boolean fileExists(String path) {
+    public boolean fileExists(Path path) {
         return Files.exists(resolveRoot(path));
     }
 
-    public InputStream readFile(String path) throws IOException {
-        return Files.newInputStream(resolveRoot(path));
+    public boolean isValidDirectory(Path path) throws IOException {
+        Path resolvedPath = resolveRoot(path);
+        return Files.isDirectory(resolvedPath) && !Files.isHidden(resolvedPath);
     }
 
-    public void writeFile(String destinationPath, InputStream source) throws IOException {
+    public void writeFile(Path destinationPath, InputStream source) throws IOException {
         Files.copy(source, resolveRoot(destinationPath));
     }
 
-    public void copyFromLocal(String path, OutputStream destination) throws IOException {
+    public void copyFromLocal(Path path, OutputStream destination) throws IOException {
         Files.copy(resolveRoot(path), destination);
     }
 
-    private Path resolveRoot(String path) {
+    public Stream<Path> list(Path path) throws IOException {
+        return Files.list(resolveRoot(path));
+    }
+
+    private Path resolveRoot(Path path) {
         return rootDir.resolve(path);
     }
 
