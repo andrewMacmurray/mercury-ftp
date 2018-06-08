@@ -1,7 +1,7 @@
 package server;
 
-import doubles.DummyFileSystem;
-import doubles.FakeSocketExecutor;
+import doubles.dummies.DummyFileSystem;
+import doubles.fakes.FakeSocketExecutor;
 import doubles.SocketStub;
 import org.junit.Test;
 

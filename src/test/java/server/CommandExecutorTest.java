@@ -1,7 +1,7 @@
 package server;
 
 import org.junit.Test;
-import server.commands.CommandExecutor;
+import server.ftpcommands.actions.CommandExecutor;
 
 import static org.junit.Assert.assertEquals;
 

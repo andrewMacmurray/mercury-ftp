@@ -1,6 +1,6 @@
 package server;
 
-import doubles.MockSocketFactory;
+import doubles.mocks.MockSocketFactory;
 import doubles.StreamHelper;
 import org.junit.Before;
 import org.junit.Test;

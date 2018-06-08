@@ -1,5 +1,6 @@
-package doubles;
+package doubles.fakes;
 
+import doubles.mocks.MockSocketFactory;
 import server.connections.socket.InputStreamAction;
 import server.connections.socket.OutputStreamAction;
 import server.connections.socket.SocketExecutor;

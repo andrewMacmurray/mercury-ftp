@@ -2,8 +2,8 @@ package server;
 
 import org.junit.Before;
 import org.junit.Test;
-import server.commands.Command;
-import server.commands.Commands;
+import server.ftpcommands.Command;
+import server.ftpcommands.Commands;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

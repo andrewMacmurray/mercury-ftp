@@ -1,4 +1,4 @@
-package server;
+package server.ftpcommands;
 
 import filesystem.FileListingFormatter;
 import filesystem.FtpFileSystem;
@@ -7,6 +7,7 @@ import filesystem.WorkingDirectory;
 import server.connections.CommandConnection;
 import server.connections.FileConnection;
 import server.connections.socket.SocketExecutor;
+import server.ftpcommands.CommandInterpreter;
 
 import java.io.IOException;
 import java.io.InputStream;

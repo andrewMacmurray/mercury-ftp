@@ -1,5 +1,7 @@
-package doubles;
+package doubles.dummies;
 
+import doubles.FileListingStub;
+import doubles.dummies.DummyFileSystem;
 import filesystem.FtpFileSystem;
 import filesystem.WorkingDirectory;
 

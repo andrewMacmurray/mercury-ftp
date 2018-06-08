@@ -1,7 +1,7 @@
 package filesystem;
 
 import doubles.FileListingStub;
-import doubles.FileSystemSpy;
+import doubles.spies.FileSystemSpy;
 import org.junit.Before;
 import org.junit.Test;
 

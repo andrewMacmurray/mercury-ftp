@@ -1,50 +1,22 @@
-package server;
+package server.ftpcommands;
 
-import server.commands.Command;
-import server.commands.CommandAction;
-import server.commands.CommandResponder;
-import server.commands.Commands;
 import server.connections.FileConnection;
+import server.ftpcommands.actions.CommandResponder;
+import server.ftpcommands.utils.PortParser;
 
 import java.io.IOException;
 
 public class CommandRegistry {
 
-    private FileConnection fileConnection;
     private CommandResponder commandResponder;
-    private Commands commands;
+    private FileConnection fileConnection;
 
-    public CommandRegistry(FileConnection fileConnection, CommandResponder commandResponder) {
-        this.fileConnection = fileConnection;
+    public CommandRegistry(CommandResponder commandResponder, FileConnection fileConnection) {
         this.commandResponder = commandResponder;
-        this.commands = new Commands(this::unrecognized);
-        registerCommands();
+        this.fileConnection = fileConnection;
     }
 
-    public void executeCommand(String commandName, String argument) {
-        commands.execute(commandName, argument);
-    }
-
-    private void registerCommands() {
-        commands.register(
-                new Command("RETR", this::RETR),
-                new Command("STOR", this::STOR),
-                new Command("PORT", this::PORT),
-                new Command("USER", this::USER),
-                new Command("PASS", this::PASS),
-                new Command("CWD", this::CWD),
-                new Command("LIST", this::LIST),
-                new Command("NLST", this::NLST),
-                new Command("PWD", noArg(this::PWD)),
-                new Command("CDUP", noArg(this::CDUP))
-        );
-    }
-
-    private CommandAction noArg(Runnable action) {
-        return ignoredArg -> action.run();
-    }
-
-    private void STOR(String fileName) {
+    public void STOR(String fileName) {
         try {
             commandResponder.respond(150, "OK receiving File");
             fileConnection.store(fileName);
@@ -54,7 +26,7 @@ public class CommandRegistry {
         }
     }
 
-    private void RETR(String fileName) {
+    public void RETR(String fileName) {
         try {
             commandResponder.respond(150, "OK getting File");
             fileConnection.retrieve(fileName);
@@ -64,7 +36,7 @@ public class CommandRegistry {
         }
     }
 
-    private void PORT(String rawIpAddress) {
+    public void PORT(String rawIpAddress) {
         try {
             int port = PortParser.parseIpv4(rawIpAddress);
             fileConnection.setPortNumber(port);
@@ -74,11 +46,11 @@ public class CommandRegistry {
         }
     }
 
-    private void USER(String userName) {
+    public void USER(String userName) {
         commandResponder.respond(331, String.format("Hey %s, Please enter your password", userName));
     }
 
-    private void PASS(String password) {
+    public void PASS(String password) {
         boolean validPassword = password.equalsIgnoreCase("HERMES");
         if (validPassword) {
             commandResponder.respond(230, "Welcome to Mercury");
@@ -87,11 +59,11 @@ public class CommandRegistry {
         }
     }
 
-    private void PWD() {
+    public void PWD() {
         commandResponder.respond(257, fileConnection.currentDirectory());
     }
 
-    private void CWD(String directory) {
+    public void CWD(String directory) {
         boolean isValidDirectory = fileConnection.isDirectory(directory);
         if (isValidDirectory) {
             fileConnection.changeWorkingDirectory(directory);
@@ -101,12 +73,12 @@ public class CommandRegistry {
         }
     }
 
-    private void CDUP() {
+    public void CDUP() {
         fileConnection.cdUp();
         commandResponder.respond(257, fileConnection.currentDirectory());
     }
 
-    private void LIST(String path) {
+    public void LIST(String path) {
         try {
             commandResponder.respond(150, "Getting a file list");
             fileConnection.sendFileList(path);
@@ -116,7 +88,7 @@ public class CommandRegistry {
         }
     }
 
-    private void NLST(String path) {
+    public void NLST(String path) {
         try {
             commandResponder.respond(150, "Getting a list of file names");
             fileConnection.sendNameList(path);
@@ -126,7 +98,7 @@ public class CommandRegistry {
         }
     }
 
-    private void unrecognized() {
+    public void unrecognized() {
         commandResponder.respond(500, "Unrecognized");
     }
 

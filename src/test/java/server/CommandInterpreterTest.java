@@ -1,10 +1,9 @@
 package server;
 
-import doubles.CommandConnectionSpy;
-import doubles.DummyFtpFileSystem;
-import doubles.DummySocketExecutor;
-import doubles.FileConnectionSpy;
+import doubles.spies.CommandConnectionSpy;
+import doubles.spies.FileConnectionSpy;
 import org.junit.Test;
+import server.ftpcommands.CommandInterpreter;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -19,7 +18,7 @@ public class CommandInterpreterTest {
         ByteArrayInputStream socketIn = new ByteArrayInputStream("RETR hello.txt".getBytes());
         ByteArrayOutputStream socketOut = new ByteArrayOutputStream();
 
-        FileConnectionSpy fileHandlerSpy = new FileConnectionSpy(new DummyFtpFileSystem(), new DummySocketExecutor());
+        FileConnectionSpy fileHandlerSpy = new FileConnectionSpy();
         CommandConnectionSpy commandHandlerSpy = new CommandConnectionSpy(socketIn, socketOut);
 
         CommandInterpreter commandInterpreter = new CommandInterpreter(commandHandlerSpy, fileHandlerSpy);

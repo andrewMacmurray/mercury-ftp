@@ -1,19 +1,19 @@
-package server;
+package server.ftpcommands;
 
-import server.commands.CommandExecutor;
 import server.connections.CommandConnection;
 import server.connections.FileConnection;
+import server.ftpcommands.actions.CommandExecutor;
 
 import java.io.IOException;
 
 public class CommandInterpreter {
 
-    private CommandRegistry commandRegistry;
     private CommandConnection commandConnection;
+    private Commands commands;
 
     public CommandInterpreter(CommandConnection commandConnection, FileConnection fileConnection) {
         this.commandConnection = commandConnection;
-        this.commandRegistry = new CommandRegistry(fileConnection, commandConnection::writeResponse);
+        this.commands = new CommandsFactory(commandConnection::writeResponse, fileConnection).build();
     }
 
     public void processCommands() throws IOException {
@@ -23,11 +23,11 @@ public class CommandInterpreter {
     }
 
     private void clientConnectedResponse() {
-        commandConnection.writeResponse(200, "Connected to Mercury");
+        commandConnection.signalConnected();
     }
 
     private void disconnectedResponse() {
-        commandConnection.writeResponse(421, "Disconnected from Mercury");
+        commandConnection.signalDisconnect();
     }
 
     private void processNextCommand() throws IOException {
@@ -40,11 +40,11 @@ public class CommandInterpreter {
     }
 
     private boolean shouldExecuteCommand(String rawCommand) {
-        return rawCommand != null && !"QUIT".equalsIgnoreCase(rawCommand);
+        return !commandConnection.isDisconnectCommand(rawCommand);
     }
 
     private void execute(String rawCommand) {
-        CommandExecutor.run(rawCommand, commandRegistry::executeCommand);
+        CommandExecutor.run(rawCommand, commands::execute);
     }
 
 }

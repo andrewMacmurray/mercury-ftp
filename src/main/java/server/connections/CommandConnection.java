@@ -20,4 +20,16 @@ public class CommandConnection {
         socketOut.printf("%d %s\n", code, message);
     }
 
+    public void signalConnected() {
+        writeResponse(200, "Connected to Mercury");
+    }
+
+    public void signalDisconnect() {
+        writeResponse(421, "Disconnected from Mercury");
+    }
+
+    public boolean isDisconnectCommand(String rawCommand) {
+        return rawCommand == null || rawCommand.equalsIgnoreCase("QUIT");
+    }
+
 }

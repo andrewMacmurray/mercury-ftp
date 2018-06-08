@@ -1,4 +1,4 @@
-package doubles;
+package doubles.dummies;
 
 import filesystem.NativeFileSystem;
 

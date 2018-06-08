@@ -1,4 +1,4 @@
-package doubles;
+package doubles.spies;
 
 import filesystem.NativeFileSystem;
 

@@ -1,5 +1,6 @@
-package doubles;
+package doubles.mocks;
 
+import doubles.SocketStub;
 import server.connections.socket.SocketFactory;
 
 import java.io.ByteArrayInputStream;

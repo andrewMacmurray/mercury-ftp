@@ -1,5 +1,7 @@
-package doubles;
+package doubles.spies;
 
+import doubles.dummies.DummyFtpFileSystem;
+import doubles.dummies.DummySocketExecutor;
 import filesystem.FtpFileSystem;
 import server.connections.FileConnection;
 import server.connections.socket.SocketExecutor;
@@ -12,8 +14,11 @@ public class FileConnectionSpy extends FileConnection {
     public String storedFile;
     public String requestedDirectoryList;
 
-    public FileConnectionSpy(FtpFileSystem fileSystem, SocketExecutor socketExecutor) {
-        super(fileSystem, socketExecutor);
+    public FileConnectionSpy() {
+        super(
+                new DummyFtpFileSystem(),
+                new DummySocketExecutor()
+        );
     }
 
     @Override

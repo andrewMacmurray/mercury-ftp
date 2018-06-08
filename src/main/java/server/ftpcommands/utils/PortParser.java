@@ -1,4 +1,4 @@
-package server;
+package server.ftpcommands.utils;
 
 import java.util.Arrays;
 import java.util.List;

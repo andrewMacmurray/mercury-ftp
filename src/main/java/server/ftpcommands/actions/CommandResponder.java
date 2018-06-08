@@ -1,4 +1,4 @@
-package server.commands;
+package server.ftpcommands.actions;
 
 @FunctionalInterface
 public interface CommandResponder {

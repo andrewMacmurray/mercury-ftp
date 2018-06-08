@@ -1,4 +1,6 @@
-package server.commands;
+package server.ftpcommands;
+
+import server.ftpcommands.actions.CommandAction;
 
 public class Command {
 
