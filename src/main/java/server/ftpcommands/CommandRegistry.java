@@ -55,7 +55,7 @@ public class CommandRegistry {
     }
 
     public void USER(String userName) {
-        sendResponse(331, String.format("Hey %s, Please enter your password", userName));
+        sendFormattedResponse(331, "Hey %s, Please enter your password", userName);
     }
 
     public void PASS(String password) {
