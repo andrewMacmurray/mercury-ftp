@@ -27,8 +27,8 @@ public class FileConnection {
         return ftpFileSystem.isDirectory(path);
     }
 
-    public boolean isUniqueFileName(String path) {
-        return !ftpFileSystem.fileExists(path);
+    public boolean fileExists(String path) {
+        return ftpFileSystem.fileExists(path);
     }
 
     public void cdUp() {

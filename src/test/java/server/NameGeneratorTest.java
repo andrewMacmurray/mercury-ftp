@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 public class NameGeneratorTest {
 
     private List<String> existingNames = Arrays.asList("hello.txt", "hello-1.txt", "hello-2.txt", "hello.world.txt");
-    private NameGenerator nameGenerator = new NameGenerator(this::isUniqueName);
+    private NameGenerator nameGenerator = new NameGenerator(this::fileExists);
 
     @Test
     public void generate() {
@@ -31,8 +31,8 @@ public class NameGeneratorTest {
         assertEquals("hello.world-1.txt", name);
     }
 
-    private boolean isUniqueName(String name) {
-        return !existingNames.contains(name);
+    private boolean fileExists(String name) {
+        return existingNames.contains(name);
     }
 
 }

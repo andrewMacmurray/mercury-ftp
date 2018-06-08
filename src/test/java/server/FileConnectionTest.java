@@ -57,7 +57,7 @@ public class FileConnectionTest {
 
     @Test
     public void isUniqueFileName() {
-        fileConnection.isUniqueFileName("hello.txt");
+        fileConnection.fileExists("hello.txt");
         assertEquals("hello.txt", fileSystemSpy.checkedFile);
     }
 }

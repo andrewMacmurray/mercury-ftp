@@ -7,13 +7,13 @@ import java.util.stream.Collectors;
 
 public class NameGenerator {
 
-    private Predicate<String> isUniqueName;
+    private Predicate<String> fileExists;
     private List<String> fileParts;
     private String fileName;
     private String extension;
 
-    public NameGenerator(Predicate<String> isUniqueName) {
-        this.isUniqueName = isUniqueName;
+    public NameGenerator(Predicate<String> fileExists) {
+        this.fileExists = fileExists;
     }
 
     public String generateUnique(String name) {
@@ -58,7 +58,7 @@ public class NameGenerator {
     }
 
     private boolean isUnique(String name) {
-        return isUniqueName.test(name);
+        return !fileExists.test(name);
     }
 
 }

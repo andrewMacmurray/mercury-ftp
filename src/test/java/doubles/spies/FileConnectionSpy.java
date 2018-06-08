@@ -37,8 +37,8 @@ public class FileConnectionSpy extends FileConnection {
     }
 
     @Override
-    public boolean isUniqueFileName(String path) {
-        return true;
+    public boolean fileExists(String path) {
+        return false;
     }
 
 }
