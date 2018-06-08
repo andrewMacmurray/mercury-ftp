@@ -40,9 +40,17 @@ public class NameGeneratorTest {
     @Test
     public void dottedUnique() {
         existingNames.add("hello.world.txt");
-        
+
         String name = nameGenerator.generateUnique("hello.world.txt");
         assertEquals("hello.world-1.txt", name);
+    }
+
+    @Test
+    public void dotFiles() {
+        existingNames.add(".config");
+        String name = nameGenerator.generateUnique(".config");
+
+        assertEquals(".config-1", name);
     }
 
     private boolean fileExists(String name) {
