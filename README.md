@@ -9,30 +9,29 @@ https://www.iana.org/assignments/ftp-commands-extensions/ftp-commands-extensions
 
 - [ ] ABOR - Abort
 - [ ] ACCT - Account
-- [ ] ALLO - Allocate
 - [ ] APPE - Append 
-- [ ] CWD - Change Working Directory 
+- [X] CWD - Change Working Directory 
 - [ ] DELE - Delete File 
 - [ ] HELP - Help
-- [ ] LIST - List 
+- [X] LIST - List 
 - [ ] MODE - Transfer Mode 
-- [ ] NLST - Name List 
+- [X] NLST - Name List 
 - [ ] NOOP - No-Op (Ping)
-- [ ] PASS - Password 
+- [X] PASS - Password 
 - [ ] PASV - Passive Mode 
-- [ ] PORT - Data Port 
-- [ ] QUIT - Logout 
+- [X] PORT - Data Port 
+- [X] QUIT - Logout 
 - [ ] REIN - Reinitialize 
 - [ ] REST - Restart 
-- [ ] RETR - Retrieve 
+- [X] RETR - Retrieve 
 - [ ] RNFR - Rename From
 - [ ] RNTO - Rename To
 - [ ] SITE - Site Parameters
 - [ ] STAT - Status
-- [ ] STOR - Store 
+- [X] STOR - Store 
 - [ ] STRU - File Structure 
 - [ ] TYPE - Representation Type 
-- [ ] USER - User Name
+- [X] USER - User Name
 
 
 ## Core Storing and Retrieving Operations
