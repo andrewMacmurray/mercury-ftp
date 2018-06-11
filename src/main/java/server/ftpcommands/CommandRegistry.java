@@ -2,6 +2,7 @@ package server.ftpcommands;
 
 import server.connections.FileConnection;
 import server.ftpcommands.actions.CommandResponder;
+import server.ftpcommands.utils.NameGenerator;
 import server.ftpcommands.utils.PortParser;
 
 import java.io.IOException;
@@ -10,29 +11,36 @@ public class CommandRegistry {
 
     private CommandResponder commandResponder;
     private FileConnection fileConnection;
+    private NameGenerator nameGenerator;
 
     public CommandRegistry(CommandResponder commandResponder, FileConnection fileConnection) {
         this.commandResponder = commandResponder;
         this.fileConnection = fileConnection;
+        this.nameGenerator = new NameGenerator(fileConnection::fileExists);
     }
 
     public void STOR(String fileName) {
         try {
-            commandResponder.respond(150, "OK receiving File");
+            sendGettingResource("OK receiving File");
             fileConnection.store(fileName);
-            commandResponder.respond(250, "OK File stored");
+            sendFileSuccessResponse("OK %s stored", fileName);
         } catch (IOException e) {
-            commandResponder.respond(450, "Error storing File");
+            sendFileError("Error storing File");
         }
+    }
+
+    public void STOU(String fileName) {
+        String uniqueName = nameGenerator.generateUnique(fileName);
+        STOR(uniqueName);
     }
 
     public void RETR(String fileName) {
         try {
-            commandResponder.respond(150, "OK getting File");
+            sendGettingResource("OK getting File");
             fileConnection.retrieve(fileName);
-            commandResponder.respond(250, "OK File sent");
+            sendFileSuccessResponse("OK %s sent", fileName);
         } catch (IOException e) {
-            commandResponder.respond(450, "Error retrieving File");
+            sendFileError("Error retrieving File");
         }
     }
 
@@ -40,66 +48,94 @@ public class CommandRegistry {
         try {
             int port = PortParser.parseIpv4(rawIpAddress);
             fileConnection.setPortNumber(port);
-            commandResponder.respond(200, "OK I got the Port");
+            sendResponse(200, "OK I got the Port");
         } catch (Exception e) {
-            commandResponder.respond(500, "Invalid Port");
+            sendResponse(500, "Invalid Port");
         }
     }
 
     public void USER(String userName) {
-        commandResponder.respond(331, String.format("Hey %s, Please enter your password", userName));
+        sendFormattedResponse(331, "Hey %s, Please enter your password", userName);
     }
 
     public void PASS(String password) {
         boolean validPassword = password.equalsIgnoreCase("HERMES");
         if (validPassword) {
-            commandResponder.respond(230, "Welcome to Mercury");
+            sendResponse(230, "Welcome to Mercury");
         } else {
-            commandResponder.respond(430, "Bad password, please try again");
+            sendResponse(430, "Bad password, please try again");
         }
     }
 
     public void PWD() {
-        commandResponder.respond(257, fileConnection.currentDirectory());
+        directorySuccessResponse(fileConnection.currentDirectory());
     }
 
     public void CWD(String directory) {
         boolean isValidDirectory = fileConnection.isDirectory(directory);
         if (isValidDirectory) {
             fileConnection.changeWorkingDirectory(directory);
-            commandResponder.respond(257, fileConnection.currentDirectory());
+            directorySuccessResponse(fileConnection.currentDirectory());
         } else {
-            commandResponder.respond(550, "Not a valid directory");
+            sendResponse(550, "Not a valid directory");
         }
     }
 
     public void CDUP() {
         fileConnection.cdUp();
-        commandResponder.respond(257, fileConnection.currentDirectory());
+        directorySuccessResponse(fileConnection.currentDirectory());
     }
 
     public void LIST(String path) {
         try {
-            commandResponder.respond(150, "Getting a file list");
+            sendGettingResource("Getting a file list");
             fileConnection.sendFileList(path);
-            commandResponder.respond(227, "Retrieved the listing");
+            sendListingSuccess();
         } catch (IOException e) {
-            commandResponder.respond(450, "Could not get listing");
+            sendFileError("Could not get listing");
         }
     }
 
     public void NLST(String path) {
         try {
-            commandResponder.respond(150, "Getting a list of file names");
+            sendGettingResource("Getting a list of file names");
             fileConnection.sendNameList(path);
-            commandResponder.respond(227, "Retrieved the listing");
+            sendListingSuccess();
         } catch (IOException e) {
-            commandResponder.respond(450, "Could not get listing");
+            sendFileError("Could not get listing");
         }
     }
 
     public void unrecognized() {
-        commandResponder.respond(500, "Unrecognized");
+        sendResponse(500, "Unrecognized");
+    }
+
+    private void sendGettingResource(String message) {
+        sendResponse(150, message);
+    }
+
+    private void sendListingSuccess() {
+        sendResponse(227, "Retrieved the listing");
+    }
+
+    private void directorySuccessResponse(String message) {
+        sendResponse(257, message);
+    }
+
+    private void sendFileError(String message) {
+        sendResponse(450, message);
+    }
+
+    private void sendFileSuccessResponse(String message, String fileName) {
+        sendFormattedResponse(250, message, fileName);
+    }
+
+    private void sendFormattedResponse(int code, String message, String fileName) {
+        sendResponse(code, String.format(message, fileName));
+    }
+
+    private void sendResponse(int code, String message) {
+        commandResponder.respond(code, message);
     }
 
 }

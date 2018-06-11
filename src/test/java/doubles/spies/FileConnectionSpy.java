@@ -36,4 +36,9 @@ public class FileConnectionSpy extends FileConnection {
         this.requestedDirectoryList = path;
     }
 
+    @Override
+    public boolean fileExists(String path) {
+        return false;
+    }
+
 }

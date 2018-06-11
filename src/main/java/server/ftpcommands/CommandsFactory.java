@@ -16,6 +16,7 @@ public class CommandsFactory {
         return new Commands(commandRegistry::unrecognized).register(
                 new Command("RETR", commandRegistry::RETR),
                 new Command("STOR", commandRegistry::STOR),
+                new Command("STOU", commandRegistry::STOU),
                 new Command("PORT", commandRegistry::PORT),
                 new Command("USER", commandRegistry::USER),
                 new Command("PASS", commandRegistry::PASS),

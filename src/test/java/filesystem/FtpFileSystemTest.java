@@ -91,4 +91,11 @@ public class FtpFileSystemTest {
         assertTrue(out.toString().contains("file.txt"));
     }
 
+    @Test
+    public void fileExists() {
+        workingDirectory.changeDirectory("hello");
+        ftpFileSystem.fileExists("hello.txt");
+        assertEquals("hello/hello.txt", fileSystemSpy.checkedFile);
+    }
+
 }
