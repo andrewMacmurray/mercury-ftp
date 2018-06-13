@@ -47,7 +47,7 @@ public class CommandRegistry {
     public void PORT(String rawIpAddress) {
         try {
             int port = PortParser.parseIpv4(rawIpAddress);
-            fileConnection.setPortNumber(port);
+            fileConnection.setActivePort(port);
             sendResponse(200, "OK I got the Port");
         } catch (Exception e) {
             sendResponse(500, "Invalid Port");

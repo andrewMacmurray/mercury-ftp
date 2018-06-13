@@ -9,8 +9,6 @@ import java.io.IOException;
 
 public class FileConnection {
 
-    private int portNumber;
-    private String host = "localhost";
     private SocketExecutor socketExecutor;
     private FtpFileSystem ftpFileSystem;
 
@@ -19,8 +17,8 @@ public class FileConnection {
         this.socketExecutor = socketExecutor;
     }
 
-    public void setPortNumber(int portNumber) {
-        this.portNumber = portNumber;
+    public void setActivePort(int portNumber) {
+        socketExecutor.setActivePort(portNumber);
     }
 
     public boolean isDirectory(String path) {
@@ -60,11 +58,11 @@ public class FileConnection {
     }
 
     private void runOutputSocket(OutputStreamAction outputStreamAction) throws IOException {
-        socketExecutor.outputStream(host, portNumber, outputStreamAction);
+        socketExecutor.outputStream(outputStreamAction);
     }
 
     private void runInputSocket(InputStreamAction inputStreamAction) throws IOException {
-        socketExecutor.inputStream(host, portNumber, inputStreamAction);
+        socketExecutor.inputStream(inputStreamAction);
     }
 
 }

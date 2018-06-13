@@ -1,5 +1,6 @@
 package doubles.mocks;
 
+import doubles.ServerSocketStub;
 import doubles.SocketStub;
 import server.connections.socket.SocketFactory;
 
@@ -26,6 +27,12 @@ public class MockSocketFactory extends SocketFactory {
         this.host = host;
         this.port = port;
         return new SocketStub(socketIn);
+    }
+
+    @Override
+    public ServerSocketStub createServerSocket(int port) throws IOException {
+        this.port = port;
+        return new ServerSocketStub(socketIn);
     }
 
 }
