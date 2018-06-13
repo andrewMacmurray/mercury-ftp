@@ -14,7 +14,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-public class InterpreterBuilder {
+public class CommandInterpreterBuilder {
 
     public static CommandInterpreter build(
             Socket commandSocket,

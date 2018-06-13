@@ -21,11 +21,11 @@ public class CommandRegistry {
 
     public void STOR(String fileName) {
         try {
-            sendGettingResource("OK receiving File");
+            gettingResource("OK receiving File");
             fileConnection.store(fileName);
-            sendFileSuccessResponse("OK %s stored", fileName);
+            fileSuccessResponse("OK %s stored", fileName);
         } catch (IOException e) {
-            sendFileError("Error storing File");
+            fileError("Error storing File");
         }
     }
 
@@ -36,11 +36,11 @@ public class CommandRegistry {
 
     public void RETR(String fileName) {
         try {
-            sendGettingResource("OK getting File");
+            gettingResource("OK getting File");
             fileConnection.retrieve(fileName);
-            sendFileSuccessResponse("OK %s sent", fileName);
+            fileSuccessResponse("OK %s sent", fileName);
         } catch (IOException e) {
-            sendFileError("Error retrieving File");
+            fileError("Error retrieving File");
         }
     }
 
@@ -88,21 +88,21 @@ public class CommandRegistry {
 
     public void LIST(String path) {
         try {
-            sendGettingResource("Getting a file list");
+            gettingResource("Getting a file list");
             fileConnection.sendFileList(path);
-            sendListingSuccess();
+            listingSuccess();
         } catch (IOException e) {
-            sendFileError("Could not get listing");
+            fileError("Could not get listing");
         }
     }
 
     public void NLST(String path) {
         try {
-            sendGettingResource("Getting a list of file names");
+            gettingResource("Getting a list of file names");
             fileConnection.sendNameList(path);
-            sendListingSuccess();
+            listingSuccess();
         } catch (IOException e) {
-            sendFileError("Could not get listing");
+            fileError("Could not get listing");
         }
     }
 
@@ -110,11 +110,11 @@ public class CommandRegistry {
         sendResponse(500, "Unrecognized");
     }
 
-    private void sendGettingResource(String message) {
+    private void gettingResource(String message) {
         sendResponse(150, message);
     }
 
-    private void sendListingSuccess() {
+    private void listingSuccess() {
         sendResponse(227, "Retrieved the listing");
     }
 
@@ -122,11 +122,11 @@ public class CommandRegistry {
         sendResponse(257, message);
     }
 
-    private void sendFileError(String message) {
+    private void fileError(String message) {
         sendResponse(450, message);
     }
 
-    private void sendFileSuccessResponse(String message, String fileName) {
+    private void fileSuccessResponse(String message, String fileName) {
         sendFormattedResponse(250, message, fileName);
     }
 

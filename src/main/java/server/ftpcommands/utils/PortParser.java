@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 public class PortParser {
 
-    public static int parseIpv4(String rawIpv4Address) {
+    public static int parseIpv4(String rawIpv4Address) throws Exception {
         List<Integer> ipList = Arrays
                 .stream(rawIpv4Address.split(","))
                 .mapToInt(Integer::parseInt)
