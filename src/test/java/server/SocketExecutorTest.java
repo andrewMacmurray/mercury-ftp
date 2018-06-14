@@ -18,14 +18,13 @@ public class SocketExecutorTest {
     private SocketExecutor socketExecutor;
 
     @Before
-    public void setup() {
+    public void setup() throws IOException {
         InputStream socketIn = new ByteArrayInputStream("hello".getBytes());
         mockSocketFactory = new MockSocketFactory(socketIn);
         socketExecutor = new SocketExecutor(mockSocketFactory);
 
-        socketExecutor.setActivePort(2021);
+        socketExecutor.setActiveMode("localhost", 2021);
         socketExecutor.setPassivePort(2022);
-        socketExecutor.setActiveHost("localhost");
     }
 
     @Test
@@ -58,7 +57,7 @@ public class SocketExecutorTest {
     @Test
     public void resetToActiveMode() throws IOException {
         socketExecutor.setPassiveMode();
-        socketExecutor.setActiveMode();
+        socketExecutor.setActiveMode("localhost", 2021);
 
         socketExecutor.inputStream(in -> {
             assertEquals(2021, mockSocketFactory.port);

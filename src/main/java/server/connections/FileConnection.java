@@ -4,6 +4,7 @@ import filesystem.FtpFileSystem;
 import server.connections.socket.InputStreamAction;
 import server.connections.socket.OutputStreamAction;
 import server.connections.socket.SocketExecutor;
+import server.ftpcommands.utils.Address;
 
 import java.io.IOException;
 
@@ -17,8 +18,19 @@ public class FileConnection {
         this.socketExecutor = socketExecutor;
     }
 
-    public void setActivePort(int portNumber) {
-        socketExecutor.setActivePort(portNumber);
+    public void activeMode(String host, int port) throws IOException {
+        socketExecutor.setActiveMode(host, port);
+    }
+
+    public void passiveMode() throws IOException {
+        socketExecutor.setPassiveMode();
+    }
+
+    public String getPassiveAddress() throws IOException {
+        return Address.formatIpAddress(
+                socketExecutor.getPassiveHost(),
+                socketExecutor.getPassivePort()
+        );
     }
 
     public boolean isDirectory(String path) {

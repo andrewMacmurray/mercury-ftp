@@ -18,15 +18,15 @@ public class CommandInterpreterTest {
         ByteArrayInputStream socketIn = new ByteArrayInputStream("RETR hello.txt".getBytes());
         ByteArrayOutputStream socketOut = new ByteArrayOutputStream();
 
-        FileConnectionSpy fileHandlerSpy = new FileConnectionSpy();
+        FileConnectionSpy fileConnectionSpy = new FileConnectionSpy();
         CommandConnectionSpy commandHandlerSpy = new CommandConnectionSpy(socketIn, socketOut);
 
-        CommandInterpreter commandInterpreter = new CommandInterpreter(commandHandlerSpy, fileHandlerSpy);
+        CommandInterpreter commandInterpreter = new CommandInterpreter(commandHandlerSpy, fileConnectionSpy);
         commandInterpreter.processCommands();
 
         assertEquals(421, commandHandlerSpy.code);
         assertEquals("Disconnected from Mercury", commandHandlerSpy.message);
-        assertEquals("hello.txt", fileHandlerSpy.requestedFile);
+        assertEquals("hello.txt", fileConnectionSpy.requestedFile);
     }
 
 }

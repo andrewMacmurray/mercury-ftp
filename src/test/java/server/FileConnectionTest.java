@@ -1,7 +1,7 @@
 package server;
 
 import doubles.fakes.FakeSocketExecutor;
-import doubles.FileListingStub;
+import doubles.stubs.FileListingStub;
 import doubles.spies.FileSystemSpy;
 import filesystem.FtpFileSystem;
 import filesystem.WorkingDirectory;

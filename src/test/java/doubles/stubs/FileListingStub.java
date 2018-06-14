@@ -1,4 +1,4 @@
-package doubles;
+package doubles.stubs;
 
 import filesystem.FileListingFormatter;
 

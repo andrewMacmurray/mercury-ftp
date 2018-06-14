@@ -6,7 +6,7 @@ import java.net.Socket;
 
 public class SocketFactory {
 
-    public Socket create(String host, int port) throws IOException {
+    public Socket createSocket(String host, int port) throws IOException {
         return new Socket(host, port);
     }
 

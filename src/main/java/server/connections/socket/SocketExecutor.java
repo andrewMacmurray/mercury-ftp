@@ -41,7 +41,7 @@ public class SocketExecutor {
     private Socket createSocket() throws IOException {
         return passiveMode
                 ? passiveServerSocket.accept()
-                : socketFactory.create(activeHost, activePort);
+                : socketFactory.createSocket(activeHost, activePort);
     }
 
     public void setPassiveMode() throws IOException {
@@ -51,24 +51,26 @@ public class SocketExecutor {
         passiveMode = true;
     }
 
-    public void setActiveMode() throws IOException {
+    public void setActiveMode(String host, int port) throws IOException {
         if (passiveServerSocket != null) {
             passiveServerSocket.close();
             passiveServerSocket = null;
         }
         passiveMode = false;
+        activeHost = host;
+        activePort = port;
     }
 
     public void setPassivePort(int port) {
         passivePort = port;
     }
 
-    public void setActivePort(int port) {
-        activePort = port;
+    public int getPassivePort() {
+        return passivePort;
     }
 
-    public void setActiveHost(String host) {
-        activeHost = host;
+    public String getPassiveHost() throws IOException {
+        return passiveServerSocket.getInetAddress().getHostAddress();
     }
 
 }

@@ -3,7 +3,7 @@ package server.ftpcommands;
 import server.connections.FileConnection;
 import server.ftpcommands.actions.CommandResponder;
 import server.ftpcommands.utils.NameGenerator;
-import server.ftpcommands.utils.PortParser;
+import server.ftpcommands.utils.Address;
 
 import java.io.IOException;
 
@@ -13,15 +13,16 @@ public class CommandRegistry {
     private FileConnection fileConnection;
     private NameGenerator nameGenerator;
 
-    public CommandRegistry(CommandResponder commandResponder, FileConnection fileConnection) {
+    public CommandRegistry(CommandResponder commandResponder, FileConnection fileConnection, NameGenerator nameGenerator) {
         this.commandResponder = commandResponder;
         this.fileConnection = fileConnection;
-        this.nameGenerator = new NameGenerator(fileConnection::fileExists);
+        this.nameGenerator = nameGenerator;
     }
 
     public void STOR(String fileName) {
+        gettingResource("OK receiving File");
+
         try {
-            gettingResource("OK receiving File");
             fileConnection.store(fileName);
             fileSuccessResponse("OK %s stored", fileName);
         } catch (IOException e) {
@@ -35,8 +36,9 @@ public class CommandRegistry {
     }
 
     public void RETR(String fileName) {
+        gettingResource("OK getting File");
+
         try {
-            gettingResource("OK getting File");
             fileConnection.retrieve(fileName);
             fileSuccessResponse("OK %s sent", fileName);
         } catch (IOException e) {
@@ -46,11 +48,20 @@ public class CommandRegistry {
 
     public void PORT(String rawIpAddress) {
         try {
-            int port = PortParser.parseIpv4(rawIpAddress);
-            fileConnection.setActivePort(port);
+            int port = Address.parseIpv4(rawIpAddress);
+            fileConnection.activeMode("localhost", port);
             sendResponse(200, "OK I got the Port");
         } catch (Exception e) {
             sendResponse(500, "Invalid Port");
+        }
+    }
+
+    public void PASV() {
+        try {
+            fileConnection.passiveMode();
+            sendResponse(227, "Passive connection made " + fileConnection.getPassiveAddress());
+        } catch (IOException e) {
+            sendResponse(500, "Error setting passive mode");
         }
     }
 
@@ -60,6 +71,7 @@ public class CommandRegistry {
 
     public void PASS(String password) {
         boolean validPassword = password.equalsIgnoreCase("HERMES");
+
         if (validPassword) {
             sendResponse(230, "Welcome to Mercury");
         } else {
@@ -73,6 +85,7 @@ public class CommandRegistry {
 
     public void CWD(String directory) {
         boolean isValidDirectory = fileConnection.isDirectory(directory);
+
         if (isValidDirectory) {
             fileConnection.changeWorkingDirectory(directory);
             directorySuccessResponse(fileConnection.currentDirectory());
@@ -87,8 +100,9 @@ public class CommandRegistry {
     }
 
     public void LIST(String path) {
+        gettingResource("Getting a file list");
+
         try {
-            gettingResource("Getting a file list");
             fileConnection.sendFileList(path);
             listingSuccess();
         } catch (IOException e) {
@@ -97,8 +111,9 @@ public class CommandRegistry {
     }
 
     public void NLST(String path) {
+        gettingResource("Getting a list of file names");
+
         try {
-            gettingResource("Getting a list of file names");
             fileConnection.sendNameList(path);
             listingSuccess();
         } catch (IOException e) {

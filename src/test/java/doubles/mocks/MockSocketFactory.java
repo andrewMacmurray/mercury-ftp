@@ -1,7 +1,7 @@
 package doubles.mocks;
 
-import doubles.ServerSocketStub;
-import doubles.SocketStub;
+import doubles.stubs.ServerSocketStub;
+import doubles.stubs.SocketStub;
 import server.connections.socket.SocketFactory;
 
 import java.io.ByteArrayInputStream;
@@ -23,7 +23,7 @@ public class MockSocketFactory extends SocketFactory {
     }
 
     @Override
-    public SocketStub create(String host, int port) throws IOException {
+    public SocketStub createSocket(String host, int port) throws IOException {
         this.host = host;
         this.port = port;
         return new SocketStub(socketIn);

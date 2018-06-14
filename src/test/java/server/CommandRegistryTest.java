@@ -1,115 +1,228 @@
 package server;
 
-import doubles.spies.FileConnectionSpy;
+import doubles.spies.NameGeneratorSpy;
+import doubles.stubs.ErroringFileConnectionStub;
+import doubles.stubs.FileConnectionStub;
 import org.junit.Before;
 import org.junit.Test;
 import server.ftpcommands.CommandRegistry;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class CommandRegistryTest {
 
-    private int responseCode;
-    private String responseMessage;
-    private FileConnectionSpy fileConnectionSpy;
+    private List<Integer> responseCodes;
+    private List<String> responseMessages;
     private CommandRegistry commandRegistry;
+    private FileConnectionStub fileConnectionStub;
+    private ErroringFileConnectionStub erroringFileConnectionStub;
 
     @Before
     public void setup() {
-        fileConnectionSpy = new FileConnectionSpy();
-        commandRegistry = new CommandRegistry(this::dummyResponder, fileConnectionSpy);
+        responseCodes = new ArrayList<>();
+        responseMessages = new ArrayList<>();
+        fileConnectionStub = new FileConnectionStub();
+        erroringFileConnectionStub = new ErroringFileConnectionStub();
+        commandRegistry = new CommandRegistry(this::dummyResponder, fileConnectionStub, null);
     }
 
     @Test
-    public void retrieveFile() {
+    public void triggersFileRetrievalAndSendsResponses() {
         commandRegistry.RETR("hello.txt");
-        assertEquals("hello.txt", fileConnectionSpy.requestedFile);
-        assertResponse(250, "OK hello.txt sent");
+
+        assertEquals("hello.txt", fileConnectionStub.retrieveCalledWith);
+
+        assertFirstResponse(150, "OK getting File");
+        assertSecondResponse(250, "OK hello.txt sent");
     }
 
     @Test
-    public void storeFile() {
-        commandRegistry.STOR("my-file.txt");
-        assertEquals("my-file.txt", fileConnectionSpy.storedFile);
-        assertResponse(250, "OK my-file.txt stored");
+    public void reportsFileRetrievalError() {
+        commandRegistry = new CommandRegistry(this::dummyResponder, erroringFileConnectionStub, null);
+
+        commandRegistry.RETR("hello.txt");
+
+        assertFirstResponse(150, "OK getting File");
+        assertSecondResponse(450, "Error retrieving File");
     }
 
     @Test
-    public void storeUnique() {
-        commandRegistry.STOU("my-file-1.txt");
-        assertEquals("my-file-1.txt", fileConnectionSpy.storedFile);
-        assertResponse(250, "OK my-file-1.txt stored");
+    public void triggersFileStorageAndSendsResponses() {
+        commandRegistry.STOR("hello.txt");
+
+        assertFirstResponse(150, "OK receiving File");
+        assertSecondResponse(250, "OK hello.txt stored");
     }
 
     @Test
-    public void userName() {
+    public void reportsFileStorageError() {
+        commandRegistry = new CommandRegistry(this::dummyResponder, erroringFileConnectionStub, null);
+
+        commandRegistry.STOR("hello.txt");
+
+        assertFirstResponse(150, "OK receiving File");
+        assertSecondResponse(450, "Error storing File");
+    }
+
+    @Test
+    public void triggersStoreFileWithUniqueName() {
+        NameGeneratorSpy nameGeneratorSpy = new NameGeneratorSpy();
+        commandRegistry = new CommandRegistry(this::dummyResponder, fileConnectionStub, nameGeneratorSpy);
+
+        commandRegistry.STOU("hello.txt");
+
+        assertFirstResponse(150, "OK receiving File");
+        assertSecondResponse(250, "OK unique-name.txt stored");
+    }
+
+    @Test
+    public void enteringUsernamePromptsUserForPassword() {
         commandRegistry.USER("andrew");
-        assertResponse(331, "Hey andrew, Please enter your password");
+
+        assertFirstResponse(331, "Hey andrew, Please enter your password");
     }
 
     @Test
-    public void port() {
+    public void setsActiveModeWithPortSentFromClient() {
         commandRegistry.PORT("127,0,0,1,211,127");
-        assertResponse(200, "OK I got the Port");
+
+        assertEquals("localhost", fileConnectionStub.activeModeFirstArg);
+        assertEquals(54143, fileConnectionStub.activeModeSecondArg);
+        assertFirstResponse(200, "OK I got the Port");
     }
 
     @Test
-    public void badPort() {
+    public void sendsErrorMessageForFailedPort() {
         commandRegistry.PORT("127,1,1");
-        assertResponse(500, "Invalid Port");
+
+        assertFirstResponse(500, "Invalid Port");
     }
 
     @Test
-    public void badPassword() {
+    public void triggersPassiveModeAndSendsResponse() {
+        commandRegistry.PASV();
+
+        assertTrue(fileConnectionStub.passiveModeCalled);
+        assertFirstResponse(227, "Passive connection made (0,0,0,0,12,12)");
+    }
+
+    @Test
+    public void sendsErrorIfPassiveModeError() {
+        commandRegistry = new CommandRegistry(this::dummyResponder, erroringFileConnectionStub, null);
+
+        commandRegistry.PASV();
+
+        assertFirstResponse(500, "Error setting passive mode");
+    }
+
+    @Test
+    public void sendsErrorMessageForInvalidPassword() {
         commandRegistry.PASS("hello");
-        assertResponse(430, "Bad password, please try again");
+
+        assertFirstResponse(430, "Bad password, please try again");
     }
 
     @Test
-    public void correctPassword() {
+    public void sendsSuccessMessageForCorrectPassword() {
         commandRegistry.PASS("hermes");
-        assertResponse(230, "Welcome to Mercury");
+
+        assertFirstResponse(230, "Welcome to Mercury");
     }
 
     @Test
-    public void pwd() {
+    public void sendsCurrentWorkingDirectory() {
         commandRegistry.PWD();
-        assertResponse(257, "/");
+
+        assertFirstResponse(257, "/");
     }
 
     @Test
-    public void cwd() {
+    public void changesCurrentWorkingDirectoryAndSendsInResponse() {
         commandRegistry.CWD("hello");
-        assertResponse(257, "/hello");
+
+        assertEquals("hello", fileConnectionStub.isDirectoryCalledWith);
+        assertEquals("hello", fileConnectionStub.changeWorkingDirectoryCalledWith);
+        assertFirstResponse(257, "/");
     }
 
     @Test
-    public void cdup() {
+    public void sendsErrorIfInvalidDirectory() {
+        fileConnectionStub = new FileConnectionStub(false);
+        commandRegistry = new CommandRegistry(this::dummyResponder, fileConnectionStub, null);
+
         commandRegistry.CWD("hello");
+
+        assertFirstResponse(550, "Not a valid directory");
+    }
+
+    @Test
+    public void movesUpOneDirectoryAndSendsInResponse() {
         commandRegistry.CDUP();
-        assertResponse(257, "/");
+
+        assertTrue(fileConnectionStub.cdUpCalled);
+        assertFirstResponse(257, "/");
     }
 
     @Test
-    public void list() {
-        commandRegistry.LIST("");
-        assertResponse(227, "Retrieved the listing");
+    public void triggersSendingOfFileListAndResponse() {
+        commandRegistry.LIST("hello");
+
+        assertEquals("hello", fileConnectionStub.sendFileListCalledWith);
+        assertFirstResponse(150, "Getting a file list");
+        assertSecondResponse(227, "Retrieved the listing");
     }
 
     @Test
-    public void unrecognised() {
+    public void sendsErrorMessageForFailedListing() {
+        commandRegistry = new CommandRegistry(this::dummyResponder, erroringFileConnectionStub, null);
+
+        commandRegistry.LIST("hello");
+
+        assertFirstResponse(150, "Getting a file list");
+        assertSecondResponse(450, "Could not get listing");
+    }
+
+    @Test
+    public void triggersSendingOfNamedListAndResponse() {
+        commandRegistry.NLST("hello");
+
+        assertEquals("hello", fileConnectionStub.sendNameListCalledWith);
+        assertFirstResponse(150, "Getting a list of file names");
+        assertSecondResponse(227, "Retrieved the listing");
+    }
+
+    @Test
+    public void sendsErrorMessageForFailedNameListing() {
+        commandRegistry = new CommandRegistry(this::dummyResponder, erroringFileConnectionStub, null);
+
+        commandRegistry.NLST("hello");
+
+        assertFirstResponse(150, "Getting a list of file names");
+        assertSecondResponse(450, "Could not get listing");
+    }
+    @Test
+    public void sendsUnrecognisedResponse() {
         commandRegistry.unrecognized();
-        assertResponse(500, "Unrecognized");
+        assertFirstResponse(500, "Unrecognized");
     }
 
-    private void assertResponse(int code, String message) {
-        assertEquals(code, responseCode);
-        assertEquals(message, responseMessage);
+    private void assertFirstResponse(Integer code, String message) {
+        assertEquals(code, responseCodes.get(0));
+        assertEquals(message, responseMessages.get(0));
+    }
+
+    private void assertSecondResponse(Integer code, String message) {
+        assertEquals(code, responseCodes.get(1));
+        assertEquals(message, responseMessages.get(1));
     }
 
     private void dummyResponder(int code, String message) {
-        responseCode = code;
-        responseMessage = message;
+        responseCodes.add(code);
+        responseMessages.add(message);
     }
 
 }

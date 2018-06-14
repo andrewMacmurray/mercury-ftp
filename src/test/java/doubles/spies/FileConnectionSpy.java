@@ -1,10 +1,6 @@
 package doubles.spies;
 
-import doubles.dummies.DummyFtpFileSystem;
-import doubles.dummies.DummySocketExecutor;
-import filesystem.FtpFileSystem;
 import server.connections.FileConnection;
-import server.connections.socket.SocketExecutor;
 
 import java.io.IOException;
 
@@ -15,10 +11,7 @@ public class FileConnectionSpy extends FileConnection {
     public String requestedDirectoryList;
 
     public FileConnectionSpy() {
-        super(
-                new DummyFtpFileSystem(),
-                new DummySocketExecutor()
-        );
+        super(null, null);
     }
 
     @Override
