@@ -28,9 +28,9 @@ public class FileListingFormatterTest {
         FileListingFormatter fileListingFormatter = new FileListingFormatter();
         String info = fileListingFormatter.format(tempFolder);
 
-        assertTrue("correct permissions and links", info.contains("drwxr-xr-x 3"));
+        assertTrue("correct permissions and links", info.contains("drwxr"));
+        assertTrue("correct number of links", info.contains(" 3"));
         assertTrue("correct folder name", info.contains("my-folder"));
-        assertTrue("correct file size", info.contains("64"));
     }
 
     @Test
@@ -38,8 +38,9 @@ public class FileListingFormatterTest {
         FileListingFormatter fileListingFormatter = new FileListingFormatter();
         String info = fileListingFormatter.format(tempFile);
 
-        assertTrue("correct permissions and links", info.contains("-rw-r--r-- 1"));
+        assertTrue("correct permissions and links", info.contains("-rw-r"));
         assertTrue("correct file name", info.contains("hello.txt"));
+        assertTrue("correct number of links", info.contains(" 1"));
         assertTrue("correct file size", info.contains("0"));
     }
 
