@@ -1,4 +1,4 @@
-package doubles.mocks;
+package doubles.stubs;
 
 import doubles.stubs.ServerSocketStub;
 import doubles.stubs.SocketStub;
@@ -8,17 +8,17 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class MockSocketFactory extends SocketFactory {
+public class SocketFactoryStub extends SocketFactory {
 
     public String host;
     public int port;
     private InputStream socketIn;
 
-    public MockSocketFactory(InputStream socketIn) {
+    public SocketFactoryStub(InputStream socketIn) {
         this.socketIn = socketIn;
     }
 
-    public MockSocketFactory() {
+    public SocketFactoryStub() {
         this.socketIn = new ByteArrayInputStream("".getBytes());
     }
 

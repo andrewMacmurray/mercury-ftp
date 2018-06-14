@@ -23,6 +23,16 @@ public class ErroringFileConnectionStub extends FileConnection {
     }
 
     @Override
+    public void append(String fileName) throws IOException {
+        throw new IOException();
+    }
+
+    @Override
+    public boolean fileExists(String fileName) {
+        return true;
+    }
+
+    @Override
     public void sendFileList(String path) throws IOException {
         throw new IOException();
     }

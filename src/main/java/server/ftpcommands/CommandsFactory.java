@@ -22,6 +22,7 @@ public class CommandsFactory {
                 new Command("RETR", commandRegistry::RETR),
                 new Command("STOR", commandRegistry::STOR),
                 new Command("STOU", commandRegistry::STOU),
+                new Command("APPE", commandRegistry::APPE),
                 new Command("PORT", commandRegistry::PORT),
                 new Command("USER", commandRegistry::USER),
                 new Command("PASS", commandRegistry::PASS),

@@ -5,9 +5,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Collectors;
@@ -96,6 +95,17 @@ public class NativeFileSystemTest {
         assertFalse(nativeFileSystem.fileExists(Paths.get("hello.txt")));
         Path file = tempFolder.newFile("hello.txt").toPath();
         assertTrue(nativeFileSystem.fileExists(file));
+    }
+
+    @Test
+    public void appendToFile() throws IOException {
+        Path file = tempFolder.newFile("hello.txt").toPath();
+        InputStream in = new ByteArrayInputStream("hello".getBytes());
+
+        nativeFileSystem.append(file, in);
+
+        String contents = Files.lines(file).collect(Collectors.joining(""));
+        assertTrue(contents.contains("hello"));
     }
 
 }

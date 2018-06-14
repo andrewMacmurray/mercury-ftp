@@ -58,6 +58,10 @@ public class FtpFileSystem {
         return outputStream -> nativeFileSystem.copyFromLocal(resolve(path), outputStream);
     }
 
+    public InputStreamAction append(String path) {
+        return inputStream -> nativeFileSystem.append(resolve(path), inputStream);
+    }
+
     public OutputStreamAction list(String path) {
         return outputStream -> printFilesList(path, outputStream, fileListingFormatter::format);
     }

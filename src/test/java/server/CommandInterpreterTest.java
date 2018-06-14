@@ -1,7 +1,7 @@
 package server;
 
 import doubles.spies.CommandConnectionSpy;
-import doubles.spies.FileConnectionSpy;
+import doubles.stubs.FileConnectionStub;
 import org.junit.Test;
 import server.ftpcommands.CommandInterpreter;
 
@@ -18,15 +18,15 @@ public class CommandInterpreterTest {
         ByteArrayInputStream socketIn = new ByteArrayInputStream("RETR hello.txt".getBytes());
         ByteArrayOutputStream socketOut = new ByteArrayOutputStream();
 
-        FileConnectionSpy fileConnectionSpy = new FileConnectionSpy();
+        FileConnectionStub fileConnectionStub = new FileConnectionStub();
         CommandConnectionSpy commandHandlerSpy = new CommandConnectionSpy(socketIn, socketOut);
 
-        CommandInterpreter commandInterpreter = new CommandInterpreter(commandHandlerSpy, fileConnectionSpy);
+        CommandInterpreter commandInterpreter = new CommandInterpreter(commandHandlerSpy, fileConnectionStub);
         commandInterpreter.processCommands();
 
         assertEquals(421, commandHandlerSpy.code);
         assertEquals("Disconnected from Mercury", commandHandlerSpy.message);
-        assertEquals("hello.txt", fileConnectionSpy.requestedFile);
+        assertEquals("hello.txt", fileConnectionStub.retrieveCalledWith);
     }
 
 }

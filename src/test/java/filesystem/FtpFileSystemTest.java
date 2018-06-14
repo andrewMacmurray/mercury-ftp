@@ -98,4 +98,10 @@ public class FtpFileSystemTest {
         assertEquals("hello/hello.txt", fileSystemSpy.checkedFile);
     }
 
+    @Test
+    public void append() throws IOException {
+        ftpFileSystem.append("hello.txt").runWithStream(new ByteArrayInputStream("".getBytes()));
+        assertEquals("hello.txt", fileSystemSpy.appendedFile);
+    }
+
 }

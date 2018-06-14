@@ -46,6 +46,22 @@ public class CommandRegistry {
         }
     }
 
+    public void APPE(String fileName) {
+        gettingResource("OK receiving data");
+
+        try {
+            if (fileConnection.fileExists(fileName)) {
+                fileConnection.append(fileName);
+                fileSuccessResponse("Appended data to %s", fileName);
+            } else {
+                fileConnection.store(fileName);
+                fileSuccessResponse("OK %s stored", fileName);
+            }
+        } catch (IOException e) {
+            fileError("Error appending file");
+        }
+    }
+
     public void PORT(String rawIpAddress) {
         try {
             int port = Address.parseIpv4(rawIpAddress);

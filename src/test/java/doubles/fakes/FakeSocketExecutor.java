@@ -1,6 +1,6 @@
 package doubles.fakes;
 
-import doubles.mocks.MockSocketFactory;
+import doubles.stubs.SocketFactoryStub;
 import server.connections.socket.InputStreamAction;
 import server.connections.socket.OutputStreamAction;
 import server.connections.socket.SocketExecutor;
@@ -13,7 +13,7 @@ public class FakeSocketExecutor extends SocketExecutor {
     private OutputStream outputStream;
 
     public FakeSocketExecutor() {
-        super(new MockSocketFactory());
+        super(new SocketFactoryStub());
         this.inputStream = new ByteArrayInputStream("".getBytes());
         this.outputStream = new ByteArrayOutputStream();
     }

@@ -1,6 +1,6 @@
 package server;
 
-import doubles.mocks.MockSocketFactory;
+import doubles.stubs.SocketFactoryStub;
 import doubles.StreamHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,14 +14,14 @@ import static org.junit.Assert.assertEquals;
 
 public class SocketExecutorTest {
 
-    private MockSocketFactory mockSocketFactory;
+    private SocketFactoryStub socketFactoryStub;
     private SocketExecutor socketExecutor;
 
     @Before
     public void setup() throws IOException {
         InputStream socketIn = new ByteArrayInputStream("hello".getBytes());
-        mockSocketFactory = new MockSocketFactory(socketIn);
-        socketExecutor = new SocketExecutor(mockSocketFactory);
+        socketFactoryStub = new SocketFactoryStub(socketIn);
+        socketExecutor = new SocketExecutor(socketFactoryStub);
 
         socketExecutor.setActiveMode("localhost", 2021);
         socketExecutor.setPassivePort(2022);
@@ -30,8 +30,8 @@ public class SocketExecutorTest {
     @Test
     public void inputStreamActive() throws IOException {
         socketExecutor.inputStream(in -> {
-            assertEquals(2021, mockSocketFactory.port);
-            assertEquals("localhost", mockSocketFactory.host);
+            assertEquals(2021, socketFactoryStub.port);
+            assertEquals("localhost", socketFactoryStub.host);
             assertEquals("hello", StreamHelper.inputStreamToString(in));
         });
     }
@@ -39,8 +39,8 @@ public class SocketExecutorTest {
     @Test
     public void outputStreamActive() throws IOException {
         socketExecutor.outputStream(out -> {
-            assertEquals(2021, mockSocketFactory.port);
-            assertEquals("localhost", mockSocketFactory.host);
+            assertEquals(2021, socketFactoryStub.port);
+            assertEquals("localhost", socketFactoryStub.host);
             assertEquals("", out.toString().trim());
         });
     }
@@ -49,7 +49,7 @@ public class SocketExecutorTest {
     public void inputStreamPassive() throws IOException {
         socketExecutor.setPassiveMode();
         socketExecutor.inputStream(in -> {
-            assertEquals(2022, mockSocketFactory.port);
+            assertEquals(2022, socketFactoryStub.port);
             assertEquals("hello", StreamHelper.inputStreamToString(in));
         });
     }
@@ -60,7 +60,7 @@ public class SocketExecutorTest {
         socketExecutor.setActiveMode("localhost", 2021);
 
         socketExecutor.inputStream(in -> {
-            assertEquals(2021, mockSocketFactory.port);
+            assertEquals(2021, socketFactoryStub.port);
         });
     }
 

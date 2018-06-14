@@ -80,6 +80,39 @@ public class CommandRegistryTest {
     }
 
     @Test
+    public void triggersAppendingOfFileIfFileExists() {
+        commandRegistry.APPE("hello.txt");
+
+        assertEquals("hello.txt", fileConnectionStub.fileExistsCalledWith);
+        assertEquals("hello.txt", fileConnectionStub.appendCalledWith);
+        assertFirstResponse(150, "OK receiving data");
+        assertSecondResponse(250, "Appended data to hello.txt");
+    }
+
+    @Test
+    public void triggersStoreIfAppendedFileDoesNotExist() {
+        fileConnectionStub = new FileConnectionStub(false);
+        commandRegistry = new CommandRegistry(this::dummyResponder, fileConnectionStub, null);
+
+        commandRegistry.APPE("hello.txt");
+
+        assertEquals("hello.txt", fileConnectionStub.fileExistsCalledWith);
+        assertEquals("hello.txt", fileConnectionStub.storeCalledWith);
+        assertFirstResponse(150, "OK receiving data");
+        assertSecondResponse(250, "OK hello.txt stored");
+    }
+
+    @Test
+    public void sendsErrorIfAppendFails() {
+        commandRegistry = new CommandRegistry(this::dummyResponder, erroringFileConnectionStub, null);
+
+        commandRegistry.APPE("hello.txt");
+
+        assertFirstResponse(150, "OK receiving data");
+        assertSecondResponse(450, "Error appending file");
+    }
+
+    @Test
     public void enteringUsernamePromptsUserForPassword() {
         commandRegistry.USER("andrew");
 

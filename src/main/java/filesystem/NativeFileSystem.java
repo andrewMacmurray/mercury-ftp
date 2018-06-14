@@ -1,11 +1,12 @@
 package filesystem;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class NativeFileSystem {
@@ -35,6 +36,20 @@ public class NativeFileSystem {
 
     public Stream<Path> list(Path path) throws IOException {
         return Files.list(resolveRoot(path));
+    }
+
+    public void append(Path path, InputStream source) throws IOException {
+        Files.write(
+                resolveRoot(path),
+                getLines(source),
+                StandardOpenOption.APPEND
+        );
+    }
+
+    private List<String> getLines(InputStream source) throws IOException {
+        return new BufferedReader(new InputStreamReader(source))
+                .lines()
+                .collect(Collectors.toList());
     }
 
     private Path resolveRoot(Path path) {

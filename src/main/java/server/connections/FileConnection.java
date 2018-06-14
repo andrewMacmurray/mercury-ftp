@@ -61,6 +61,10 @@ public class FileConnection {
         runInputSocket(ftpFileSystem.store(path));
     }
 
+    public void append(String path) throws IOException {
+        runInputSocket(ftpFileSystem.append(path));
+    }
+
     public void sendFileList(String path) throws IOException {
         runOutputSocket(ftpFileSystem.list(path));
     }
