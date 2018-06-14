@@ -18,7 +18,7 @@ public class FileConnection {
         this.socketExecutor = socketExecutor;
     }
 
-    public void activeMode(String host, int port) throws IOException {
+    public void activeMode(String host, int port) {
         socketExecutor.setActiveMode(host, port);
     }
 

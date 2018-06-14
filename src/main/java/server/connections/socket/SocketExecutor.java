@@ -9,8 +9,8 @@ import java.net.Socket;
 public class SocketExecutor {
 
     private SocketFactory socketFactory;
-    private boolean passiveMode;
     private ServerSocket passiveServerSocket;
+    private boolean passiveMode;
     private int passivePort;
     private int activePort;
     private String activeHost;
@@ -51,14 +51,26 @@ public class SocketExecutor {
         passiveMode = true;
     }
 
-    public void setActiveMode(String host, int port) throws IOException {
+    public void setActiveMode(String host, int port) {
+        closePassiveServerQuietly();
+        passiveMode = false;
+        activeHost = host;
+        activePort = port;
+    }
+
+    private void closePassiveServerQuietly() {
+        try {
+            closePassiveServer();
+        } catch (IOException e) {
+            passiveServerSocket = null;
+        }
+    }
+
+    private void closePassiveServer() throws IOException {
         if (passiveServerSocket != null) {
             passiveServerSocket.close();
             passiveServerSocket = null;
         }
-        passiveMode = false;
-        activeHost = host;
-        activePort = port;
     }
 
     public void setPassivePort(int port) {
