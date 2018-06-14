@@ -9,7 +9,7 @@ https://www.iana.org/assignments/ftp-commands-extensions/ftp-commands-extensions
 
 - [ ] ABOR - Abort
 - [ ] ACCT - Account
-- [ ] APPE - Append 
+- [X] APPE - Append 
 - [X] CWD - Change Working Directory 
 - [ ] DELE - Delete File 
 - [ ] HELP - Help
@@ -18,7 +18,7 @@ https://www.iana.org/assignments/ftp-commands-extensions/ftp-commands-extensions
 - [X] NLST - Name List 
 - [ ] NOOP - No-Op (Ping)
 - [X] PASS - Password 
-- [ ] PASV - Passive Mode 
+- [X] PASV - Passive Mode 
 - [X] PORT - Data Port 
 - [X] QUIT - Logout 
 - [ ] REIN - Reinitialize 
@@ -29,6 +29,7 @@ https://www.iana.org/assignments/ftp-commands-extensions/ftp-commands-extensions
 - [ ] SITE - Site Parameters
 - [ ] STAT - Status
 - [X] STOR - Store 
+- [X] STOU - Store Unique 
 - [ ] STRU - File Structure 
 - [ ] TYPE - Representation Type 
 - [X] USER - User Name
