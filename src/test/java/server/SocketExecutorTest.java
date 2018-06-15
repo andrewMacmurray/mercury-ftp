@@ -1,7 +1,7 @@
 package server;
 
-import doubles.stubs.SocketFactoryStub;
 import doubles.StreamHelper;
+import doubles.stubs.SocketFactoryStub;
 import org.junit.Before;
 import org.junit.Test;
 import server.connections.socket.SocketExecutor;

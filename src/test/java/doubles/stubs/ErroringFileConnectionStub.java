@@ -1,8 +1,6 @@
 package doubles.stubs;
 
-import filesystem.FtpFileSystem;
 import server.connections.FileConnection;
-import server.connections.socket.SocketExecutor;
 
 import java.io.IOException;
 

@@ -1,6 +1,5 @@
 package doubles.fakes;
 
-import doubles.stubs.SocketFactoryStub;
 import server.connections.socket.InputStreamAction;
 import server.connections.socket.OutputStreamAction;
 import server.connections.socket.SocketExecutor;

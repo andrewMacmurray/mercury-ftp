@@ -8,11 +8,8 @@ import server.connections.CommandConnection;
 import server.connections.CommandResponses;
 import server.connections.FileConnection;
 import server.connections.socket.SocketExecutor;
-import server.ftpcommands.CommandInterpreter;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.Socket;
 
 public class CommandInterpreterBuilder {

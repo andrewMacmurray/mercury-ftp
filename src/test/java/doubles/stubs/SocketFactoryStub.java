@@ -1,7 +1,5 @@
 package doubles.stubs;
 
-import doubles.stubs.ServerSocketStub;
-import doubles.stubs.SocketStub;
 import server.connections.socket.SocketFactory;
 
 import java.io.ByteArrayInputStream;

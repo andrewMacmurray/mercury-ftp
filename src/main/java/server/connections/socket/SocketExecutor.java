@@ -3,8 +3,10 @@ package server.connections.socket;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 public class SocketExecutor {
 
@@ -54,8 +56,8 @@ public class SocketExecutor {
         passiveMode = true;
     }
 
-    private void setPassiveHost() {
-        passiveHost = passiveServerSocket.getInetAddress().getHostAddress();
+    private void setPassiveHost() throws UnknownHostException {
+        passiveHost = InetAddress.getLocalHost().getHostAddress();
     }
 
     public void setActiveMode(String host, int port) {

@@ -240,6 +240,7 @@ public class CommandRegistryTest {
         assertFirstResponse(150, "Getting a list of file names");
         assertSecondResponse(450, "Could not get listing");
     }
+
     @Test
     public void sendsUnrecognisedResponse() {
         commandRegistry.unrecognized();

@@ -2,8 +2,6 @@ package doubles.spies;
 
 import server.ftpcommands.utils.NameGenerator;
 
-import java.util.function.Predicate;
-
 public class NameGeneratorSpy extends NameGenerator {
 
     public String generateUniqueCalledWith;

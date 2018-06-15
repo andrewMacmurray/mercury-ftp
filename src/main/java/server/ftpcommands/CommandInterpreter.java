@@ -1,8 +1,6 @@
 package server.ftpcommands;
 
-import server.connections.CommandConnection;
 import server.connections.CommandResponses;
-import server.connections.FileConnection;
 import server.ftpcommands.actions.CommandExecutor;
 import server.ftpcommands.actions.CommandReader;
 

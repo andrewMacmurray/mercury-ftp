@@ -1,8 +1,8 @@
 package server;
 
 import filesystem.NativeFileSystem;
-import server.ftpcommands.CommandInterpreter;
 import server.connections.socket.SocketExecutor;
+import server.ftpcommands.CommandInterpreter;
 import server.ftpcommands.CommandInterpreterBuilder;
 
 import java.io.IOException;
