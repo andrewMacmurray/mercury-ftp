@@ -14,10 +14,14 @@ public class CommandInterpreter {
     private CommandResponses commandResponses;
     private Commands commands;
 
-    public CommandInterpreter(CommandConnection commandConnection, FileConnection fileConnection) {
-        this.commandReader = commandConnection::readCommand;
-        this.commandResponses = new CommandResponses(commandConnection::writeResponse);
-        this.commands = new CommandsFactory(commandResponses, fileConnection).build();
+    public CommandInterpreter(
+            CommandReader commandReader,
+            CommandResponses commandResponses,
+            Commands commands
+    ) {
+        this.commandReader = commandReader;
+        this.commandResponses = commandResponses;
+        this.commands = commands;
     }
 
     public void processCommands() throws IOException {

@@ -5,6 +5,7 @@ import filesystem.FtpFileSystem;
 import filesystem.NativeFileSystem;
 import filesystem.WorkingDirectory;
 import server.connections.CommandConnection;
+import server.connections.CommandResponses;
 import server.connections.FileConnection;
 import server.connections.socket.SocketExecutor;
 import server.ftpcommands.CommandInterpreter;
@@ -21,20 +22,42 @@ public class CommandInterpreterBuilder {
             SocketExecutor socketExecutor,
             NativeFileSystem fs
     ) throws IOException {
+        CommandConnection commandConnection = createCommandConnection(commandSocket);
+        CommandResponses commandResponses   = createResponses(commandConnection);
         return new CommandInterpreter(
-                createCommandConnection(commandSocket),
-                createFileConnection(fs, socketExecutor)
+                commandConnection::readCommand,
+                commandResponses,
+                createCommands(commandResponses, fs, socketExecutor)
         );
     }
 
+    private static CommandResponses createResponses(CommandConnection commandConnection) {
+        return new CommandResponses(commandConnection::writeResponse);
+    }
+
+    private static Commands createCommands(
+            CommandResponses commandResponses,
+            NativeFileSystem fs,
+            SocketExecutor socketExecutor
+    ) {
+        return new CommandsFactory(
+                commandResponses,
+                createFileConnection(fs, socketExecutor)
+        ).build();
+    }
+
     private static FileConnection createFileConnection(NativeFileSystem fs, SocketExecutor socketExecutor) {
-        return new FileConnection(createFileSystem(fs), socketExecutor);
+        return new FileConnection(
+                createFileSystem(fs),
+                socketExecutor
+        );
     }
 
     private static CommandConnection createCommandConnection(Socket commandSocket) throws IOException {
-        InputStream socketIn = commandSocket.getInputStream();
-        OutputStream socketOut = commandSocket.getOutputStream();
-        return new CommandConnection(socketIn, socketOut);
+        return new CommandConnection(
+                commandSocket.getInputStream(),
+                commandSocket.getOutputStream()
+        );
     }
 
     private static FtpFileSystem createFileSystem(NativeFileSystem fs) {
