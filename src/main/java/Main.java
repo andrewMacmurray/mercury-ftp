@@ -9,7 +9,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = new ServerSocket(2021);
-        SocketExecutor socketExecutor = new SocketExecutor(new SocketFactory());
+        SocketExecutor socketExecutor = new SocketExecutor(new SocketFactory(), 2022);
         NativeFileSystem fs = new NativeFileSystem("tmp");
 
         FtpServer ftpServer = new FtpServer(serverSocket, socketExecutor, fs);

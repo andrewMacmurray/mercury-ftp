@@ -2,8 +2,7 @@ package doubles.stubs;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.*;
 
 public class ServerSocketStub extends ServerSocket {
 
@@ -23,6 +22,15 @@ public class ServerSocketStub extends ServerSocket {
     @Override
     public void close() {
         closed = true;
+    }
+
+    @Override
+    public InetAddress getInetAddress() {
+        try {
+            return InetAddress.getByName("localhost");
+        } catch (UnknownHostException e) {
+            return null;
+        }
     }
 
 }

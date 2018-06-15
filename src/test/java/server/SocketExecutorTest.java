@@ -21,10 +21,8 @@ public class SocketExecutorTest {
     public void setup() throws IOException {
         InputStream socketIn = new ByteArrayInputStream("hello".getBytes());
         socketFactoryStub = new SocketFactoryStub(socketIn);
-        socketExecutor = new SocketExecutor(socketFactoryStub);
-
+        socketExecutor = new SocketExecutor(socketFactoryStub, 2022);
         socketExecutor.setActiveMode("localhost", 2021);
-        socketExecutor.setPassivePort(2022);
     }
 
     @Test

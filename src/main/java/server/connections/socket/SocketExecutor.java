@@ -12,11 +12,13 @@ public class SocketExecutor {
     private ServerSocket passiveServerSocket;
     private boolean passiveMode;
     private int passivePort;
+    private String passiveHost;
     private int activePort;
     private String activeHost;
 
-    public SocketExecutor(SocketFactory socketFactory) {
+    public SocketExecutor(SocketFactory socketFactory, int passivePort) {
         this.socketFactory = socketFactory;
+        this.passivePort = passivePort;
         this.passiveMode = false;
     }
 
@@ -47,8 +49,13 @@ public class SocketExecutor {
     public void setPassiveMode() throws IOException {
         if (passiveServerSocket == null) {
             passiveServerSocket = socketFactory.createServerSocket(passivePort);
+            setPassiveHost();
         }
         passiveMode = true;
+    }
+
+    private void setPassiveHost() {
+        passiveHost = passiveServerSocket.getInetAddress().getHostAddress();
     }
 
     public void setActiveMode(String host, int port) {
@@ -73,16 +80,12 @@ public class SocketExecutor {
         }
     }
 
-    public void setPassivePort(int port) {
-        passivePort = port;
-    }
-
     public int getPassivePort() {
         return passivePort;
     }
 
-    public String getPassiveHost() throws IOException {
-        return passiveServerSocket.getInetAddress().getHostAddress();
+    public String getPassiveHost() {
+        return passiveHost;
     }
 
 }

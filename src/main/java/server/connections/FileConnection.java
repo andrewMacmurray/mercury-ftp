@@ -26,7 +26,7 @@ public class FileConnection {
         socketExecutor.setPassiveMode();
     }
 
-    public String getPassiveAddress() throws IOException {
+    public String getPassiveAddress() {
         return Address.formatIpAddress(
                 socketExecutor.getPassiveHost(),
                 socketExecutor.getPassivePort()

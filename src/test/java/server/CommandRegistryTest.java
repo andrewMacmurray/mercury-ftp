@@ -5,6 +5,7 @@ import doubles.stubs.ErroringFileConnectionStub;
 import doubles.stubs.FileConnectionStub;
 import org.junit.Before;
 import org.junit.Test;
+import server.connections.CommandResponses;
 import server.ftpcommands.CommandRegistry;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ public class CommandRegistryTest {
     private List<String> responseMessages;
     private CommandRegistry commandRegistry;
     private FileConnectionStub fileConnectionStub;
+    private CommandResponses responder;
     private ErroringFileConnectionStub erroringFileConnectionStub;
 
     @Before
@@ -27,7 +29,8 @@ public class CommandRegistryTest {
         responseMessages = new ArrayList<>();
         fileConnectionStub = new FileConnectionStub();
         erroringFileConnectionStub = new ErroringFileConnectionStub();
-        commandRegistry = new CommandRegistry(this::dummyResponder, fileConnectionStub, null);
+        responder = new CommandResponses(this::dummyResponder);
+        commandRegistry = new CommandRegistry(responder, fileConnectionStub, null);
     }
 
     @Test
@@ -42,7 +45,7 @@ public class CommandRegistryTest {
 
     @Test
     public void reportsFileRetrievalError() {
-        commandRegistry = new CommandRegistry(this::dummyResponder, erroringFileConnectionStub, null);
+        commandRegistry = new CommandRegistry(responder, erroringFileConnectionStub, null);
 
         commandRegistry.RETR("hello.txt");
 
@@ -60,7 +63,7 @@ public class CommandRegistryTest {
 
     @Test
     public void reportsFileStorageError() {
-        commandRegistry = new CommandRegistry(this::dummyResponder, erroringFileConnectionStub, null);
+        commandRegistry = new CommandRegistry(responder, erroringFileConnectionStub, null);
 
         commandRegistry.STOR("hello.txt");
 
@@ -71,7 +74,7 @@ public class CommandRegistryTest {
     @Test
     public void triggersStoreFileWithUniqueName() {
         NameGeneratorSpy nameGeneratorSpy = new NameGeneratorSpy();
-        commandRegistry = new CommandRegistry(this::dummyResponder, fileConnectionStub, nameGeneratorSpy);
+        commandRegistry = new CommandRegistry(responder, fileConnectionStub, nameGeneratorSpy);
 
         commandRegistry.STOU("hello.txt");
 
@@ -92,7 +95,7 @@ public class CommandRegistryTest {
     @Test
     public void triggersStoreIfAppendedFileDoesNotExist() {
         fileConnectionStub = new FileConnectionStub(false);
-        commandRegistry = new CommandRegistry(this::dummyResponder, fileConnectionStub, null);
+        commandRegistry = new CommandRegistry(responder, fileConnectionStub, null);
 
         commandRegistry.APPE("hello.txt");
 
@@ -104,7 +107,7 @@ public class CommandRegistryTest {
 
     @Test
     public void sendsErrorIfAppendFails() {
-        commandRegistry = new CommandRegistry(this::dummyResponder, erroringFileConnectionStub, null);
+        commandRegistry = new CommandRegistry(responder, erroringFileConnectionStub, null);
 
         commandRegistry.APPE("hello.txt");
 
@@ -145,7 +148,7 @@ public class CommandRegistryTest {
 
     @Test
     public void sendsErrorIfPassiveModeError() {
-        commandRegistry = new CommandRegistry(this::dummyResponder, erroringFileConnectionStub, null);
+        commandRegistry = new CommandRegistry(responder, erroringFileConnectionStub, null);
 
         commandRegistry.PASV();
 
@@ -185,7 +188,7 @@ public class CommandRegistryTest {
     @Test
     public void sendsErrorIfInvalidDirectory() {
         fileConnectionStub = new FileConnectionStub(false);
-        commandRegistry = new CommandRegistry(this::dummyResponder, fileConnectionStub, null);
+        commandRegistry = new CommandRegistry(responder, fileConnectionStub, null);
 
         commandRegistry.CWD("hello");
 
@@ -211,7 +214,7 @@ public class CommandRegistryTest {
 
     @Test
     public void sendsErrorMessageForFailedListing() {
-        commandRegistry = new CommandRegistry(this::dummyResponder, erroringFileConnectionStub, null);
+        commandRegistry = new CommandRegistry(responder, erroringFileConnectionStub, null);
 
         commandRegistry.LIST("hello");
 
@@ -230,7 +233,7 @@ public class CommandRegistryTest {
 
     @Test
     public void sendsErrorMessageForFailedNameListing() {
-        commandRegistry = new CommandRegistry(this::dummyResponder, erroringFileConnectionStub, null);
+        commandRegistry = new CommandRegistry(responder, erroringFileConnectionStub, null);
 
         commandRegistry.NLST("hello");
 

@@ -1,17 +1,17 @@
 package server.ftpcommands;
 
+import server.connections.CommandResponses;
 import server.connections.FileConnection;
 import server.ftpcommands.actions.CommandAction;
-import server.ftpcommands.actions.CommandResponder;
 import server.ftpcommands.utils.NameGenerator;
 
 public class CommandsFactory {
 
     private CommandRegistry commandRegistry;
 
-    public CommandsFactory(CommandResponder commandResponder, FileConnection fileConnection) {
+    public CommandsFactory(CommandResponses commandResponses, FileConnection fileConnection) {
         this.commandRegistry = new CommandRegistry(
-                commandResponder,
+                commandResponses,
                 fileConnection,
                 new NameGenerator(fileConnection::fileExists)
         );

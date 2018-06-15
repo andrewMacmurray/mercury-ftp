@@ -13,7 +13,7 @@ public class FakeSocketExecutor extends SocketExecutor {
     private OutputStream outputStream;
 
     public FakeSocketExecutor() {
-        super(new SocketFactoryStub());
+        super(null, 0);
         this.inputStream = new ByteArrayInputStream("".getBytes());
         this.outputStream = new ByteArrayOutputStream();
     }
