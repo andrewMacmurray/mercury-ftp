@@ -1,13 +1,11 @@
 package server.connections;
 
-import server.ftpcommands.actions.ResponseWriter;
-
 public class CommandResponses {
 
-    private ResponseWriter responseWriter;
+    private CommandConnection commandConnection;
 
-    public CommandResponses(ResponseWriter responseWriter) {
-        this.responseWriter = responseWriter;
+    public CommandResponses(CommandConnection commandConnection) {
+        this.commandConnection = commandConnection;
     }
 
     public void signalConnected() {
@@ -91,7 +89,7 @@ public class CommandResponses {
     }
 
     private void writeResponse(int code, String message) {
-        responseWriter.write(code, message);
+        commandConnection.writeResponse(code, message);
     }
 
 }

@@ -1,6 +1,8 @@
 package server;
 
+import doubles.spies.CommandConnectionSpy;
 import doubles.spies.NameGeneratorSpy;
+import doubles.stubs.CommandConnectionStub;
 import doubles.stubs.ErroringFileConnectionStub;
 import doubles.stubs.FileConnectionStub;
 import org.junit.Before;
@@ -16,20 +18,18 @@ import static org.junit.Assert.assertTrue;
 
 public class CommandRegistryTest {
 
-    private List<Integer> responseCodes;
-    private List<String> responseMessages;
     private CommandRegistry commandRegistry;
     private FileConnectionStub fileConnectionStub;
+    private CommandConnectionStub commandConnectionStub;
     private CommandResponses responder;
     private ErroringFileConnectionStub erroringFileConnectionStub;
 
     @Before
     public void setup() {
-        responseCodes = new ArrayList<>();
-        responseMessages = new ArrayList<>();
         fileConnectionStub = new FileConnectionStub();
         erroringFileConnectionStub = new ErroringFileConnectionStub();
-        responder = new CommandResponses(this::dummyResponder);
+        commandConnectionStub = new CommandConnectionStub();
+        responder = new CommandResponses(commandConnectionStub);
         commandRegistry = new CommandRegistry(responder, fileConnectionStub, null);
     }
 
@@ -38,7 +38,6 @@ public class CommandRegistryTest {
         commandRegistry.RETR("hello.txt");
 
         assertEquals("hello.txt", fileConnectionStub.retrieveCalledWith);
-
         assertFirstResponse(150, "OK getting File");
         assertSecondResponse(250, "OK hello.txt sent");
     }
@@ -248,18 +247,13 @@ public class CommandRegistryTest {
     }
 
     private void assertFirstResponse(Integer code, String message) {
-        assertEquals(code, responseCodes.get(0));
-        assertEquals(message, responseMessages.get(0));
+        assertEquals(code, commandConnectionStub.codes.get(0));
+        assertEquals(message, commandConnectionStub.messages.get(0));
     }
 
     private void assertSecondResponse(Integer code, String message) {
-        assertEquals(code, responseCodes.get(1));
-        assertEquals(message, responseMessages.get(1));
-    }
-
-    private void dummyResponder(int code, String message) {
-        responseCodes.add(code);
-        responseMessages.add(message);
+        assertEquals(code, commandConnectionStub.codes.get(1));
+        assertEquals(message, commandConnectionStub.messages.get(1));
     }
 
 }

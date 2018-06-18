@@ -10,8 +10,13 @@ public class CommandConnectionSpy extends CommandConnection {
     public int code;
     public String message;
 
-    public CommandConnectionSpy(InputStream in, OutputStream out) {
-        super(in, out);
+    public CommandConnectionSpy() {
+        super(null, null);
+    }
+
+    @Override
+    public String readCommand() {
+        return "";
     }
 
     @Override

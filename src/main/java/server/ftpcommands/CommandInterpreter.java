@@ -1,23 +1,23 @@
 package server.ftpcommands;
 
+import server.connections.CommandConnection;
 import server.connections.CommandResponses;
 import server.ftpcommands.actions.CommandExecutor;
-import server.ftpcommands.actions.CommandReader;
 
 import java.io.IOException;
 
 public class CommandInterpreter {
 
-    private CommandReader commandReader;
+    private CommandConnection commandConnection;
     private CommandResponses commandResponses;
     private Commands commands;
 
     public CommandInterpreter(
-            CommandReader commandReader,
+            CommandConnection commandConnection,
             CommandResponses commandResponses,
             Commands commands
     ) {
-        this.commandReader = commandReader;
+        this.commandConnection = commandConnection;
         this.commandResponses = commandResponses;
         this.commands = commands;
     }
@@ -37,7 +37,7 @@ public class CommandInterpreter {
     }
 
     private void processNextCommand() throws IOException {
-        String rawCommand = commandReader.readLine();
+        String rawCommand = commandConnection.readCommand();
         System.out.println(rawCommand);
         if (shouldExecuteCommand(rawCommand)) {
             execute(rawCommand);

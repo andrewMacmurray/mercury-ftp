@@ -22,14 +22,14 @@ public class CommandInterpreterBuilder {
         CommandConnection commandConnection = createCommandConnection(commandSocket);
         CommandResponses commandResponses   = createResponses(commandConnection);
         return new CommandInterpreter(
-                commandConnection::readCommand,
+                commandConnection,
                 commandResponses,
                 createCommands(commandResponses, fs, socketExecutor)
         );
     }
 
     private static CommandResponses createResponses(CommandConnection commandConnection) {
-        return new CommandResponses(commandConnection::writeResponse);
+        return new CommandResponses(commandConnection);
     }
 
     private static Commands createCommands(

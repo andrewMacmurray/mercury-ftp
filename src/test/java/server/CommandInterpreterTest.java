@@ -1,5 +1,6 @@
 package server;
 
+import doubles.stubs.CommandConnectionStub;
 import doubles.stubs.FileConnectionStub;
 import org.junit.Test;
 import server.connections.CommandResponses;
@@ -16,21 +17,16 @@ import static org.junit.Assert.assertEquals;
 
 public class CommandInterpreterTest {
 
-    private List<Integer> codes = new ArrayList<>();
-    private List<String> messages = new ArrayList<>();
-    private List<String> commandsToSend = new ArrayList<>(
-            Arrays.asList(
-                    "RETR hello.txt"
-            )
-    );
+    private CommandConnectionStub commandConnectionStub;
 
     @Test
     public void processCommands() throws IOException {
-        CommandResponses responses = new CommandResponses(this::dummyResponder);
+        commandConnectionStub = new CommandConnectionStub();
+        CommandResponses responses = new CommandResponses(commandConnectionStub);
         FileConnectionStub fileConnectionStub = new FileConnectionStub();
         Commands commands = new CommandsFactory(responses, fileConnectionStub).build();
         CommandInterpreter commandInterpreter = new CommandInterpreter(
-                this::dummyCommandReader,
+                commandConnectionStub,
                 responses,
                 commands
         );
@@ -38,27 +34,12 @@ public class CommandInterpreterTest {
         commandInterpreter.processCommands();
 
         assertNthResponse(1, 200, "Connected to Mercury");
-        assertNthResponse(2, 150, "OK getting File");
-        assertNthResponse(3, 250, "OK hello.txt sent");
-        assertNthResponse(4, 421, "Disconnected from Mercury");
-    }
-
-    private String dummyCommandReader() {
-        try {
-            return commandsToSend.remove(0);
-        } catch (Exception e) {
-            return null;
-        }
+        assertNthResponse(2, 421, "Disconnected from Mercury");
     }
 
     private void assertNthResponse(Integer responseNumber, Integer code, String message) {
-        assertEquals(code, codes.get(responseNumber - 1));
-        assertEquals(message, messages.get(responseNumber - 1));
-    }
-
-    private void dummyResponder(int code, String message) {
-        codes.add(code);
-        messages.add(message);
+        assertEquals(code, commandConnectionStub.codes.get(responseNumber - 1));
+        assertEquals(message, commandConnectionStub.messages.get(responseNumber - 1));
     }
 
 }
