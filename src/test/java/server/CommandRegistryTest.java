@@ -125,7 +125,7 @@ public class CommandRegistryTest {
     public void setsActiveModeWithPortSentFromClient() {
         commandRegistry.PORT("127,0,0,1,211,127");
 
-        assertEquals("localhost", fileConnectionStub.activeModeFirstArg);
+        assertEquals("127.0.0.1", fileConnectionStub.activeModeFirstArg);
         assertEquals(54143, fileConnectionStub.activeModeSecondArg);
         assertFirstResponse(200, "OK I got the Port");
     }

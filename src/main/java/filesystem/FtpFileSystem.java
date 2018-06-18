@@ -93,11 +93,15 @@ public class FtpFileSystem {
     }
 
     private Path resolve(String path) {
-        return workingDirectory.getCurrentDirectory().resolve(removeLeadingSlash(path));
+        return workingDirectory
+                .getCurrentDirectory()
+                .resolve(removeLeadingSlash(path));
     }
 
     private String removeLeadingSlash(String path) {
-        return path.charAt(0) == '/' ? path.substring(1) : path;
+        return path.charAt(0) == '/'
+                ? path.substring(1)
+                : path;
     }
 
 }

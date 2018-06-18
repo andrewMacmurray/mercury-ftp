@@ -68,8 +68,9 @@ public class CommandRegistry {
 
     public void PORT(String rawIpAddress) {
         try {
-            int port = Address.parseIpv4(rawIpAddress);
-            fileConnection.activeMode("localhost", port);
+            int port = Address.getIpv4Port(rawIpAddress);
+            String host = Address.getIpv4Host(rawIpAddress);
+            fileConnection.activeMode(host, port);
             commandResponses.commandSuccess("OK I got the Port");
         } catch (Exception e) {
             commandResponses.commandFailure("Invalid Port");
