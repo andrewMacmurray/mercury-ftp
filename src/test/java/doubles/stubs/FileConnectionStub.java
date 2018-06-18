@@ -1,6 +1,6 @@
 package doubles.stubs;
 
-import server.connections.FileConnection;
+import mercury.server.connections.FileConnection;
 
 public class FileConnectionStub extends FileConnection {
 

@@ -1,6 +1,6 @@
 package doubles.stubs;
 
-import server.connections.socket.SocketFactory;
+import mercury.server.connections.socket.SocketFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

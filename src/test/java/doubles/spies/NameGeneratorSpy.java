@@ -1,6 +1,6 @@
 package doubles.spies;
 
-import server.ftpcommands.utils.NameGenerator;
+import mercury.server.ftpcommands.utils.NameGenerator;
 
 public class NameGeneratorSpy extends NameGenerator {
 

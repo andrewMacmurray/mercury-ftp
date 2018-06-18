@@ -1,6 +1,6 @@
 package doubles.spies;
 
-import filesystem.NativeFileSystem;
+import mercury.filesystem.NativeFileSystem;
 
 import java.io.IOException;
 import java.io.InputStream;

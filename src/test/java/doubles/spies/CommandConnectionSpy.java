@@ -1,6 +1,6 @@
 package doubles.spies;
 
-import server.connections.CommandConnection;
+import mercury.server.connections.CommandConnection;
 
 import java.io.InputStream;
 import java.io.OutputStream;

@@ -1,6 +1,6 @@
 package doubles.stubs;
 
-import server.connections.CommandConnection;
+import mercury.server.connections.CommandConnection;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

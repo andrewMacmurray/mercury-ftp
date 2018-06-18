@@ -1,8 +1,8 @@
 package doubles.fakes;
 
-import server.connections.socket.InputStreamAction;
-import server.connections.socket.OutputStreamAction;
-import server.connections.socket.SocketExecutor;
+import mercury.server.connections.socket.InputStreamAction;
+import mercury.server.connections.socket.OutputStreamAction;
+import mercury.server.connections.socket.SocketExecutor;
 
 import java.io.*;
 

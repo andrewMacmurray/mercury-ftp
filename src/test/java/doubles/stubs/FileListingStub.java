@@ -1,6 +1,6 @@
 package doubles.stubs;
 
-import filesystem.FileListingFormatter;
+import mercury.filesystem.FileListingFormatter;
 
 import java.nio.file.Path;
 

@@ -1,6 +1,6 @@
 # Mercury FTP
 
-Java FTP server
+Java FTP mercury.server
 
 
 ## Mandatory Commands
@@ -37,13 +37,13 @@ https://www.iana.org/assignments/ftp-commands-extensions/ftp-commands-extensions
 
 ## Core Storing and Retrieving Operations
 
-- STORE (`STOR`) - Causes the server-DTP to accept the data transferred via the data connection and to store the data as a file at the server site. If a file exists at that site it will be replaced by the new one.
+- STORE (`STOR`) - Causes the mercury.server-DTP to accept the data transferred via the data connection and to store the data as a file at the mercury.server site. If a file exists at that site it will be replaced by the new one.
 
-- RETRIEVE (`RETR`) - Causes the server-DTP to transfer a copy of the file specified at the pathname to a client. The status and contents of the file at the server site shall be unaffected.
+- RETRIEVE (`RETR`) - Causes the mercury.server-DTP to transfer a copy of the file specified at the pathname to a client. The status and contents of the file at the mercury.server site shall be unaffected.
 
 - STORE UNIQUE (`STOU`) - Behaves like `STOR` but file must have a unique name to that directory (name must be included in the `205` transfer started response).
 
-- APPEND (`APPE`) - Causes the Server-DTP to store a copy of the file at the specified server site. If the pathname exists the data should be appended to that file, otherwise a new one created.
+- APPEND (`APPE`) - Causes the Server-DTP to store a copy of the file at the specified mercury.server site. If the pathname exists the data should be appended to that file, otherwise a new one created.
 
 ## FTP Server Return Codes
 
