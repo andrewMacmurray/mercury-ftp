@@ -4,13 +4,12 @@ import filesystem.FtpFileSystem;
 import server.connections.socket.InputStreamAction;
 import server.connections.socket.OutputStreamAction;
 import server.connections.socket.SocketExecutor;
+import server.ftpcommands.utils.Address;
 
 import java.io.IOException;
 
 public class FileConnection {
 
-    private int portNumber;
-    private String host = "localhost";
     private SocketExecutor socketExecutor;
     private FtpFileSystem ftpFileSystem;
 
@@ -19,8 +18,19 @@ public class FileConnection {
         this.socketExecutor = socketExecutor;
     }
 
-    public void setPortNumber(int portNumber) {
-        this.portNumber = portNumber;
+    public void activeMode(String host, int port) {
+        socketExecutor.setActiveMode(host, port);
+    }
+
+    public void passiveMode() throws IOException {
+        socketExecutor.setPassiveMode();
+    }
+
+    public String getPassiveAddress() {
+        return Address.formatIpAddress(
+                socketExecutor.getPassiveHost(),
+                socketExecutor.getPassivePort()
+        );
     }
 
     public boolean isDirectory(String path) {
@@ -51,6 +61,10 @@ public class FileConnection {
         runInputSocket(ftpFileSystem.store(path));
     }
 
+    public void append(String path) throws IOException {
+        runInputSocket(ftpFileSystem.append(path));
+    }
+
     public void sendFileList(String path) throws IOException {
         runOutputSocket(ftpFileSystem.list(path));
     }
@@ -60,11 +74,11 @@ public class FileConnection {
     }
 
     private void runOutputSocket(OutputStreamAction outputStreamAction) throws IOException {
-        socketExecutor.outputStream(host, portNumber, outputStreamAction);
+        socketExecutor.outputStream(outputStreamAction);
     }
 
     private void runInputSocket(InputStreamAction inputStreamAction) throws IOException {
-        socketExecutor.inputStream(host, portNumber, inputStreamAction);
+        socketExecutor.inputStream(inputStreamAction);
     }
 
 }

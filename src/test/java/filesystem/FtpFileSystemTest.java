@@ -1,7 +1,7 @@
 package filesystem;
 
-import doubles.FileListingStub;
 import doubles.spies.FileSystemSpy;
+import doubles.stubs.FileListingStub;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -96,6 +96,12 @@ public class FtpFileSystemTest {
         workingDirectory.changeDirectory("hello");
         ftpFileSystem.fileExists("hello.txt");
         assertEquals("hello/hello.txt", fileSystemSpy.checkedFile);
+    }
+
+    @Test
+    public void append() throws IOException {
+        ftpFileSystem.append("hello.txt").runWithStream(new ByteArrayInputStream("".getBytes()));
+        assertEquals("hello.txt", fileSystemSpy.appendedFile);
     }
 
 }

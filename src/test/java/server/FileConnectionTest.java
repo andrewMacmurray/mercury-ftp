@@ -1,8 +1,8 @@
 package server;
 
 import doubles.fakes.FakeSocketExecutor;
-import doubles.FileListingStub;
 import doubles.spies.FileSystemSpy;
+import doubles.stubs.FileListingStub;
 import filesystem.FtpFileSystem;
 import filesystem.WorkingDirectory;
 import org.junit.Before;

@@ -58,26 +58,30 @@ public class FtpFileSystem {
         return outputStream -> nativeFileSystem.copyFromLocal(resolve(path), outputStream);
     }
 
+    public InputStreamAction append(String path) {
+        return inputStream -> nativeFileSystem.append(resolve(path), inputStream);
+    }
+
     public OutputStreamAction list(String path) {
-        return outputStream -> getFilesList(path, outputStream, fileListingFormatter::format);
+        return outputStream -> printFilesList(path, outputStream, fileListingFormatter::format);
     }
 
     public OutputStreamAction nameList(String path) {
-        return outputStream -> getFilesList(path, outputStream, fileListingFormatter::name);
+        return outputStream -> printFilesList(path, outputStream, fileListingFormatter::name);
     }
 
-    private void getFilesList(String path, OutputStream outputStream, FormatRunner formatRunner) throws IOException {
+    private void printFilesList(String path, OutputStream outputStream, FormatRunner formatRunner) throws IOException {
         PrintWriter printWriter = createPrintWriter(outputStream);
         Path currentDirectory = workingDirectory.getCurrentDirectory();
 
         if (path.isEmpty()) {
-            printFilesList(currentDirectory, printWriter, formatRunner);
+            printDirectory(currentDirectory, printWriter, formatRunner);
         } else {
-            printFilesList(resolve(path), printWriter, formatRunner);
+            printDirectory(resolve(path), printWriter, formatRunner);
         }
     }
 
-    private void printFilesList(Path path, PrintWriter printWriter, FormatRunner formatRunner) throws IOException {
+    private void printDirectory(Path path, PrintWriter printWriter, FormatRunner formatRunner) throws IOException {
         nativeFileSystem
                 .list(path)
                 .map(formatRunner::run)

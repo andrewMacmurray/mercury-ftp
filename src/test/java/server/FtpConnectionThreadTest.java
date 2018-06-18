@@ -1,8 +1,7 @@
 package server;
 
-import doubles.dummies.DummyFileSystem;
 import doubles.fakes.FakeSocketExecutor;
-import doubles.SocketStub;
+import doubles.stubs.SocketStub;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -18,10 +17,9 @@ public class FtpConnectionThreadTest {
         ByteArrayInputStream socketIn = new ByteArrayInputStream("USER andrew".getBytes());
         ByteArrayOutputStream socketOut = new ByteArrayOutputStream();
         SocketStub socketStub = new SocketStub(socketIn, socketOut);
-        DummyFileSystem dummyFileSystem = new DummyFileSystem();
         FakeSocketExecutor fakeSocketExecutor = new FakeSocketExecutor();
 
-        FtpConnectionThread ftpConnectionThread = new FtpConnectionThread(socketStub, fakeSocketExecutor, dummyFileSystem);
+        FtpConnectionThread ftpConnectionThread = new FtpConnectionThread(socketStub, fakeSocketExecutor, null);
         ftpConnectionThread.run();
 
         String output = socketOut.toString();

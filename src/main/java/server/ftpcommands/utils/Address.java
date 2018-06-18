@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PortParser {
+public class Address {
 
     public static int parseIpv4(String rawIpv4Address) {
         List<Integer> ipList = Arrays
@@ -13,6 +13,15 @@ public class PortParser {
                 .boxed()
                 .collect(Collectors.toList());
         return ipList.get(4) * 256 + ipList.get(5);
+    }
+
+    public static String formatIpAddress(String host, int port) {
+        String address = Arrays.stream(host.split("\\."))
+                .limit(4)
+                .collect(Collectors.joining(","));
+        int p1 = port / 256;
+        int p2 = port % 256;
+        return String.format("(%s,%d,%d)", address, p1, p2);
     }
 
 }

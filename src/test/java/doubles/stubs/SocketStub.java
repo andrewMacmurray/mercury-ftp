@@ -1,4 +1,4 @@
-package doubles;
+package doubles.stubs;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;

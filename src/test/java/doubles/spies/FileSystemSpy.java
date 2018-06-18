@@ -15,6 +15,7 @@ public class FileSystemSpy extends NativeFileSystem {
     public String storedFile;
     public String retrievedFile;
     public String listedDirectory;
+    public String appendedFile;
     private Stream<Path> subPaths;
 
     public FileSystemSpy() {
@@ -40,12 +41,12 @@ public class FileSystemSpy extends NativeFileSystem {
     }
 
     @Override
-    public void writeFile(Path path, InputStream source) throws IOException {
+    public void writeFile(Path path, InputStream source) {
         storedFile = path.toString();
     }
 
     @Override
-    public void copyFromLocal(Path path, OutputStream destination) throws IOException {
+    public void copyFromLocal(Path path, OutputStream destination) {
         retrievedFile = path.toString();
     }
 
@@ -53,6 +54,11 @@ public class FileSystemSpy extends NativeFileSystem {
     public Stream<Path> list(Path path) throws IOException {
         listedDirectory = path.toString();
         return subPaths;
+    }
+
+    @Override
+    public void append(Path path, InputStream in) {
+        appendedFile = path.toString();
     }
 
 }

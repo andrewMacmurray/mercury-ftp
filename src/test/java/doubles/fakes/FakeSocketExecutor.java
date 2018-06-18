@@ -1,6 +1,5 @@
 package doubles.fakes;
 
-import doubles.mocks.MockSocketFactory;
 import server.connections.socket.InputStreamAction;
 import server.connections.socket.OutputStreamAction;
 import server.connections.socket.SocketExecutor;
@@ -13,18 +12,18 @@ public class FakeSocketExecutor extends SocketExecutor {
     private OutputStream outputStream;
 
     public FakeSocketExecutor() {
-        super(new MockSocketFactory());
+        super(null, 0);
         this.inputStream = new ByteArrayInputStream("".getBytes());
         this.outputStream = new ByteArrayOutputStream();
     }
 
     @Override
-    public void inputStream(String host, int port, InputStreamAction action) throws IOException {
+    public void inputStream(InputStreamAction action) throws IOException {
         action.runWithStream(inputStream);
     }
 
     @Override
-    public void outputStream(String host, int port, OutputStreamAction action) throws IOException {
+    public void outputStream(OutputStreamAction action) throws IOException {
         action.runWithStream(outputStream);
     }
 

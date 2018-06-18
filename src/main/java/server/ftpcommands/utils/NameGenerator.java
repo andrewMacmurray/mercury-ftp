@@ -1,6 +1,5 @@
 package server.ftpcommands.utils;
 
-import java.util.List;
 import java.util.function.Predicate;
 
 public class NameGenerator {

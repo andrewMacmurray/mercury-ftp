@@ -1,31 +1,36 @@
 package server.ftpcommands;
 
+import server.connections.CommandResponses;
 import server.connections.FileConnection;
-import server.ftpcommands.actions.CommandResponder;
+import server.ftpcommands.utils.Address;
 import server.ftpcommands.utils.NameGenerator;
-import server.ftpcommands.utils.PortParser;
 
 import java.io.IOException;
 
 public class CommandRegistry {
 
-    private CommandResponder commandResponder;
+    private CommandResponses commandResponses;
     private FileConnection fileConnection;
     private NameGenerator nameGenerator;
 
-    public CommandRegistry(CommandResponder commandResponder, FileConnection fileConnection) {
-        this.commandResponder = commandResponder;
+    public CommandRegistry(
+            CommandResponses commandResponses,
+            FileConnection fileConnection,
+            NameGenerator nameGenerator
+    ) {
+        this.commandResponses = commandResponses;
         this.fileConnection = fileConnection;
-        this.nameGenerator = new NameGenerator(fileConnection::fileExists);
+        this.nameGenerator = nameGenerator;
     }
 
     public void STOR(String fileName) {
+        commandResponses.gettingResource("OK receiving File");
+
         try {
-            sendGettingResource("OK receiving File");
             fileConnection.store(fileName);
-            sendFileSuccessResponse("OK %s stored", fileName);
+            commandResponses.fileStored(fileName);
         } catch (IOException e) {
-            sendFileError("Error storing File");
+            commandResponses.fileError("Error storing File");
         }
     }
 
@@ -35,107 +40,109 @@ public class CommandRegistry {
     }
 
     public void RETR(String fileName) {
+        commandResponses.gettingResource("OK getting File");
+
         try {
-            sendGettingResource("OK getting File");
             fileConnection.retrieve(fileName);
-            sendFileSuccessResponse("OK %s sent", fileName);
+            commandResponses.fileSent(fileName);
         } catch (IOException e) {
-            sendFileError("Error retrieving File");
+            commandResponses.fileError("Error retrieving File");
+        }
+    }
+
+    public void APPE(String fileName) {
+        commandResponses.gettingResource("OK receiving data");
+
+        try {
+            if (fileConnection.fileExists(fileName)) {
+                fileConnection.append(fileName);
+                commandResponses.fileAppended(fileName);
+            } else {
+                fileConnection.store(fileName);
+                commandResponses.fileStored(fileName);
+            }
+        } catch (IOException e) {
+            commandResponses.fileError("Error appending file");
         }
     }
 
     public void PORT(String rawIpAddress) {
         try {
-            int port = PortParser.parseIpv4(rawIpAddress);
-            fileConnection.setPortNumber(port);
-            sendResponse(200, "OK I got the Port");
+            int port = Address.parseIpv4(rawIpAddress);
+            fileConnection.activeMode("localhost", port);
+            commandResponses.commandSuccess("OK I got the Port");
         } catch (Exception e) {
-            sendResponse(500, "Invalid Port");
+            commandResponses.commandFailure("Invalid Port");
+        }
+    }
+
+    public void PASV() {
+        try {
+            fileConnection.passiveMode();
+            commandResponses.passiveConnectionSuccess(fileConnection.getPassiveAddress());
+        } catch (IOException e) {
+            commandResponses.commandFailure("Error setting passive mode");
         }
     }
 
     public void USER(String userName) {
-        sendFormattedResponse(331, "Hey %s, Please enter your password", userName);
+        commandResponses.enterPassword(userName);
     }
 
     public void PASS(String password) {
         boolean validPassword = password.equalsIgnoreCase("HERMES");
+
         if (validPassword) {
-            sendResponse(230, "Welcome to Mercury");
+            commandResponses.welcome();
         } else {
-            sendResponse(430, "Bad password, please try again");
+            commandResponses.badPassword();
         }
     }
 
     public void PWD() {
-        directorySuccessResponse(fileConnection.currentDirectory());
+        commandResponses.directorySuccess(fileConnection.currentDirectory());
     }
 
     public void CWD(String directory) {
         boolean isValidDirectory = fileConnection.isDirectory(directory);
+
         if (isValidDirectory) {
             fileConnection.changeWorkingDirectory(directory);
-            directorySuccessResponse(fileConnection.currentDirectory());
+            commandResponses.directorySuccess(fileConnection.currentDirectory());
         } else {
-            sendResponse(550, "Not a valid directory");
+            commandResponses.invalidDirectory();
         }
     }
 
     public void CDUP() {
         fileConnection.cdUp();
-        directorySuccessResponse(fileConnection.currentDirectory());
+        commandResponses.directorySuccess(fileConnection.currentDirectory());
     }
 
     public void LIST(String path) {
+        commandResponses.gettingResource("Getting a file list");
+
         try {
-            sendGettingResource("Getting a file list");
             fileConnection.sendFileList(path);
-            sendListingSuccess();
+            commandResponses.listingSuccess();
         } catch (IOException e) {
-            sendFileError("Could not get listing");
+            commandResponses.fileError("Could not get listing");
         }
     }
 
     public void NLST(String path) {
+        commandResponses.gettingResource("Getting a list of file names");
+
         try {
-            sendGettingResource("Getting a list of file names");
             fileConnection.sendNameList(path);
-            sendListingSuccess();
+            commandResponses.listingSuccess();
         } catch (IOException e) {
-            sendFileError("Could not get listing");
+            commandResponses.fileError("Could not get listing");
         }
     }
 
     public void unrecognized() {
-        sendResponse(500, "Unrecognized");
-    }
-
-    private void sendGettingResource(String message) {
-        sendResponse(150, message);
-    }
-
-    private void sendListingSuccess() {
-        sendResponse(227, "Retrieved the listing");
-    }
-
-    private void directorySuccessResponse(String message) {
-        sendResponse(257, message);
-    }
-
-    private void sendFileError(String message) {
-        sendResponse(450, message);
-    }
-
-    private void sendFileSuccessResponse(String message, String fileName) {
-        sendFormattedResponse(250, message, fileName);
-    }
-
-    private void sendFormattedResponse(int code, String message, String fileName) {
-        sendResponse(code, String.format(message, fileName));
-    }
-
-    private void sendResponse(int code, String message) {
-        commandResponder.respond(code, message);
+        commandResponses.unrecognized();
     }
 
 }

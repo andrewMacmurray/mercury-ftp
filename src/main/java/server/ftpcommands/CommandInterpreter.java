@@ -1,7 +1,7 @@
 package server.ftpcommands;
 
 import server.connections.CommandConnection;
-import server.connections.FileConnection;
+import server.connections.CommandResponses;
 import server.ftpcommands.actions.CommandExecutor;
 
 import java.io.IOException;
@@ -9,11 +9,17 @@ import java.io.IOException;
 public class CommandInterpreter {
 
     private CommandConnection commandConnection;
+    private CommandResponses commandResponses;
     private Commands commands;
 
-    public CommandInterpreter(CommandConnection commandConnection, FileConnection fileConnection) {
+    public CommandInterpreter(
+            CommandConnection commandConnection,
+            CommandResponses commandResponses,
+            Commands commands
+    ) {
         this.commandConnection = commandConnection;
-        this.commands = new CommandsFactory(commandConnection::writeResponse, fileConnection).build();
+        this.commandResponses = commandResponses;
+        this.commands = commands;
     }
 
     public void processCommands() throws IOException {
@@ -23,11 +29,11 @@ public class CommandInterpreter {
     }
 
     private void clientConnectedResponse() {
-        commandConnection.signalConnected();
+        commandResponses.signalConnected();
     }
 
     private void disconnectedResponse() {
-        commandConnection.signalDisconnect();
+        commandResponses.signalDisconnect();
     }
 
     private void processNextCommand() throws IOException {
@@ -40,7 +46,7 @@ public class CommandInterpreter {
     }
 
     private boolean shouldExecuteCommand(String rawCommand) {
-        return !commandConnection.isDisconnectCommand(rawCommand);
+        return !commandResponses.isDisconnectCommand(rawCommand);
     }
 
     private void execute(String rawCommand) {

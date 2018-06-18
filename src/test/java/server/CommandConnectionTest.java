@@ -8,9 +8,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class CommandConnectionTest {
 
@@ -38,32 +36,6 @@ public class CommandConnectionTest {
 
         connection.writeResponse(150, "Retrieving File");
         assertEquals("150 Retrieving File", out.toString().trim());
-    }
-
-    @Test
-    public void signalConnected() {
-        in = new ByteArrayInputStream("".getBytes());
-        CommandConnection connection = new CommandConnection(in, out);
-
-        connection.signalConnected();
-        assertEquals("200 Connected to Mercury", out.toString().trim());
-    }
-
-    @Test
-    public void signalDisconnect() {
-        in = new ByteArrayInputStream("".getBytes());
-        CommandConnection connection = new CommandConnection(in, out);
-
-        connection.signalDisconnect();
-        assertEquals("421 Disconnected from Mercury", out.toString().trim());
-    }
-
-    @Test
-    public void disconnectCommand() {
-        CommandConnection connection = new CommandConnection(new ByteArrayInputStream("".getBytes()), out);
-        assertFalse(connection.isDisconnectCommand("RETR hello.txt"));
-        assertTrue(connection.isDisconnectCommand("QUIT"));
-        assertTrue(connection.isDisconnectCommand(null));
     }
 
 }
