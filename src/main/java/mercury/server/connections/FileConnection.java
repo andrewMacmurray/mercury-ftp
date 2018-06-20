@@ -74,11 +74,11 @@ public class FileConnection {
     }
 
     private void runOutputSocket(OutputStreamAction outputStreamAction) throws IOException {
-        socketExecutor.outputStream(outputStreamAction);
+        socketExecutor.runOutputStream(outputStreamAction);
     }
 
     private void runInputSocket(InputStreamAction inputStreamAction) throws IOException {
-        socketExecutor.inputStream(inputStreamAction);
+        socketExecutor.runInputStream(inputStreamAction);
     }
 
 }

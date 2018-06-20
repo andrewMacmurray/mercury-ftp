@@ -27,7 +27,7 @@ public class SocketExecutorTest {
 
     @Test
     public void inputStreamActive() throws IOException {
-        socketExecutor.inputStream(in -> {
+        socketExecutor.runInputStream(in -> {
             assertEquals(2021, socketFactoryStub.port);
             assertEquals("localhost", socketFactoryStub.host);
             assertEquals("hello", StreamHelper.inputStreamToString(in));
@@ -36,7 +36,7 @@ public class SocketExecutorTest {
 
     @Test
     public void outputStreamActive() throws IOException {
-        socketExecutor.outputStream(out -> {
+        socketExecutor.runOutputStream(out -> {
             assertEquals(2021, socketFactoryStub.port);
             assertEquals("localhost", socketFactoryStub.host);
             assertEquals("", out.toString().trim());
@@ -46,7 +46,7 @@ public class SocketExecutorTest {
     @Test
     public void inputStreamPassive() throws IOException {
         socketExecutor.setPassiveMode();
-        socketExecutor.inputStream(in -> {
+        socketExecutor.runInputStream(in -> {
             assertEquals(2022, socketFactoryStub.port);
             assertEquals("hello", StreamHelper.inputStreamToString(in));
         });
@@ -57,7 +57,7 @@ public class SocketExecutorTest {
         socketExecutor.setPassiveMode();
         socketExecutor.setActiveMode("localhost", 2021);
 
-        socketExecutor.inputStream(in -> {
+        socketExecutor.runInputStream(in -> {
             assertEquals(2021, socketFactoryStub.port);
         });
     }

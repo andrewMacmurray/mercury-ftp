@@ -24,7 +24,7 @@ public class SocketExecutor {
         this.passiveMode = false;
     }
 
-    public void inputStream(InputStreamAction inputStreamAction) throws IOException {
+    public void runInputStream(InputStreamAction inputStreamAction) throws IOException {
         try (
                 Socket socket = createSocket();
                 InputStream inputStream = socket.getInputStream();
@@ -33,7 +33,7 @@ public class SocketExecutor {
         }
     }
 
-    public void outputStream(OutputStreamAction outputStreamAction) throws IOException {
+    public void runOutputStream(OutputStreamAction outputStreamAction) throws IOException {
         try (
                 Socket socket = createSocket();
                 OutputStream outputStream = socket.getOutputStream();
@@ -51,13 +51,8 @@ public class SocketExecutor {
     public void setPassiveMode() throws IOException {
         if (passiveServerSocket == null) {
             passiveServerSocket = socketFactory.createServerSocket(passivePort);
-            setPassiveHost();
         }
         passiveMode = true;
-    }
-
-    private void setPassiveHost() throws UnknownHostException {
-        passiveHost = InetAddress.getLocalHost().getHostAddress();
     }
 
     public void setActiveMode(String host, int port) {
@@ -87,7 +82,7 @@ public class SocketExecutor {
     }
 
     public String getPassiveHost() {
-        return passiveHost;
+        return "127.0.0.1";
     }
 
 }

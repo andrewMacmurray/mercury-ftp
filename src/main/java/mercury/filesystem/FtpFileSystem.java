@@ -6,7 +6,11 @@ import mercury.server.connections.socket.OutputStreamAction;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class FtpFileSystem {
 
@@ -71,21 +75,15 @@ public class FtpFileSystem {
     }
 
     private void printFilesList(String path, OutputStream outputStream, FormatRunner formatRunner) throws IOException {
-        PrintWriter printWriter = createPrintWriter(outputStream);
-        Path currentDirectory = workingDirectory.getCurrentDirectory();
-
-        if (path.isEmpty()) {
-            printDirectory(currentDirectory, printWriter, formatRunner);
-        } else {
-            printDirectory(resolve(path), printWriter, formatRunner);
-        }
+        Path dir = path.isEmpty() ? workingDirectory.getCurrentDirectory() : resolve(path);
+        printDirectory(dir, createPrintWriter(outputStream), formatRunner);
     }
 
-    private void printDirectory(Path path, PrintWriter printWriter, FormatRunner formatRunner) throws IOException {
+    private void printDirectory(Path path, PrintWriter pr, FormatRunner formatRunner) throws IOException {
         nativeFileSystem
                 .list(path)
                 .map(formatRunner::run)
-                .forEach(printWriter::println);
+                .forEach(x -> pr.printf("%s\r\n", x));
     }
 
     private PrintWriter createPrintWriter(OutputStream outputStream) {
