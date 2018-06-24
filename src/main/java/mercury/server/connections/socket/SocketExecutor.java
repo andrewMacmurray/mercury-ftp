@@ -18,9 +18,16 @@ public class SocketExecutor {
     private int activePort;
     private String activeHost;
 
-    public SocketExecutor(SocketFactory socketFactory, int passivePort) {
+    public SocketExecutor(
+            SocketFactory socketFactory,
+            ServerSocket passiveServerSocket,
+            int passivePort,
+            String passiveHost
+    ) {
         this.socketFactory = socketFactory;
+        this.passiveServerSocket = passiveServerSocket;
         this.passivePort = passivePort;
+        this.passiveHost = passiveHost;
         this.passiveMode = false;
     }
 
@@ -49,32 +56,13 @@ public class SocketExecutor {
     }
 
     public void setPassiveMode() throws IOException {
-        if (passiveServerSocket == null) {
-            passiveServerSocket = socketFactory.createServerSocket(passivePort);
-        }
         passiveMode = true;
     }
 
     public void setActiveMode(String host, int port) {
-        closePassiveServerQuietly();
         passiveMode = false;
         activeHost = host;
         activePort = port;
-    }
-
-    private void closePassiveServerQuietly() {
-        try {
-            closePassiveServer();
-        } catch (IOException e) {
-            passiveServerSocket = null;
-        }
-    }
-
-    private void closePassiveServer() throws IOException {
-        if (passiveServerSocket != null) {
-            passiveServerSocket.close();
-            passiveServerSocket = null;
-        }
     }
 
     public int getPassivePort() {
@@ -82,7 +70,7 @@ public class SocketExecutor {
     }
 
     public String getPassiveHost() {
-        return "127.0.0.1";
+        return passiveHost;
     }
 
 }

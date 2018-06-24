@@ -10,9 +10,18 @@ import java.net.ServerSocket;
 public class Main {
 
     public static void main(String[] args) throws IOException {
+        String publicIp = args[0];
+
         ServerSocket serverSocket = new ServerSocket(21);
-        SocketExecutor socketExecutor = new SocketExecutor(new SocketFactory(), 2022);
-        NativeFileSystem fs = new NativeFileSystem("tmp");
+        ServerSocket passiveServerSocket = new ServerSocket(2022);
+
+        SocketExecutor socketExecutor = new SocketExecutor(
+                new SocketFactory(),
+                passiveServerSocket,
+                2022,
+                publicIp
+        );
+        NativeFileSystem fs = new NativeFileSystem("ftp");
 
         FtpServer ftpServer = new FtpServer(serverSocket, socketExecutor, fs);
         ftpServer.start();
