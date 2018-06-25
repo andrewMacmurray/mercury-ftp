@@ -49,7 +49,7 @@ public class CommandResponses {
     }
 
     public void listingSuccess() {
-        writeResponse(227, "Retrieved the listing");
+        writeResponse(226, "Retrieved the listing");
     }
 
     public void directorySuccess(String message) {

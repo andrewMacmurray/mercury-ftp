@@ -18,13 +18,20 @@ public class SocketExecutor {
     private int activePort;
     private String activeHost;
 
-    public SocketExecutor(SocketFactory socketFactory, int passivePort) {
+    public SocketExecutor(
+            SocketFactory socketFactory,
+            ServerSocket passiveServerSocket,
+            int passivePort,
+            String passiveHost
+    ) {
         this.socketFactory = socketFactory;
+        this.passiveServerSocket = passiveServerSocket;
         this.passivePort = passivePort;
+        this.passiveHost = passiveHost;
         this.passiveMode = false;
     }
 
-    public void inputStream(InputStreamAction inputStreamAction) throws IOException {
+    public void runInputStream(InputStreamAction inputStreamAction) throws IOException {
         try (
                 Socket socket = createSocket();
                 InputStream inputStream = socket.getInputStream();
@@ -33,7 +40,7 @@ public class SocketExecutor {
         }
     }
 
-    public void outputStream(OutputStreamAction outputStreamAction) throws IOException {
+    public void runOutputStream(OutputStreamAction outputStreamAction) throws IOException {
         try (
                 Socket socket = createSocket();
                 OutputStream outputStream = socket.getOutputStream();
@@ -49,37 +56,13 @@ public class SocketExecutor {
     }
 
     public void setPassiveMode() throws IOException {
-        if (passiveServerSocket == null) {
-            passiveServerSocket = socketFactory.createServerSocket(passivePort);
-            setPassiveHost();
-        }
         passiveMode = true;
     }
 
-    private void setPassiveHost() throws UnknownHostException {
-        passiveHost = InetAddress.getLocalHost().getHostAddress();
-    }
-
     public void setActiveMode(String host, int port) {
-        closePassiveServerQuietly();
         passiveMode = false;
         activeHost = host;
         activePort = port;
-    }
-
-    private void closePassiveServerQuietly() {
-        try {
-            closePassiveServer();
-        } catch (IOException e) {
-            passiveServerSocket = null;
-        }
-    }
-
-    private void closePassiveServer() throws IOException {
-        if (passiveServerSocket != null) {
-            passiveServerSocket.close();
-            passiveServerSocket = null;
-        }
     }
 
     public int getPassivePort() {

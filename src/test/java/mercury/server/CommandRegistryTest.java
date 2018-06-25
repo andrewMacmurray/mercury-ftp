@@ -208,7 +208,7 @@ public class CommandRegistryTest {
 
         assertEquals("hello", fileConnectionStub.sendFileListCalledWith);
         assertFirstResponse(150, "Getting a file list");
-        assertSecondResponse(227, "Retrieved the listing");
+        assertSecondResponse(226, "Retrieved the listing");
     }
 
     @Test
@@ -227,7 +227,7 @@ public class CommandRegistryTest {
 
         assertEquals("hello", fileConnectionStub.sendNameListCalledWith);
         assertFirstResponse(150, "Getting a list of file names");
-        assertSecondResponse(227, "Retrieved the listing");
+        assertSecondResponse(226, "Retrieved the listing");
     }
 
     @Test

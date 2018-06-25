@@ -1,6 +1,7 @@
 package mercury.server;
 
 import doubles.StreamHelper;
+import doubles.stubs.ServerSocketStub;
 import doubles.stubs.SocketFactoryStub;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,13 +22,24 @@ public class SocketExecutorTest {
     public void setup() throws IOException {
         InputStream socketIn = new ByteArrayInputStream("hello".getBytes());
         socketFactoryStub = new SocketFactoryStub(socketIn);
-        socketExecutor = new SocketExecutor(socketFactoryStub, 2022);
-        socketExecutor.setActiveMode("localhost", 2021);
+        socketExecutor = new SocketExecutor(
+                socketFactoryStub,
+                new ServerSocketStub(socketIn),
+                2022,
+                "127.0.0.1"
+        );
+    }
+
+    @Test
+    public void getsCorrectPassiveHostAndPort() {
+        assertEquals(2022, socketExecutor.getPassivePort());
+        assertEquals("127.0.0.1", socketExecutor.getPassiveHost());
     }
 
     @Test
     public void inputStreamActive() throws IOException {
-        socketExecutor.inputStream(in -> {
+        socketExecutor.setActiveMode("localhost", 2021);
+        socketExecutor.runInputStream(in -> {
             assertEquals(2021, socketFactoryStub.port);
             assertEquals("localhost", socketFactoryStub.host);
             assertEquals("hello", StreamHelper.inputStreamToString(in));
@@ -36,9 +48,10 @@ public class SocketExecutorTest {
 
     @Test
     public void outputStreamActive() throws IOException {
-        socketExecutor.outputStream(out -> {
-            assertEquals(2021, socketFactoryStub.port);
-            assertEquals("localhost", socketFactoryStub.host);
+        socketExecutor.setActiveMode("127.0.0.1", 8080);
+        socketExecutor.runOutputStream(out -> {
+            assertEquals(8080, socketFactoryStub.port);
+            assertEquals("127.0.0.1", socketFactoryStub.host);
             assertEquals("", out.toString().trim());
         });
     }
@@ -46,8 +59,7 @@ public class SocketExecutorTest {
     @Test
     public void inputStreamPassive() throws IOException {
         socketExecutor.setPassiveMode();
-        socketExecutor.inputStream(in -> {
-            assertEquals(2022, socketFactoryStub.port);
+        socketExecutor.runInputStream(in -> {
             assertEquals("hello", StreamHelper.inputStreamToString(in));
         });
     }
@@ -57,7 +69,8 @@ public class SocketExecutorTest {
         socketExecutor.setPassiveMode();
         socketExecutor.setActiveMode("localhost", 2021);
 
-        socketExecutor.inputStream(in -> {
+        socketExecutor.runInputStream(in -> {
+            assertEquals("localhost", socketFactoryStub.host);
             assertEquals(2021, socketFactoryStub.port);
         });
     }

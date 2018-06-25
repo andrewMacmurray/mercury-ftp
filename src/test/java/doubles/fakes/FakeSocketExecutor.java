@@ -12,18 +12,18 @@ public class FakeSocketExecutor extends SocketExecutor {
     private OutputStream outputStream;
 
     public FakeSocketExecutor() {
-        super(null, 0);
+        super(null, null, 0, "");
         this.inputStream = new ByteArrayInputStream("".getBytes());
         this.outputStream = new ByteArrayOutputStream();
     }
 
     @Override
-    public void inputStream(InputStreamAction action) throws IOException {
+    public void runInputStream(InputStreamAction action) throws IOException {
         action.runWithStream(inputStream);
     }
 
     @Override
-    public void outputStream(OutputStreamAction action) throws IOException {
+    public void runOutputStream(OutputStreamAction action) throws IOException {
         action.runWithStream(outputStream);
     }
 
