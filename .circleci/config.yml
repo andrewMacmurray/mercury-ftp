@@ -33,7 +33,7 @@ jobs:
         - run:
             name: install aws cli
             command: |
-              apt get python-pip
+              apk add py-pip bash
               pip install awscli
 
         - run:
