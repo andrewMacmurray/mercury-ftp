@@ -30,6 +30,7 @@ jobs:
         - image: hashicorp/terraform:full
       working_directory: ~/repo
       steps:
+        - checkout
         - run:
             name: install aws cli
             command: |
