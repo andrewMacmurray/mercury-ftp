@@ -57,14 +57,15 @@ jobs:
               - ~/infrastructure/.terraform
             key: terraform-v1-{{ checksum "terraform-plugins" }}
 
-  workflows:
-    version: 2
-    build-deploy:
-      jobs:
-        - build
-        - deploy:
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build
+      - deploy:
           requires:
             - build
           filters:
             branches:
               only: master
+
