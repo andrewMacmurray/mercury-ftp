@@ -33,8 +33,8 @@ jobs:
         - run:
             name: install aws cli
             command: |
-              sudo apt get python-pip
-              sudo pip install awscli
+              apt get python-pip
+              pip install awscli
 
         - run:
             name: send compiled jar to s3
