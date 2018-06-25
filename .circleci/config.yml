@@ -21,9 +21,10 @@ jobs:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
-      - run:
-          name: compile artifacts and run tests
-          command: gradle build
+      - run: gradle build
+
+      - store_artifacts:
+          path: build/libs/mercury-ftp-1.0-SNAPSHOT.jar
 
   deploy:
       docker:
@@ -40,7 +41,7 @@ jobs:
 
         - run:
             name: send compiled jar to s3
-            command: aws s3 cp ./build/libs/mercury-ftp-1.0-SNAPSHOT.jar s3://mercury-terraform/build-artifacts/
+            command: aws s3 cp build/libs/mercury-ftp-1.0-SNAPSHOT.jar s3://mercury-terraform/build-artifacts/
 
         - restore_cache:
             keys:
