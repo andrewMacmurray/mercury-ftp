@@ -27,7 +27,7 @@ jobs:
 
   deploy:
       docker:
-        - image: circleci/terraform
+        - image: hashicorp/terraform:full
       working_directory: ~/repo
       steps:
         - run:
