@@ -57,6 +57,4 @@ resource "aws_security_group" "mercury-security" {
     to_port = 0
     cidr_blocks = ["0.0.0.0/0"]
   }
-
 }
-

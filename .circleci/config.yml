@@ -20,4 +20,51 @@ jobs:
           paths:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
-      - run: gradle test
+
+      - run:
+        name: compile artifacts and run tests
+        command: gradle build
+
+  deploy:
+      docker:
+        - image: circleci/terraform
+      working_directory: ~/repo
+      steps:
+        - run:
+          name: install aws cli
+          command: |
+            sudo apt get python-pip
+            sudo pip install awscli
+
+        - run:
+          name: send compiled jar to s3
+          command: aws s3 cp ./build/libs/mercury-ftp-1.0-SNAPSHOT.jar s3://mercury-terraform/build-artifacts/
+
+        - restore_cache:
+            keys:
+            - terraform-v1-{{ checksum "terraform-plugins" }}
+            - terraform-v1-
+
+        - run:
+          name: apply changes with terraform
+          command: |
+            cd infrastructure
+            terraform init
+            terraform apply -auto-approve
+
+        - save_cache:
+            paths:
+              - ~/infrastructure/.terraform
+            key: terraform-v1-{{ checksum "terraform-plugins" }}
+
+  workflows:
+    version: 2
+    build-deploy:
+      jobs:
+        - build
+        - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
