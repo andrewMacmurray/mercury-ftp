@@ -4,9 +4,6 @@ jobs:
     docker:
       - image: circleci/openjdk:8-jdk
     working_directory: ~/repo
-    environment:
-      JVM_OPTS: -Xmx3200m
-      TERM: dumb
 
     steps:
       - checkout
@@ -33,13 +30,13 @@ jobs:
     working_directory: ~/repo
     steps:
       - attach_workspace:
-          at: ~/repo/build
+          at: ~/repo
 
       - run: sudo pip install awscli
 
       - run:
           name: send compiled jar to s3
-          command: aws s3 cp ~/repo/build/build/libs/mercury-ftp-1.0-SNAPSHOT.jar s3://mercury-terraform/build-artifacts/
+          command: aws s3 cp ~/repo/build/libs/mercury-ftp-1.0-SNAPSHOT.jar s3://mercury-terraform/build-artifacts/
 
   provision:
       docker:
@@ -47,7 +44,6 @@ jobs:
       working_directory: ~/repo
       steps:
         - checkout
-
         - restore_cache:
             keys:
               - terraform-v1-{{ checksum "terraform-plugins" }}
@@ -58,6 +54,7 @@ jobs:
             command: |
               cd infrastructure
               terraform init
+              terraform taint aws_instance.mercury
               terraform apply -auto-approve
 
         - save_cache:
