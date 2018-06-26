@@ -23,15 +23,18 @@ jobs:
 
       - run: gradle build
 
-      - store_artifacts:
-          path: build/libs/mercury-ftp-1.0-SNAPSHOT.jar
+      - persist_to_workspace:
+          root: build
+          at: ~/repo
 
   deploy:
       docker:
         - image: hashicorp/terraform:full
       working_directory: ~/repo
       steps:
-        - checkout
+        - attach_workspace:
+            at: ~/repo/build
+
         - run:
             name: install aws cli
             command: |
@@ -41,7 +44,7 @@ jobs:
 
         - run:
             name: send compiled jar to s3
-            command: aws s3 cp build/libs/mercury-ftp-1.0-SNAPSHOT.jar s3://mercury-terraform/build-artifacts/
+            command: aws s3 cp ~/repo/build/build/libs/mercury-ftp-1.0-SNAPSHOT.jar s3://mercury-terraform/build-artifacts/
 
         - restore_cache:
             keys:
