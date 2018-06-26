@@ -77,9 +77,12 @@ workflows:
           requires:
             - build
           filters:
-            only: master
+            branches:
+              only: master
       - provision:
           requires:
             - upload
           filters:
-            only: master
+            branches:
+              only: master
+
