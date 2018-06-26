@@ -24,7 +24,8 @@ jobs:
       - run: gradle build
 
       - persist_to_workspace:
-          paths: ~/build/libs/mercury-ftp-1.0-SNAPSHOT.jar
+          root: ~/repo
+          paths: build/libs/mercury-ftp-1.0-SNAPSHOT.jar
 
   deploy:
       docker:
