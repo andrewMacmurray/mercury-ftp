@@ -64,13 +64,16 @@ jobs:
 
 workflows:
   version: 2
-  build-deploy:
+  build-upload-provision:
     jobs:
       - build
       - upload:
           requires:
             - build
+          filters:
+            only: master
       - provision:
           requires:
             - upload
-
+          filters:
+            only: master
