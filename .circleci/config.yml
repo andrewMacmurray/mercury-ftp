@@ -27,26 +27,26 @@ jobs:
           root: ~/repo
           paths: build/libs/mercury-ftp-1.0-SNAPSHOT.jar
 
-  deploy:
+  upload:
+    docker:
+      - image: circleci/python:2.7
+    working_directory: ~/repo
+    steps:
+      - attach_workspace:
+          at: ~/repo/build
+
+      - run: sudo pip install awscli
+
+      - run:
+          name: send compiled jar to s3
+          command: aws s3 cp ~/repo/build/build/libs/mercury-ftp-1.0-SNAPSHOT.jar s3://mercury-terraform/build-artifacts/
+
+  provision:
       docker:
         - image: hashicorp/terraform:full
       working_directory: ~/repo
       steps:
-        - attach_workspace:
-            at: ~/repo/build
-
         - checkout
-
-        - run:
-            name: install aws cli
-            command: |
-              apk update
-              apk add py-pip bash
-              pip install awscli
-
-        - run:
-            name: send compiled jar to s3
-            command: aws s3 cp ~/repo/build/build/libs/mercury-ftp-1.0-SNAPSHOT.jar s3://mercury-terraform/build-artifacts/
 
         - restore_cache:
             keys:
@@ -70,7 +70,10 @@ workflows:
   build-deploy:
     jobs:
       - build
-      - deploy:
+      - upload:
           requires:
             - build
+      - provision:
+          requires:
+            - upload
 
