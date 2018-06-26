@@ -18,7 +18,11 @@ jobs:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
-      - run: gradle build
+      - run:
+          name: runs tests and compiles assets
+          command: |
+            gradle test
+            gradle jar
 
       - persist_to_workspace:
           root: ~/repo
@@ -32,7 +36,9 @@ jobs:
       - attach_workspace:
           at: ~/repo
 
-      - run: sudo pip install awscli
+      - run:
+          name: install aws cli
+          command: sudo pip install awscli
 
       - run:
           name: send compiled jar to s3
