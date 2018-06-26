@@ -25,7 +25,7 @@ jobs:
 
       - persist_to_workspace:
           root: build
-          at: ~/repo
+          at: libs/mercury-ftp-1.0-SNAPSHOT.jar
 
   deploy:
       docker:
