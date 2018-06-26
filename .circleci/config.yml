@@ -35,6 +35,8 @@ jobs:
         - attach_workspace:
             at: ~/repo/build
 
+        - checkout
+
         - run:
             name: install aws cli
             command: |
