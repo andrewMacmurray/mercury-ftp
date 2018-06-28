@@ -6,10 +6,6 @@ terraform {
   }
 }
 
-provider "aws" {
-  region = "eu-west-2"
-}
-
 resource "aws_instance" "mercury" {
   ami = "ami-a36f8dc4"
   instance_type = "t2.micro"
@@ -45,9 +41,9 @@ resource "aws_security_group" "mercury-security" {
   }
 
   ingress {
-    from_port   = 22
-    protocol    = "tcp"
-    to_port     = 22
+    from_port = 22
+    protocol = "tcp"
+    to_port = 22
     cidr_blocks = ["0.0.0.0/0"]
   }
 
