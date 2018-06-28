@@ -24,7 +24,7 @@ public class CommandInterpreterBuilderTest {
         FakeSocketExecutor fakeSocketExecutor = new FakeSocketExecutor();
         FileSystemSpy fileSystemSpy = new FileSystemSpy();
 
-        CommandInterpreter commandInterpreter = CommandInterpreterBuilder.build(socketStub, fakeSocketExecutor, fileSystemSpy);
+        CommandInterpreter commandInterpreter = new CommandInterpreterBuilder(socketStub, fakeSocketExecutor, fileSystemSpy).build();
 
         commandInterpreter.processCommands();
 
