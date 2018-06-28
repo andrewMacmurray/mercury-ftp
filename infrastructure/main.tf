@@ -60,3 +60,6 @@ resource "aws_security_group" "mercury-security" {
 
 }
 
+output "public_ip" {
+  value = "${aws_instance.mercury.public_ip}"
+}
