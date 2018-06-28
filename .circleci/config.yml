@@ -4,9 +4,6 @@ jobs:
     docker:
       - image: circleci/openjdk:8-jdk
     working_directory: ~/repo
-    environment:
-      JVM_OPTS: -Xmx3200m
-      TERM: dumb
 
     steps:
       - checkout
@@ -20,4 +17,72 @@ jobs:
           paths:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
-      - run: gradle test
+
+      - run:
+          name: runs tests and compiles assets
+          command: |
+            gradle test
+            gradle jar
+
+      - persist_to_workspace:
+          root: ~/repo
+          paths: build/libs/mercury-ftp-1.0-SNAPSHOT.jar
+
+  upload:
+    docker:
+      - image: circleci/python:2.7
+    working_directory: ~/repo
+    steps:
+      - attach_workspace:
+          at: ~/repo
+
+      - run:
+          name: install aws cli
+          command: sudo pip install awscli
+
+      - run:
+          name: send compiled jar to s3
+          command: aws s3 cp ~/repo/build/libs/mercury-ftp-1.0-SNAPSHOT.jar s3://mercury-terraform/build-artifacts/
+
+  provision:
+      docker:
+        - image: hashicorp/terraform:full
+      working_directory: ~/repo
+      steps:
+        - checkout
+        - restore_cache:
+            keys:
+              - terraform-v1-{{ checksum "terraform-plugins" }}
+              - terraform-v1-
+
+        - run:
+            name: apply changes with terraform
+            command: |
+              cd infrastructure
+              terraform init
+              terraform taint aws_instance.mercury
+              terraform apply -auto-approve
+
+        - save_cache:
+            paths:
+              - ~/infrastructure/.terraform
+            key: terraform-v1-{{ checksum "terraform-plugins" }}
+
+workflows:
+  version: 2
+  build-upload-provision:
+    jobs:
+      - build
+      - upload:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
+      - provision:
+          requires:
+            - upload
+          filters:
+            branches:
+              only: master
+
