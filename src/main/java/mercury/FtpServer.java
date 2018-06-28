@@ -2,7 +2,8 @@ package mercury;
 
 import mercury.filesystem.NativeFileSystem;
 import mercury.server.connections.FtpConnectionThread;
-import mercury.server.connections.PassivePorts;
+import mercury.server.connections.PassivePortManager;
+import mercury.server.connections.socket.SocketFactory;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -13,15 +14,23 @@ import java.util.concurrent.Executors;
 public class FtpServer {
 
     private ServerSocket serverSocket;
-    private PassivePorts passivePorts;
+    private PassivePortManager passivePortManager;
+    private SocketFactory socketFactory;
     private NativeFileSystem fs;
     private ExecutorService threadPool;
 
-    public FtpServer(ServerSocket serverSocket, PassivePorts passivePorts, NativeFileSystem fs) {
+    public FtpServer(
+            ServerSocket serverSocket,
+            PassivePortManager passivePortManager,
+            SocketFactory socketFactory,
+            NativeFileSystem fs,
+            ExecutorService threadPool
+    ) {
         this.serverSocket = serverSocket;
+        this.socketFactory = socketFactory;
         this.fs = fs;
-        this.passivePorts = passivePorts;
-        this.threadPool = Executors.newFixedThreadPool(5);
+        this.passivePortManager = passivePortManager;
+        this.threadPool = threadPool;
     }
 
     public void start() throws IOException {
@@ -38,7 +47,7 @@ public class FtpServer {
 
     private void acceptConnection() throws IOException {
         Socket commandSocket = serverSocket.accept();
-        threadPool.execute(new FtpConnectionThread(commandSocket, passivePorts, fs));
+        threadPool.execute(new FtpConnectionThread(commandSocket, passivePortManager, socketFactory, fs));
     }
 
     private void logConnectionError(IOException e) {

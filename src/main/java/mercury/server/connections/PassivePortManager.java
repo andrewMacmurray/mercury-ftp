@@ -5,17 +5,17 @@ import java.util.Queue;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class PassivePorts {
+public class PassivePortManager {
 
     private Queue<Integer> availablePorts;
-    private String hostAddress;
+    private String host;
 
-    public PassivePorts(String hostAddress, Integer fromPort, Integer toPort) {
+    public PassivePortManager(String host, Integer fromPort, Integer toPort) {
         availablePorts = IntStream
-                .range(fromPort, toPort)
+                .rangeClosed(fromPort, toPort)
                 .boxed()
                 .collect(Collectors.toCollection(LinkedList::new));
-        this.hostAddress = hostAddress;
+        this.host = host;
     }
 
     public Integer getAvailablePort() {
@@ -26,8 +26,8 @@ public class PassivePorts {
         availablePorts.add(port);
     }
 
-    public String getHostAddress() {
-        return hostAddress;
+    public String getHost() {
+        return host;
     }
 
 }

@@ -1,10 +1,13 @@
 package mercury;
 
 import mercury.filesystem.NativeFileSystem;
-import mercury.server.connections.PassivePorts;
+import mercury.server.connections.PassivePortManager;
+import mercury.server.connections.socket.SocketFactory;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Main {
 
@@ -19,11 +22,16 @@ public class Main {
         String userRootDirectory = "ftp";
         String publicIp = "127.0.0.1";
 
+        Integer fromPort = 2022;
+        Integer toPort = 2026;
+
         ServerSocket serverSocket = new ServerSocket(2021);
         NativeFileSystem fs = new NativeFileSystem(userRootDirectory);
-        PassivePorts passivePorts = new PassivePorts(publicIp, 2022, 2026);
+        PassivePortManager passivePortManager = new PassivePortManager(publicIp, fromPort, toPort);
+        SocketFactory socketFactory = new SocketFactory();
+        ExecutorService threadPool = Executors.newFixedThreadPool(toPort - fromPort + 1);
 
-        FtpServer ftpServer = new FtpServer(serverSocket, passivePorts, fs);
+        FtpServer ftpServer = new FtpServer(serverSocket, passivePortManager, socketFactory, fs, threadPool);
         ftpServer.start();
     }
 

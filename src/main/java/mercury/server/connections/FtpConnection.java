@@ -13,36 +13,52 @@ import java.net.Socket;
 public class FtpConnection implements AutoCloseable {
 
     private Socket commandSocket;
-    private PassivePorts passivePorts;
+    private PassivePortManager passivePortManager;
     private Integer provisionedPort;
     private ServerSocket passiveServerSocket;
     private CommandInterpreter commandInterpreter;
 
-    public FtpConnection(Socket commandSocket, PassivePorts passivePorts, NativeFileSystem fs) throws IOException {
+    public FtpConnection(
+            Socket commandSocket,
+            PassivePortManager passivePortManager,
+            SocketFactory socketFactory,
+            NativeFileSystem fs
+    ) throws IOException {
         this.commandSocket = commandSocket;
-        this.passivePorts = passivePorts;
-        this.provisionedPort = passivePorts.getAvailablePort();
-        System.out.println("provisioned port " + provisionedPort);
-        this.commandInterpreter = new CommandInterpreterBuilder(
-                commandSocket,
-                createSocketExecutor(),
-                fs).build();
+        this.passivePortManager = passivePortManager;
+        this.provisionedPort = provisionPort();
+        this.passiveServerSocket = createPassiveServer(socketFactory);
+        this.commandInterpreter = createInterpreter(socketFactory, fs);
     }
 
     public void processCommands() throws IOException {
         commandInterpreter.processCommands();
     }
 
-    private SocketExecutor createSocketExecutor() throws IOException {
-        SocketFactory socketFactory = new SocketFactory();
-        passiveServerSocket = socketFactory.createServerSocket(provisionedPort);
-        return new SocketExecutor(socketFactory, passiveServerSocket, provisionedPort, passivePorts.getHostAddress());
+    private CommandInterpreter createInterpreter(SocketFactory socketFactory, NativeFileSystem fs) throws IOException {
+        return new CommandInterpreterBuilder(commandSocket, createSocketExecutor(socketFactory), fs).build();
+    }
+
+    private Integer provisionPort() {
+        return passivePortManager.getAvailablePort();
+    }
+
+    private ServerSocket createPassiveServer(SocketFactory socketFactory) throws IOException {
+        return socketFactory.createServerSocket(provisionedPort);
+    }
+
+    private SocketExecutor createSocketExecutor(SocketFactory socketFactory) {
+        return new SocketExecutor(
+                socketFactory,
+                passiveServerSocket,
+                provisionedPort,
+                passivePortManager.getHost()
+        );
     }
 
     @Override
     public void close() throws IOException {
-        System.out.println("releasing port " + provisionedPort);
-        passivePorts.releasePort(provisionedPort);
+        passivePortManager.releasePort(provisionedPort);
         passiveServerSocket.close();
         commandSocket.close();
     }
