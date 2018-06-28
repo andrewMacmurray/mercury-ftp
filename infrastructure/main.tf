@@ -40,7 +40,7 @@ resource "aws_security_group" "mercury-security" {
   ingress {
     from_port = 2022
     protocol = "tcp"
-    to_port = 2022
+    to_port = 2026
     cidr_blocks = ["0.0.0.0/0"]
   }
 
