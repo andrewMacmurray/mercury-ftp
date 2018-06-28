@@ -3,9 +3,9 @@ package mercury.server;
 import doubles.StreamHelper;
 import doubles.stubs.ServerSocketStub;
 import doubles.stubs.SocketFactoryStub;
+import mercury.server.connections.socket.SocketExecutor;
 import org.junit.Before;
 import org.junit.Test;
-import mercury.server.connections.socket.SocketExecutor;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

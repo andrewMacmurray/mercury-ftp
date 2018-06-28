@@ -10,6 +10,7 @@ public class SocketFactoryStub extends SocketFactory {
 
     public String host;
     public int port;
+    public ServerSocketStub createdServerSocketStub;
     private InputStream socketIn;
 
     public SocketFactoryStub(InputStream socketIn) {
@@ -30,7 +31,8 @@ public class SocketFactoryStub extends SocketFactory {
     @Override
     public ServerSocketStub createServerSocket(int port) throws IOException {
         this.port = port;
-        return new ServerSocketStub(socketIn);
+        this.createdServerSocketStub = new ServerSocketStub(socketIn);
+        return createdServerSocketStub;
     }
 
 }

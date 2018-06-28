@@ -14,55 +14,52 @@ import java.net.Socket;
 
 public class CommandInterpreterBuilder {
 
-    public static CommandInterpreter build(
+    private Socket commandSocket;
+    private SocketExecutor socketExecutor;
+    private NativeFileSystem fs;
+
+    public CommandInterpreterBuilder(
             Socket commandSocket,
             SocketExecutor socketExecutor,
             NativeFileSystem fs
-    ) throws IOException {
-        CommandConnection commandConnection = createCommandConnection(commandSocket);
-        CommandResponses commandResponses   = createResponses(commandConnection);
-        return new CommandInterpreter(
-                commandConnection,
-                commandResponses,
-                createCommands(commandResponses, fs, socketExecutor)
-        );
+    ) {
+        this.commandSocket = commandSocket;
+        this.socketExecutor = socketExecutor;
+        this.fs = fs;
     }
 
     private static CommandResponses createResponses(CommandConnection commandConnection) {
         return new CommandResponses(commandConnection);
     }
 
-    private static Commands createCommands(
-            CommandResponses commandResponses,
-            NativeFileSystem fs,
-            SocketExecutor socketExecutor
-    ) {
-        return new CommandsFactory(
-                commandResponses,
-                createFileConnection(fs, socketExecutor)
-        ).build();
-    }
+    public CommandInterpreter build() throws IOException {
+        CommandConnection commandConnection = createCommandConnection();
+        CommandResponses commandResponses = createResponses(commandConnection);
 
-    private static FileConnection createFileConnection(NativeFileSystem fs, SocketExecutor socketExecutor) {
-        return new FileConnection(
-                createFileSystem(fs),
-                socketExecutor
+        return new CommandInterpreter(
+                commandConnection,
+                commandResponses,
+                createCommands(commandResponses, socketExecutor)
         );
     }
 
-    private static CommandConnection createCommandConnection(Socket commandSocket) throws IOException {
+    private Commands createCommands(CommandResponses commandResponses, SocketExecutor socketExecutor) {
+        return new CommandsFactory(commandResponses, createFileConnection(fs, socketExecutor)).build();
+    }
+
+    private FileConnection createFileConnection(NativeFileSystem fs, SocketExecutor socketExecutor) {
+        return new FileConnection(createFileSystem(), socketExecutor);
+    }
+
+    private CommandConnection createCommandConnection() throws IOException {
         return new CommandConnection(
                 commandSocket.getInputStream(),
                 commandSocket.getOutputStream()
         );
     }
 
-    private static FtpFileSystem createFileSystem(NativeFileSystem fs) {
-        return new FtpFileSystem(
-                fs,
-                new FileListingFormatter(),
-                new WorkingDirectory()
-        );
+    private FtpFileSystem createFileSystem() {
+        return new FtpFileSystem(fs, new FileListingFormatter(), new WorkingDirectory());
     }
 
 }

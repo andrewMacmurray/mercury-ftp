@@ -5,10 +5,10 @@ import doubles.spies.FileSystemSpy;
 import doubles.stubs.FileListingStub;
 import mercury.filesystem.FtpFileSystem;
 import mercury.filesystem.WorkingDirectory;
-import org.junit.Before;
-import org.junit.Test;
 import mercury.server.connections.FileConnection;
 import mercury.server.connections.socket.SocketExecutor;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 

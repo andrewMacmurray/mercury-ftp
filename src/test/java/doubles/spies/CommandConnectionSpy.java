@@ -2,9 +2,6 @@ package doubles.spies;
 
 import mercury.server.connections.CommandConnection;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-
 public class CommandConnectionSpy extends CommandConnection {
 
     public int code;
