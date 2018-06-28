@@ -2,7 +2,7 @@ package mercury;
 
 import mercury.filesystem.NativeFileSystem;
 import mercury.server.connections.FtpConnectionThread;
-import mercury.server.connections.socket.SocketExecutor;
+import mercury.server.connections.PassivePorts;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -13,14 +13,14 @@ import java.util.concurrent.Executors;
 public class FtpServer {
 
     private ServerSocket serverSocket;
-    private SocketExecutor socketExecutor;
+    private PassivePorts passivePorts;
     private NativeFileSystem fs;
     private ExecutorService threadPool;
 
-    public FtpServer(ServerSocket serverSocket, SocketExecutor socketExecutor, NativeFileSystem fs) {
+    public FtpServer(ServerSocket serverSocket, PassivePorts passivePorts, NativeFileSystem fs) {
         this.serverSocket = serverSocket;
-        this.socketExecutor = socketExecutor;
         this.fs = fs;
+        this.passivePorts = passivePorts;
         this.threadPool = Executors.newFixedThreadPool(5);
     }
 
@@ -38,7 +38,7 @@ public class FtpServer {
 
     private void acceptConnection() throws IOException {
         Socket commandSocket = serverSocket.accept();
-        threadPool.execute(new FtpConnectionThread(commandSocket, socketExecutor, fs));
+        threadPool.execute(new FtpConnectionThread(commandSocket, passivePorts, fs));
     }
 
     private void logConnectionError(IOException e) {
