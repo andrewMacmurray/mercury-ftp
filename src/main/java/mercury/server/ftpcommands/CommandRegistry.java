@@ -125,9 +125,6 @@ public class CommandRegistry {
             commandResponses.listingSuccess();
         } catch (IOException e) {
             commandResponses.fileError("Could not get listing");
-        } catch (Exception e) {
-            System.out.println(e.toString());
-            System.out.println(e.getMessage());
         }
     }
 

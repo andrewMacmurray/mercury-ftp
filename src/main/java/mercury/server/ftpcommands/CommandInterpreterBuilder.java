@@ -28,10 +28,6 @@ public class CommandInterpreterBuilder {
         this.fs = fs;
     }
 
-    private static CommandResponses createResponses(CommandConnection commandConnection) {
-        return new CommandResponses(commandConnection);
-    }
-
     public CommandInterpreter build() throws IOException {
         CommandConnection commandConnection = createCommandConnection();
         CommandResponses commandResponses = createResponses(commandConnection);
@@ -41,6 +37,10 @@ public class CommandInterpreterBuilder {
                 commandResponses,
                 createCommands(commandResponses, socketExecutor)
         );
+    }
+
+    private CommandResponses createResponses(CommandConnection commandConnection) {
+        return new CommandResponses(commandConnection);
     }
 
     private Commands createCommands(CommandResponses commandResponses, SocketExecutor socketExecutor) {

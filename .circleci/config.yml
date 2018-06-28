@@ -52,7 +52,7 @@ jobs:
         - checkout
         - restore_cache:
             keys:
-              - terraform-v1-{{ checksum "terraform-plugins" }}
+              - terraform-v1-{{ checksum "infrastructure/.terraform/plugins" }}
               - terraform-v1-
 
         - run:
@@ -60,13 +60,13 @@ jobs:
             command: |
               cd infrastructure
               terraform init
-              terraform taint aws_instance.mercury
+              terraform taint -allow-missing aws_instance.mercury
               terraform apply -auto-approve
 
         - save_cache:
             paths:
               - ~/infrastructure/.terraform
-            key: terraform-v1-{{ checksum "terraform-plugins" }}
+            key: terraform-v1-{{ checksum "infrastructure/.terraform/plugins" }}
 
 workflows:
   version: 2
