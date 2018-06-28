@@ -8,10 +8,8 @@ import mercury.server.connections.CommandConnection;
 import mercury.server.connections.CommandResponses;
 import mercury.server.connections.FileConnection;
 import mercury.server.connections.socket.SocketExecutor;
-import mercury.server.connections.socket.SocketFactory;
 
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.Socket;
 
 public class CommandInterpreterBuilder {
@@ -30,19 +28,19 @@ public class CommandInterpreterBuilder {
         this.fs = fs;
     }
 
+    private static CommandResponses createResponses(CommandConnection commandConnection) {
+        return new CommandResponses(commandConnection);
+    }
+
     public CommandInterpreter build() throws IOException {
         CommandConnection commandConnection = createCommandConnection();
-        CommandResponses commandResponses   = createResponses(commandConnection);
+        CommandResponses commandResponses = createResponses(commandConnection);
 
         return new CommandInterpreter(
                 commandConnection,
                 commandResponses,
                 createCommands(commandResponses, socketExecutor)
         );
-    }
-
-    private static CommandResponses createResponses(CommandConnection commandConnection) {
-        return new CommandResponses(commandConnection);
     }
 
     private Commands createCommands(CommandResponses commandResponses, SocketExecutor socketExecutor) {

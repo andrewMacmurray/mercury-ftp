@@ -1,7 +1,7 @@
 package mercury.server;
 
-import org.junit.Test;
 import mercury.server.ftpcommands.actions.CommandExecutor;
+import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 

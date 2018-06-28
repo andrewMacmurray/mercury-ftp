@@ -9,8 +9,8 @@ import java.net.UnknownHostException;
 
 public class ServerSocketStub extends ServerSocket {
 
-    private SocketStub socketStub;
     public boolean closed;
+    private SocketStub socketStub;
 
     public ServerSocketStub(InputStream in) throws IOException {
         this.socketStub = new SocketStub(in);

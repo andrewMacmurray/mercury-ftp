@@ -1,17 +1,13 @@
 package mercury.server;
 
-import doubles.spies.CommandConnectionSpy;
 import doubles.spies.NameGeneratorSpy;
 import doubles.stubs.CommandConnectionStub;
 import doubles.stubs.ErroringFileConnectionStub;
 import doubles.stubs.FileConnectionStub;
-import org.junit.Before;
-import org.junit.Test;
 import mercury.server.connections.CommandResponses;
 import mercury.server.ftpcommands.CommandRegistry;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.junit.Before;
+import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

@@ -3,10 +3,9 @@ package mercury.server;
 import doubles.fakes.FakeSocketExecutor;
 import doubles.spies.FileSystemSpy;
 import doubles.stubs.SocketStub;
-import org.junit.Test;
-import mercury.server.connections.CommandResponses;
 import mercury.server.ftpcommands.CommandInterpreter;
 import mercury.server.ftpcommands.CommandInterpreterBuilder;
+import org.junit.Test;
 
 import java.io.*;
 import java.util.stream.Collectors;
