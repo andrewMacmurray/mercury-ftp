@@ -2,6 +2,7 @@ package mercury.server;
 
 import doubles.fakes.FakeSocketExecutor;
 import doubles.stubs.SocketStub;
+import mercury.server.connections.FtpConnectionThread;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;

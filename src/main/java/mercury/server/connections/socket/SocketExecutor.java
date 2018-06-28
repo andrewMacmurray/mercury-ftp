@@ -55,7 +55,7 @@ public class SocketExecutor {
                 : socketFactory.createSocket(activeHost, activePort);
     }
 
-    public void setPassiveMode() throws IOException {
+    public void setPassiveMode() {
         passiveMode = true;
     }
 

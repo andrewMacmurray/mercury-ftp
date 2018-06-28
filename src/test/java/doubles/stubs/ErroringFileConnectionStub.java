@@ -40,9 +40,4 @@ public class ErroringFileConnectionStub extends FileConnection {
         throw new IOException();
     }
 
-    @Override
-    public void passiveMode() throws IOException {
-        throw new IOException();
-    }
-
 }

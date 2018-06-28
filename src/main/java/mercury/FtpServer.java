@@ -1,7 +1,7 @@
 package mercury;
 
 import mercury.filesystem.NativeFileSystem;
-import mercury.server.FtpConnectionThread;
+import mercury.server.connections.FtpConnectionThread;
 import mercury.server.connections.socket.SocketExecutor;
 
 import java.io.IOException;

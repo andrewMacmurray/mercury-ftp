@@ -78,12 +78,9 @@ public class CommandRegistry {
     }
 
     public void PASV() {
-        try {
-            fileConnection.passiveMode();
-            commandResponses.passiveConnectionSuccess(fileConnection.getPassiveAddress());
-        } catch (IOException e) {
-            commandResponses.commandFailure("Error setting passive mode");
-        }
+        fileConnection.passiveMode();
+        String passiveAddress = fileConnection.getPassiveAddress();
+        commandResponses.passiveConnectionSuccess(passiveAddress);
     }
 
     public void USER(String userName) {

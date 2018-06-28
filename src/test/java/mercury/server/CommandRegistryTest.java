@@ -146,15 +146,6 @@ public class CommandRegistryTest {
     }
 
     @Test
-    public void sendsErrorIfPassiveModeError() {
-        commandRegistry = new CommandRegistry(responder, erroringFileConnectionStub, null);
-
-        commandRegistry.PASV();
-
-        assertFirstResponse(500, "Error setting passive mode");
-    }
-
-    @Test
     public void sendsErrorMessageForInvalidPassword() {
         commandRegistry.PASS("hello");
 
