@@ -6,11 +6,7 @@ import mercury.server.connections.socket.OutputStreamAction;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class FtpFileSystem {
 

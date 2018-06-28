@@ -1,8 +1,8 @@
 package mercury.server;
 
+import mercury.server.ftpcommands.utils.NameGenerator;
 import org.junit.Before;
 import org.junit.Test;
-import mercury.server.ftpcommands.utils.NameGenerator;
 
 import java.util.ArrayList;
 import java.util.List;

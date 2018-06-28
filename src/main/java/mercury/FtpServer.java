@@ -1,27 +1,35 @@
 package mercury;
 
 import mercury.filesystem.NativeFileSystem;
-import mercury.server.FtpConnectionThread;
-import mercury.server.connections.socket.SocketExecutor;
+import mercury.server.connections.FtpConnectionThread;
+import mercury.server.connections.PassivePortManager;
+import mercury.server.connections.socket.SocketFactory;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class FtpServer {
 
     private ServerSocket serverSocket;
-    private SocketExecutor socketExecutor;
+    private PassivePortManager passivePortManager;
+    private SocketFactory socketFactory;
     private NativeFileSystem fs;
     private ExecutorService threadPool;
 
-    public FtpServer(ServerSocket serverSocket, SocketExecutor socketExecutor, NativeFileSystem fs) {
+    public FtpServer(
+            ServerSocket serverSocket,
+            PassivePortManager passivePortManager,
+            SocketFactory socketFactory,
+            NativeFileSystem fs,
+            ExecutorService threadPool
+    ) {
         this.serverSocket = serverSocket;
-        this.socketExecutor = socketExecutor;
+        this.socketFactory = socketFactory;
         this.fs = fs;
-        this.threadPool = Executors.newFixedThreadPool(5);
+        this.passivePortManager = passivePortManager;
+        this.threadPool = threadPool;
     }
 
     public void start() throws IOException {
@@ -38,7 +46,7 @@ public class FtpServer {
 
     private void acceptConnection() throws IOException {
         Socket commandSocket = serverSocket.accept();
-        threadPool.execute(new FtpConnectionThread(commandSocket, socketExecutor, fs));
+        threadPool.execute(new FtpConnectionThread(commandSocket, passivePortManager, socketFactory, fs));
     }
 
     private void logConnectionError(IOException e) {

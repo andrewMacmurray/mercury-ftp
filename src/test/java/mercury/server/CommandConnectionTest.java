@@ -1,8 +1,8 @@
 package mercury.server;
 
+import mercury.server.connections.CommandConnection;
 import org.junit.Before;
 import org.junit.Test;
-import mercury.server.connections.CommandConnection;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

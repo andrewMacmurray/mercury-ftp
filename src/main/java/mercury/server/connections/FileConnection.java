@@ -22,7 +22,7 @@ public class FileConnection {
         socketExecutor.setActiveMode(host, port);
     }
 
-    public void passiveMode() throws IOException {
+    public void passiveMode() {
         socketExecutor.setPassiveMode();
     }
 
