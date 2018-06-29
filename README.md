@@ -1,85 +1,91 @@
 # Mercury FTP
 
-Java FTP server
+[![CircleCI](https://circleci.com/gh/andrewMacmurray/mercury-ftp.svg?style=svg)](https://circleci.com/gh/andrewMacmurray/mercury-ftp)
 
+![1_fkapdcuastrczqakefqvka](https://user-images.githubusercontent.com/14013616/42080037-44c2705e-7b79-11e8-93bc-e608c9255628.png)
+
+Mercury is a partial implementation of an FTP server in Java - (named after the [winged messenger](https://en.wikipedia.org/wiki/Mercury_(mythology)))
 
 ## Implemented Commands
 
 https://www.iana.org/assignments/ftp-commands-extensions/ftp-commands-extensions.xhtml
 
-- [ ] ABOR - Abort
-- [ ] ACCT - Account
-- [X] APPE - Append 
-- [X] CWD - Change Working Directory 
-- [ ] DELE - Delete File 
-- [ ] HELP - Help
-- [X] LIST - List 
-- [ ] MODE - Transfer Mode 
-- [X] NLST - Name List 
-- [ ] NOOP - No-Op (Ping)
-- [X] PASS - Password 
-- [X] PASV - Passive Mode 
-- [X] PORT - Data Port 
-- [X] QUIT - Logout 
-- [ ] REIN - Reinitialize 
-- [ ] REST - Restart 
-- [X] RETR - Retrieve 
-- [ ] RNFR - Rename From
-- [ ] RNTO - Rename To
-- [ ] SITE - Site Parameters
-- [ ] STAT - Status
-- [X] STOR - Store 
-- [X] STOU - Store Unique 
-- [ ] STRU - File Structure 
-- [ ] TYPE - Representation Type 
-- [X] USER - User Name
+- APPE - Append 
+- CWD - Change Working Directory 
+- LIST - List 
+- NLST - Name List 
+- PASS - Password 
+- PASV - Passive Mode 
+- PORT - Data Port 
+- QUIT - Logout 
+- RETR - Retrieve 
+- STOR - Store 
+- STOU - Store Unique 
+- USER - User Name
 
 
-## Core Storing and Retrieving Operations
+## Get up and running
 
-- STORE (`STOR`) - Causes the server-DTP to accept the data transferred via the data connection and to store the data as a file at the mercury.server site. If a file exists at that site it will be replaced by the new one.
+Clone the repo and make sure you have Java 8 installed
 
-- RETRIEVE (`RETR`) - Causes the server-DTP to transfer a copy of the file specified at the pathname to a client. The status and contents of the file at the mercury.server site shall be unaffected.
+```$xslt
+> git clone https://github.com/andrewMacmurray/mercury-ftp
+```
 
-- STORE UNIQUE (`STOU`) - Behaves like `STOR` but file must have a unique name to that directory (name must be included in the `205` transfer started response).
+Run the tests with
 
-- APPEND (`APPE`) - Causes the Server-DTP to store a copy of the file at the specified mercury.server site. If the pathname exists the data should be appended to that file, otherwise a new one created.
+```$xslt
+> ./gradew test
+```
 
-## FTP Server Return Codes
+Build the application with
 
-https://en.wikipedia.org/wiki/List_of_FTP_server_return_codes
+```$xslt
+> ./gradlew jar
+```
 
-Response Status
+You may need to run the app with root privileges (as the server opens a socket on port 21)
 
-+ `1XX` - Positive Preliminary Reply (requested action started, expect another reply soon)
-+ `2XX` - Positive Completion Reply (good news, action complete)
-+ `3XX` - Positive Intermediate Reply (command accepted but need some more info pls)
-+ `4XX` - Transient Negative Completion Reply (command not accepted, please try again)
-+ `5XX` - Permanent Negative Completion Reply (invalid command, please correct)
+```$xslt
+> sudo java -jar build/libs/mercury-ftp-1.0-SNAPSHOT.jar
+```
 
-Response Info
+Alternatively for dev purposes you can change the `commandSocketPort` in `Main.java` to a non privileged port (ports above `1023`)
 
-+ `X0X` - Syntax errors
-+ `X1X` - Information (usually replies to requests for information such as status or help)
-+ `X2X` - Connections (replies referring to the control and data connections)
-+ `X3X` - Authentication and Accounting
-+ `X5X` - File System
+## Connect to the server
 
-### Common Codes
+A lightweight client I used to connect to the server was the `ftp` client from [inetutils package](https://www.gnu.org/software/inetutils/). On MacOS install this with
 
-+ `150` - File status OK, about to open a data connection.
-+ `250` - Requested file action OK
-+ `200` - Command OK
-+ `212` - Directory Status
-+ `213` - File Status
-+ `331` - User name OK, need password
-+ `332` - Need account for login
-+ `350` - Requested file action pending further information
-+ `450` - File unavailable
-+ `425` - Can't open data connection
-+ `425` - Connection closed, transfer aborted
-+ `500` - Syntax error
-+ `530` - User not logged in
-+ `502` - Command not implemented
+```$xslt
+> brew install inetutils
+```
 
+Running the server locally you can connect to it using:
+
+```$xslt
+> ftp --ipv4 --no-login
+> open localhost 21
+```
+
+You can view the ftp client commands you can issue using
+
+```$xslt
+ftp> help
+```
+
+But be aware that not all of them have been implemented yet!
+
+## Infrastructure Setup
+
+### CircleCI / Terraform / AWS
+
+The project has been set up with with a Continuous Deployment pipeline via [CircleCI](https://circleci.com/) and [Terraform](https://www.terraform.io/).
+
++ CircleCI runs the tests for every commit pushed to Github
++ When a pull request is merged into master CircleCI then runs a terraform script to provision infrastructure and deploy the server
++ Terraform is set up to create and manage AWS resources that include -
+    + A single ec2 instance
+    + A security group
+    + An IAM role for the ec2 instance
+    + A managed version of the default VPC
 
