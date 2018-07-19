@@ -18,7 +18,7 @@ public class PassivePortManager {
         this.host = host;
     }
 
-    public Integer getAvailablePort() {
+    public Integer provisionPort() {
         return availablePorts.poll();
     }
 

@@ -22,27 +22,27 @@ public class PassivePortManagerTest {
 
     @Test
     public void provisionsPortCorrectly() {
-        assertEquals(new Integer(2022), passivePortManager.getAvailablePort());
+        assertEquals(new Integer(2022), passivePortManager.provisionPort());
     }
 
     @Test
     public void provisionsSequentialPorts() {
-        passivePortManager.getAvailablePort();
-        passivePortManager.getAvailablePort();
-        Integer availablePort = passivePortManager.getAvailablePort();
+        passivePortManager.provisionPort();
+        passivePortManager.provisionPort();
+        Integer availablePort = passivePortManager.provisionPort();
 
         assertEquals(new Integer(2024), availablePort);
     }
 
     @Test
     public void releasesPortCorrectly() {
-        Integer availablePort = passivePortManager.getAvailablePort();
+        Integer availablePort = passivePortManager.provisionPort();
         passivePortManager.releasePort(availablePort);
 
         for (int i = 0; i < 4; i++) {
-            passivePortManager.getAvailablePort();
+            passivePortManager.provisionPort();
         }
 
-        assertEquals(new Integer(2022), passivePortManager.getAvailablePort());
+        assertEquals(new Integer(2022), passivePortManager.provisionPort());
     }
 }

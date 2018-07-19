@@ -27,7 +27,12 @@ public class FtpConnectionThread extends Thread {
 
     @Override
     public void run() {
-        try (FtpConnection ftpConnection = new FtpConnection(commandSocket, passivePortManager, socketFactory, fs)) {
+        try (FtpConnection ftpConnection = new FtpConnectionBuilder(
+                commandSocket,
+                passivePortManager,
+                socketFactory,
+                fs).build()
+        ) {
             ftpConnection.processCommands();
         } catch (IOException e) {
             System.out.println("Error on thread " + Thread.currentThread().getName());

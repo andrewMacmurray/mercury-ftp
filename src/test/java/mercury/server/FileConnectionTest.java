@@ -1,12 +1,12 @@
 package mercury.server;
 
-import doubles.fakes.FakeSocketExecutor;
+import doubles.fakes.FakeDataSocketExecutor;
 import doubles.spies.FileSystemSpy;
 import doubles.stubs.FileListingStub;
 import mercury.filesystem.FtpFileSystem;
 import mercury.filesystem.WorkingDirectory;
 import mercury.server.connections.FileConnection;
-import mercury.server.connections.socket.SocketExecutor;
+import mercury.server.connections.socket.DataSocketExecutor;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,13 +22,13 @@ public class FileConnectionTest {
     @Before
     public void setup() {
         fileSystemSpy = new FileSystemSpy();
-        SocketExecutor socketExecutor = new FakeSocketExecutor();
+        DataSocketExecutor dataSocketExecutor = new FakeDataSocketExecutor();
         FtpFileSystem ftpFileSystem = new FtpFileSystem(
                 fileSystemSpy,
                 new FileListingStub(),
                 new WorkingDirectory()
         );
-        fileConnection = new FileConnection(ftpFileSystem, socketExecutor);
+        fileConnection = new FileConnection(ftpFileSystem, dataSocketExecutor);
     }
 
     @Test

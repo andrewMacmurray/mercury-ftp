@@ -1,35 +1,35 @@
 package mercury.server.connections;
 
 import mercury.filesystem.FtpFileSystem;
+import mercury.server.connections.socket.DataSocketExecutor;
 import mercury.server.connections.socket.InputStreamAction;
 import mercury.server.connections.socket.OutputStreamAction;
-import mercury.server.connections.socket.SocketExecutor;
 import mercury.server.ftpcommands.utils.Address;
 
 import java.io.IOException;
 
 public class FileConnection {
 
-    private SocketExecutor socketExecutor;
+    private DataSocketExecutor dataSocketExecutor;
     private FtpFileSystem ftpFileSystem;
 
-    public FileConnection(FtpFileSystem ftpFileSystem, SocketExecutor socketExecutor) {
+    public FileConnection(FtpFileSystem ftpFileSystem, DataSocketExecutor dataSocketExecutor) {
         this.ftpFileSystem = ftpFileSystem;
-        this.socketExecutor = socketExecutor;
+        this.dataSocketExecutor = dataSocketExecutor;
     }
 
     public void activeMode(String host, int port) {
-        socketExecutor.setActiveMode(host, port);
+        dataSocketExecutor.setActiveMode(host, port);
     }
 
     public void passiveMode() {
-        socketExecutor.setPassiveMode();
+        dataSocketExecutor.setPassiveMode();
     }
 
     public String getPassiveAddress() {
         return Address.formatIpAddress(
-                socketExecutor.getPassiveHost(),
-                socketExecutor.getPassivePort()
+                dataSocketExecutor.getPassiveHost(),
+                dataSocketExecutor.getPassivePort()
         );
     }
 
@@ -74,11 +74,11 @@ public class FileConnection {
     }
 
     private void runOutputSocket(OutputStreamAction outputStreamAction) throws IOException {
-        socketExecutor.runOutputStream(outputStreamAction);
+        dataSocketExecutor.runOutputStream(outputStreamAction);
     }
 
     private void runInputSocket(InputStreamAction inputStreamAction) throws IOException {
-        socketExecutor.runInputStream(inputStreamAction);
+        dataSocketExecutor.runInputStream(inputStreamAction);
     }
 
 }

@@ -18,19 +18,18 @@ public class Main {
 
         String publicIp = args[0];
         String userRootDirectory = args[1];
-
         Integer commandSocketPort = 21;
-
         Integer passiveFromPort = 2022;
         Integer passiveToPort = 2026;
 
-        ServerSocket commandServerSocket = new ServerSocket(commandSocketPort);
-        NativeFileSystem fs = new NativeFileSystem(userRootDirectory);
-        PassivePortManager passivePortManager = new PassivePortManager(publicIp, passiveFromPort, passiveToPort);
-        SocketFactory socketFactory = new SocketFactory();
-        ExecutorService threadPool = Executors.newFixedThreadPool(passiveToPort - passiveFromPort + 1);
+        FtpServer ftpServer = new FtpServerBuilder(
+                publicIp,
+                userRootDirectory,
+                commandSocketPort,
+                passiveFromPort,
+                passiveToPort
+        ).build();
 
-        FtpServer ftpServer = new FtpServer(commandServerSocket, passivePortManager, socketFactory, fs, threadPool);
         ftpServer.start();
     }
 

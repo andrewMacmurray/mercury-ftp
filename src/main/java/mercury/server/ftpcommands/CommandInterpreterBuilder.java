@@ -7,7 +7,7 @@ import mercury.filesystem.WorkingDirectory;
 import mercury.server.connections.CommandConnection;
 import mercury.server.connections.CommandResponses;
 import mercury.server.connections.FileConnection;
-import mercury.server.connections.socket.SocketExecutor;
+import mercury.server.connections.socket.DataSocketExecutor;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -15,16 +15,16 @@ import java.net.Socket;
 public class CommandInterpreterBuilder {
 
     private Socket commandSocket;
-    private SocketExecutor socketExecutor;
+    private DataSocketExecutor dataSocketExecutor;
     private NativeFileSystem fs;
 
     public CommandInterpreterBuilder(
             Socket commandSocket,
-            SocketExecutor socketExecutor,
+            DataSocketExecutor dataSocketExecutor,
             NativeFileSystem fs
     ) {
         this.commandSocket = commandSocket;
-        this.socketExecutor = socketExecutor;
+        this.dataSocketExecutor = dataSocketExecutor;
         this.fs = fs;
     }
 
@@ -35,7 +35,7 @@ public class CommandInterpreterBuilder {
         return new CommandInterpreter(
                 commandConnection,
                 commandResponses,
-                createCommands(commandResponses, socketExecutor)
+                createCommands(commandResponses, dataSocketExecutor)
         );
     }
 
@@ -43,12 +43,12 @@ public class CommandInterpreterBuilder {
         return new CommandResponses(commandConnection);
     }
 
-    private Commands createCommands(CommandResponses commandResponses, SocketExecutor socketExecutor) {
-        return new CommandsFactory(commandResponses, createFileConnection(fs, socketExecutor)).build();
+    private Commands createCommands(CommandResponses commandResponses, DataSocketExecutor dataSocketExecutor) {
+        return new CommandsFactory(commandResponses, createFileConnection(fs, dataSocketExecutor)).build();
     }
 
-    private FileConnection createFileConnection(NativeFileSystem fs, SocketExecutor socketExecutor) {
-        return new FileConnection(createFileSystem(), socketExecutor);
+    private FileConnection createFileConnection(NativeFileSystem fs, DataSocketExecutor dataSocketExecutor) {
+        return new FileConnection(createFileSystem(), dataSocketExecutor);
     }
 
     private CommandConnection createCommandConnection() throws IOException {

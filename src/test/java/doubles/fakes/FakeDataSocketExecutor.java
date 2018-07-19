@@ -1,17 +1,17 @@
 package doubles.fakes;
 
+import mercury.server.connections.socket.DataSocketExecutor;
 import mercury.server.connections.socket.InputStreamAction;
 import mercury.server.connections.socket.OutputStreamAction;
-import mercury.server.connections.socket.SocketExecutor;
 
 import java.io.*;
 
-public class FakeSocketExecutor extends SocketExecutor {
+public class FakeDataSocketExecutor extends DataSocketExecutor {
 
     private InputStream inputStream;
     private OutputStream outputStream;
 
-    public FakeSocketExecutor() {
+    public FakeDataSocketExecutor() {
         super(null, null, 0, "");
         this.inputStream = new ByteArrayInputStream("".getBytes());
         this.outputStream = new ByteArrayOutputStream();

@@ -6,7 +6,7 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class SocketExecutor {
+public class DataSocketExecutor {
 
     private SocketFactory socketFactory;
     private ServerSocket passiveServerSocket;
@@ -16,7 +16,7 @@ public class SocketExecutor {
     private int activePort;
     private String activeHost;
 
-    public SocketExecutor(
+    public DataSocketExecutor(
             SocketFactory socketFactory,
             ServerSocket passiveServerSocket,
             int passivePort,

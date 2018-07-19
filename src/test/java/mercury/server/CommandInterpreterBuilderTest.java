@@ -1,6 +1,6 @@
 package mercury.server;
 
-import doubles.fakes.FakeSocketExecutor;
+import doubles.fakes.FakeDataSocketExecutor;
 import doubles.spies.FileSystemSpy;
 import doubles.stubs.SocketStub;
 import mercury.server.ftpcommands.CommandInterpreter;
@@ -20,7 +20,7 @@ public class CommandInterpreterBuilderTest {
         InputStream socketIn = new ByteArrayInputStream("RETR hello.txt".getBytes());
         OutputStream socketOut = new ByteArrayOutputStream();
         SocketStub socketStub = new SocketStub(socketIn, socketOut);
-        FakeSocketExecutor fakeSocketExecutor = new FakeSocketExecutor();
+        FakeDataSocketExecutor fakeSocketExecutor = new FakeDataSocketExecutor();
         FileSystemSpy fileSystemSpy = new FileSystemSpy();
 
         CommandInterpreter commandInterpreter = new CommandInterpreterBuilder(socketStub, fakeSocketExecutor, fileSystemSpy).build();
